@@ -2,9 +2,19 @@ class DifferentialEvolution(object):
     def __init__(self, dataset, settings):
         self.dataset = dataset
         self.settings = settings
+        self.population = None
+
+    def initialize(self):
+        self.population = []
+
 
     def step(self):
+
         pass
+
+class DifferentialEvolutionPopulation(object):
+    def __init__(self, settings):
+        self.settings = settings
 
 class DifferentialEvolutionCrossover(object):
     def __init__(self, settings):
@@ -30,10 +40,6 @@ class DifferentialEvolutionMutation(object):
 
     def mutate(self, target):
         raise Exception("Unimplemented")
-
-class DifferentialEvolutionPopulation(object):
-    def __init__(self, settings):
-        self.settings = settings
 
 class DifferentialEvolutionVector(object):
     def __init__(self, settings):

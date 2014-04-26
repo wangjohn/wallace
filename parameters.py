@@ -40,11 +40,11 @@ class ParametersValidityCheck(object):
 #   3. Categorical variables (might actually supersede booleans)
 #
 class ParametersRangeValidityCheck(ParametersValidityCheck):
-    def __init__(self, ranges=None):
-        if ranges == None:
-            self.ranges = {}
+    def __init__(self, parameters=None):
+        if parameters == None:
+            self.parameters = {}
         else:
-            self.ranges = ranges
+            self.parameters = parameters
 
     def set_range(self, parameter_name, lower_bound, upper_bound):
         self.ranges[parameter_name] = (lower_bound, upper_bound)
@@ -67,6 +67,58 @@ class ParametersRangeValidityCheck(ParametersValidityCheck):
     def _check_parameter_existence(self, parameter_name):
         if parameter_name not in self.ranges:
             raise ValueError("Parameter '%s' does not have a valid range of values defined." % parameter_name)
+
+class BasicParameter(object):
+    def __init__(self, parameter_type):
+        self.parameter_type = parameter_type
+
+    def get_valid_value(self, data=None):
+        raise NotImplementedError("This method should be implemented by subclasses of BasicParameter.")
+
+class RangeParameter(BasicParameter):
+    def __init__(self, lower_bound, upper_bound):
+        BasicParameter.__init__(self, "range")
+        self.lower_bound = lower_bound
+        self.upper_bound = upper_bound
+
+    def get_valid_value(self, data=None):
+        return random.uniform(lower_bound, upper_bound)
+
+class CategoryParameter(BasicParameter):
+    def __init__(self, categories, weights = None):
+        BasicParameter.__init__(self, "category")
+        self.categories = categories
+        self.weights = self._normalize_weights(weights)
+        self._validate_weights(self.categories, self.weights)
+
+    def get_valid_value(self, data=None):
+        if self.weights == None:
+            return random.choice(self.categories)
+        else:
+            rand = random.random()
+            current_sum = 0
+            for i in xrange(len(self.categories)):
+                if rand <= self.weights[i] + current_sum:
+                    return self.categories[i]
+                current_sum += self.weights[i]
+
+            raise ArithmeticError("CategoryParameter's weights did not sum to 1")
+
+    def _validate_weights(self, categories, weights):
+        if weights != None and len(categories) != len(weights):
+            raise ValueError("CategoryParameter's weights and categories are unequal lengths.")
+
+    def _normalize_weights(self, weights):
+        if weights == None:
+            return None
+        else:
+            total_weight = sum(weights)
+            normalized = []
+            for weight in weights:
+                normalized_weight = float(weight) / total_weight
+                normalized.append(normalized_weight)
+            return normalized
+
 
 class ParametersValidityCheckResult(object):
     def __init__(self, is_valid, message=None):

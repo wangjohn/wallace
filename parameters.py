@@ -17,15 +17,21 @@ class ParameterSet(object):
             return self.default_values[parameter_name]
         raise KeyError("Parameter '%s' was not defined" % parameter_name)
 
+    def get_valid_value(self, parameter_name):
+        if self.validity_check == None:
+            raise ValueError("Cannot get valid value without a validity check.")
+        else:
+            return self.validity_check.get_valid_value(parameter_name)
+
     def set(self, parameter_name, value):
-        if self.validity_check != None:
+        if self.validity_check == None:
+            self.parameter_values[parameter_name] = value
+        else:
             validity_result = self.validity_check.check_validity(parameter_name, value)
             if validity_result.is_valid:
                 self.parameter_values[parameter_name] = value
             else:
                 raise ValueError("Parameter assignment did not pass validity check: %s" % validity_result.message)
-        else:
-            self.parameter_values[parameter_name] = value
 
     def copy(self):
         """
@@ -142,8 +148,7 @@ class ParametersGeneralValidityCheck(ParametersValidityCheck):
 
     def get_valid_value(self, parameter_name):
         self._check_parameter_existence(parameter_name)
-        (lower_bound, upper_bound) = self.ranges[parameter_name]
-        return random.uniform(lower_bound, upper_bound)
+        return self.parameters[parameter_name].get_valid_value()
 
     def _check_parameter_existence(self, parameter_name):
         if parameter_name not in self.ranges:

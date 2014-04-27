@@ -1,3 +1,5 @@
+from wallace import fitness_evaluation
+
 class OptimizationAlgorithm(object):
     def __init__(self, dataset, settings):
         self.dataset = dataset
@@ -29,7 +31,8 @@ class OptimizationAlgorithm(object):
 
     def evaluate_population_fitness(self):
         for model in self.model_population:
-            fitness = model.evaluate_fitness(self.dataset)
+            evaluation = fitness_evaluation.CrossValidationFitnessEvaluation(self.settings, model, self.dataset)
+            fitness = evaluation.evaluate()
             self.model_tracking.insert(fitness, model)
 
 class ModelTracking(object):

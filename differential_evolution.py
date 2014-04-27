@@ -15,6 +15,10 @@ class DifferentialEvolution(object):
 class DifferentialEvolutionPopulation(object):
     def __init__(self, settings):
         self.settings = settings
+        self.instances = []
+
+    def initialize(self, dataset):
+
 
 class DifferentialEvolutionCrossover(object):
     def __init__(self, settings):

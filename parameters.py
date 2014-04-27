@@ -33,31 +33,28 @@ class ParametersValidityCheck(object):
     def get_valid_value(self, parameter_name):
         raise NotImplementedError()
 
-# TODO: make this into a more general check. Something called GeneralParametersValidityCheck.
-# This should handle:
-#   1. Ranges (i.e. numbers)
-#   2. Booleans
-#   3. Categorical variables (might actually supersede booleans)
-#
-class ParametersRangeValidityCheck(ParametersValidityCheck):
+class ParametersGeneralValidityCheck(ParametersValidityCheck):
     def __init__(self, parameters=None):
         if parameters == None:
             self.parameters = {}
         else:
             self.parameters = parameters
 
-    def set_range(self, parameter_name, lower_bound, upper_bound):
-        self.ranges[parameter_name] = (lower_bound, upper_bound)
+    def set_range_parameter(self, parameter_name, lower_bound, upper_bound):
+        self.parameters[parameter_name] = RangeParameter(lower_bound, upper_bound)
+
+    def set_category_parameter(self, parameter_name, categories, weights=None):
+        self.parameters[parameter_name] = CategoryParameter(categories, weights)
+
+    def set_parameter(self, parameter_name, parameter):
+        if isinstance(parameter, BasicParameter):
+            self.parameters[parameter_name] = parameter
+        else:
+            raise TypeError("Parameters must be subclasses of BasicParameter.")
 
     def check_validity(self, parameter_name, value):
         self._check_parameter_existence(parameter_name)
-        (lower_bound, upper_bound) = self.ranges[parameter_name]
-        if lower_bound <= value and value <= upper_bound:
-            return ParametersValidityCheckResult(True)
-        else:
-            message = "Value '%s' is out of parameter range: [%s, %s]" %
-                    (value, lower_bound, upper_bound)
-            return ParametersValidityCheckResult(False, message)
+        return self.parameters[parameter_name].check_validity(value)
 
     def get_valid_value(self, parameter_name):
         self._check_parameter_existence(parameter_name)
@@ -69,10 +66,14 @@ class ParametersRangeValidityCheck(ParametersValidityCheck):
             raise ValueError("Parameter '%s' does not have a valid range of values defined." % parameter_name)
 
 class BasicParameter(object):
-    def __init__(self, parameter_type):
+    def __init__(self, parameter_type, value=None):
         self.parameter_type = parameter_type
+        self.value = value
 
     def get_valid_value(self, data=None):
+        raise NotImplementedError("This method should be implemented by subclasses of BasicParameter.")
+
+    def check_validity(self, value):
         raise NotImplementedError("This method should be implemented by subclasses of BasicParameter.")
 
 class RangeParameter(BasicParameter):
@@ -84,12 +85,27 @@ class RangeParameter(BasicParameter):
     def get_valid_value(self, data=None):
         return random.uniform(lower_bound, upper_bound)
 
+    def check_validity(self, value):
+        if self.lower_bound <= value and value <= self.upper_bound:
+            return ParametersValidityCheckResult(True)
+        else:
+            message = "Value '%s' is out of parameter range: [%s, %s]" %
+                    (value, self.lower_bound, self.upper_bound)
+            return ParametersValidityCheckResult(False, message)
+
 class CategoryParameter(BasicParameter):
     def __init__(self, categories, weights = None):
         BasicParameter.__init__(self, "category")
         self.categories = categories
         self.weights = self._normalize_weights(weights)
         self._validate_weights(self.categories, self.weights)
+
+    def check_validity(self, value):
+        if value in self.categories:
+            return ParametersValidityCheckResult(True)
+        else:
+            message = "Value '%s' is not a category" % value
+            return ParametersValidityCheckResult(False, message)
 
     def get_valid_value(self, data=None):
         if self.weights == None:

@@ -84,34 +84,34 @@ class ParameterSet(object):
             if "default" in param_options:
                 default_values[parameter_name] = param_options["default"]
 
-            self._intialize_validity_check(parameter_name, param_options, validity_check)
+            _initialize_validity_check(parameter_name, param_options, validity_check)
 
         return cls(parameter_values, validity_check, default_values)
 
-    def _initialize_validity_check(self, parameter_name, param_options, validity_check):
-        param_type = self._get_param_option(param_options, "type", True, parameter_name)
-        if param_type == "range":
-            lower_bound = self._get_param_option(param_options, "lower_bound", True, parameter_name)
-            upper_bound = self._get_param_option(param_options, "upper_bound", True, parameter_name)
-            validity_check.set_range_parameter(parameter_name, lower_bound, upper_bound)
-        elif param_type == "integer_range":
-            lower_bound = self._get_param_option(param_options, "lower_bound", True, parameter_name)
-            upper_bound = self._get_param_option(param_options, "upper_bound", True, parameter_name)
-            validity_check.set_integer_range_parameter(parameter_name, lower_bound, upper_bound)
-        elif param_type == "category":
-            categories = self._get_param_option(param_options, "categories", True, parameter_name)
-            weights = self._get_param_option(param_options, "categories")
-            validity_check.set_category_parameter(parameter_name, categories, weights)
-        else:
-            raise ValueError("Malformed dictionary for parameter '%s': '%s' is not a valid parameter type" %
-                    (parameter_name, param_type))
+def _initialize_validity_check(parameter_name, param_options, validity_check):
+    param_type = _get_param_option(param_options, "type", True, parameter_name)
+    if param_type == "range":
+        lower_bound = _get_param_option(param_options, "lower_bound", True, parameter_name)
+        upper_bound = _get_param_option(param_options, "upper_bound", True, parameter_name)
+        validity_check.set_range_parameter(parameter_name, lower_bound, upper_bound)
+    elif param_type == "integer_range":
+        lower_bound = _get_param_option(param_options, "lower_bound", True, parameter_name)
+        upper_bound = _get_param_option(param_options, "upper_bound", True, parameter_name)
+        validity_check.set_integer_range_parameter(parameter_name, lower_bound, upper_bound)
+    elif param_type == "category":
+        categories = _get_param_option(param_options, "categories", True, parameter_name)
+        weights = _get_param_option(param_options, "categories")
+        validity_check.set_category_parameter(parameter_name, categories, weights)
+    else:
+        raise ValueError("Malformed dictionary for parameter '%s': '%s' is not a valid parameter type" % \
+                (parameter_name, param_type))
 
-    def _get_param_option(self, param_options, param_option_name, required=False, parameter_name=None):
-        if param_option_name in param_options:
-            return param_options[param_option_name]
-        elif required:
-            raise ValueError("Malformed dictionary for parameter '%s': required parameter '%s' does not exist" %
-                    (parameter_name, param_option_name))
+def _get_param_option(param_options, param_option_name, required=False, parameter_name=None):
+    if param_option_name in param_options:
+        return param_options[param_option_name]
+    elif required:
+        raise ValueError("Malformed dictionary for parameter '%s': required parameter '%s' does not exist" % \
+                (parameter_name, param_option_name))
 
 class ParametersValidityCheck(object):
     def check_validity(self, parameter_name, value):
@@ -178,8 +178,8 @@ class RangeParameter(BasicParameter):
         if self.lower_bound <= value and value <= self.upper_bound:
             return ParametersValidityCheckResult(True)
         else:
-            message = "Value '%s' is out of parameter range: [%s, %s]" %
-                    (value, self.lower_bound, self.upper_bound)
+            message = ("Value '%s' is out of parameter range: [%s, %s]" % \
+                    (value, self.lower_bound, self.upper_bound))
             return ParametersValidityCheckResult(False, message)
 
 class IntegerRangeParameter(BasicParameter):
@@ -199,7 +199,7 @@ class IntegerRangeParameter(BasicParameter):
         if self.lower_bound <= value and value <= self.upper_bound:
             return ParametersValidityCheckResult(True)
         else:
-            message = "Value '%s' is out of parameter range: [%s, %s]" %
+            message = "Value '%s' is out of parameter range: [%s, %s]" % \
                     (value, self.lower_bound, self.upper_bound)
             return ParametersValidityCheckResult(False, message)
 

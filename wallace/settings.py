@@ -1,4 +1,7 @@
-class DifferentialEvolutionSettings(object):
+class Settings(object):
+    pass
+
+class DifferentialEvolutionSettings(Settings):
     DEFAULT_CROSSOVER_PROBABILITY = 0.5
     DEFAULT_DIFFERENTIAL_WEIGHT = 0.8
     DEFAULT_POPULATION_SIZE = 10

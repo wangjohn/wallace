@@ -1,6 +1,7 @@
 import random
+import copy
 
-class ParameterValuesSet(object):
+class ParameterSet(object):
     def __init__(self, parameter_values, validity_check=None, default_values=None):
         self.parameter_values = parameter_values
         self.validity_check = validity_check
@@ -26,10 +27,19 @@ class ParameterValuesSet(object):
         else:
             self.parameter_values[parameter_name] = value
 
-    @classmethod
-    def create_from_dict(self, dictionary):
+    def copy(self):
         """
-        Takes a dictionary and converts it into a ParameterValuesSet. Dictionaries
+        Returns a semi-deep copy of a ParameterSet. The parameter values will have
+        a deep copy, but the validity_check and default_values attributes will be
+        shared across all copies.
+        """
+        parameter_values = copy.deepcopy(self.parameter_values)
+        return ParameterSet(parameter_values, self.validity_check, self.default_values)
+
+    @classmethod
+    def create_from_dict(cls, dictionary):
+        """
+        Takes a dictionary and converts it into a ParameterSet. Dictionaries
         should be of the following form:
 
         dictionary = {
@@ -59,7 +69,43 @@ class ParameterValuesSet(object):
         Currently supporting three types of parameters: range, integer_range,
         and category.
         """
+        parameter_values = {}
+        default_values = {}
+        validity_check = ParametersGeneralValidityCheck()
+        for parameter_name, param_options in dictionary.iteritems():
+            if "value" in param_options:
+                parameter_values[parameter_name] = param_options["value"]
+            if "default" in param_options:
+                default_values[parameter_name] = param_options["default"]
 
+            self._intialize_validity_check(parameter_name, param_options, validity_check)
+
+        return cls(parameter_values, validity_check, default_values)
+
+    def _initialize_validity_check(self, parameter_name, param_options, validity_check):
+        param_type = self._get_param_option(param_options, "type", True, parameter_name)
+        if param_type == "range":
+            lower_bound = self._get_param_option(param_options, "lower_bound", True, parameter_name)
+            upper_bound = self._get_param_option(param_options, "upper_bound", True, parameter_name)
+            validity_check.set_range_parameter(parameter_name, lower_bound, upper_bound)
+        elif param_type == "integer_range":
+            lower_bound = self._get_param_option(param_options, "lower_bound", True, parameter_name)
+            upper_bound = self._get_param_option(param_options, "upper_bound", True, parameter_name)
+            validity_check.set_integer_range_parameter(parameter_name, lower_bound, upper_bound)
+        elif param_type == "category":
+            categories = self._get_param_option(param_options, "categories", True, parameter_name)
+            weights = self._get_param_option(param_options, "categories")
+            validity_check.set_category_parameter(parameter_name, categories, weights)
+        else:
+            raise ValueError("Malformed dictionary for parameter '%s': '%s' is not a valid parameter type" %
+                    (parameter_name, param_type))
+
+    def _get_param_option(self, param_options, param_option_name, required=False, parameter_name=None):
+        if param_option_name in param_options:
+            return param_options[param_option_name]
+        elif required:
+            raise ValueError("Malformed dictionary for parameter '%s': required parameter '%s' does not exist" %
+                    (parameter_name, param_option_name))
 
 class ParametersValidityCheck(object):
     def check_validity(self, parameter_name, value):

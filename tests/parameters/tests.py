@@ -67,3 +67,36 @@ class ParameterSetTest(TestCase):
 
         with self.assertRaises(ValueError):
             parameter_set.set("my_parameter", 1234)
+
+    def test_invalid_parameter_type(self):
+        dictionary = {
+            "my_parameter": {
+                "type": "new_category"
+                }
+            }
+
+        with self.assertRaises(ValueError):
+            parameters.ParameterSet.create_from_dict(dictionary)
+
+    def test_missing_required_parameter_from_range(self):
+        dictionary = {
+            "my_parameter": {
+                "type": "range",
+                "lower_bound": 12
+                }
+            }
+
+        with self.assertRaises(ValueError):
+            parameters.ParameterSet.create_from_dict(dictionary)
+
+    def test_noninteger_bounds_for_integer_range(self):
+        dictionary = {
+            "my_parameter": {
+                "type": "integer_range",
+                "lower_bound": 12.123,
+                "upper_bound": 15.234
+                }
+            }
+
+        with self.assertRaises(ValueError):
+            parameters.ParameterSet.create_from_dict(dictionary)

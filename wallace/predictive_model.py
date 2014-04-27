@@ -1,8 +1,9 @@
 import random
 
 class PredictiveModel(object):
-    def __init__(self, parameters_set=None):
-        self.set_parameters(parameters_set)
+    def __init__(self, settings, parameter_set):
+        self.parameter_set = parameter_set
+        self.settings = settings
         self.independent_variables = []
 
     def independent_variables(self):
@@ -11,5 +12,5 @@ class PredictiveModel(object):
     def predict(self, input_data):
         raise NotImplementedError()
 
-    def set_parameters(self, parameters_set):
-        self.parameters_set = parameters_set
+    def evaluate_fitness(self, dataset):
+        raise NotImplementedError()

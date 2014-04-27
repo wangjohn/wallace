@@ -151,8 +151,8 @@ class ParametersGeneralValidityCheck(ParametersValidityCheck):
         return self.parameters[parameter_name].get_valid_value()
 
     def _check_parameter_existence(self, parameter_name):
-        if parameter_name not in self.ranges:
-            raise ValueError("Parameter '%s' does not have a valid range of values defined." % parameter_name)
+        if parameter_name not in self.parameters:
+            raise ValueError("Parameter '%s' does not have a validity check defined." % parameter_name)
 
 class BasicParameter(object):
     def __init__(self, parameter_type, value=None):

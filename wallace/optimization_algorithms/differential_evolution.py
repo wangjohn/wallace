@@ -1,10 +1,10 @@
-class DifferentialEvolution(object):
-    def __init__(self, dataset, settings):
-        self.dataset = dataset
-        self.settings = settings
-        self.population = None
+from wallace.optimization_algorithms import OptimizationAlgorithm
 
-    def initialize(self):
+class DifferentialEvolution(OptimizationAlgorithm):
+    def __init__(self, dataset, settings):
+        OptimizationAlgorithm.__init__(self, dataset, settings)
+
+    def initialize_population(self):
         self.population = []
 
 class DifferentialEvolutionCrossover(object):

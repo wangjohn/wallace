@@ -37,7 +37,7 @@ class OptimizationAlgorithm(object):
 
 class ModelTracking(object):
     def __init__(self, settings):
-        self.models_to_track = self.settings.models_to_track()
+        self.models_to_track = self.settings.model_tracking_models_to_track()
         self.best_models = []
 
     def insert(self, fitness, model):

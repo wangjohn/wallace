@@ -16,9 +16,12 @@ class Dataset(object):
         return self.get(row, col)
 
     def column_index(self, header):
+        self._check_headers()
         for i in xrange(len(self.headers)):
             if self.headers[i] == header:
                 return i
+
+        raise ValueError("Header '%s' does not exist in this dataset.")
 
     def get_column(self, col):
         for row in xrange(self.num_rows):

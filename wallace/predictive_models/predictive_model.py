@@ -16,6 +16,19 @@ class PredictiveModel(object):
     def train(self, dataset):
         raise NotImplementedError()
 
+class PredictiveModelVariable(object):
+    def __init__(self, variable):
+        self.variable = variable
+
+    def get_column_index(self, dataset):
+        if isinstance(self.variable, int):
+            if 0 <= self.variable and self.variable < dataset.num_cols:
+                return self.variable
+            else:
+                raise ValueError("Variable is out of the range of the dataset.")
+        else:
+            return self.dataset.column_index(self.variable)
+
 class TrainedPredictiveModel(object):
     def __init__(self, settings, predictive_model, dataset):
         self.settings = settings

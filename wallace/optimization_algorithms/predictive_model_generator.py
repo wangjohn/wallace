@@ -1,6 +1,7 @@
 import random
 
 from wallace.predictive_models import PredictiveModel
+from wallace.parameters import ParameterSet
 
 class PredictiveModelGenerator(object):
     def __init__(self, settings):
@@ -30,8 +31,23 @@ class PredictiveModelGenerator(object):
                     return self.model_types[model_name]
                 current_sum += weight
 
-    def generate_model_parameters(self, model_klass):
-        pass
+    def get_parameter_set_from_class(self, model_klass):
+        model_name = model_klass.__name__
+        return self.get_parameter_set(model_name)
+
+    def get_parameter_set(self, model_name):
+        if model_name not in self.model_types:
+            raise ValueError("Model '%s' is not a valid model type for this model generator." % model_name)
+
+        model_information = self.model_types[model_name]
+        validity_check = model_information["parameter_validity_check"]
+
+        parameter_values = {}
+        for parameter_name in validity_check.list_parameter_names():
+            value = validity_check.get_valid_value(parameter_name)
+            parameter_values[parameter_name] = value
+
+        return ParameterSet(parameter_values, validity_check=validity_check)
 
     def _normalize_weights(self):
         non_weighted = 0

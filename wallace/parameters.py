@@ -142,6 +142,9 @@ class ParametersGeneralValidityCheck(ParametersValidityCheck):
         else:
             raise TypeError("Parameters must be subclasses of BasicParameter.")
 
+    def list_parameter_names(self):
+        return self.parameters.keys()
+
     def check_validity(self, parameter_name, value):
         self._check_parameter_existence(parameter_name)
         return self.parameters[parameter_name].check_validity(value)

@@ -1,6 +1,6 @@
 import random
 
-from wallace.predictive_models import PredictiveModel
+from wallace.predictive_models.predictive_model import PredictiveModel
 from wallace.parameters import ParameterSet
 
 class PredictiveModelGenerator(object):
@@ -11,15 +11,15 @@ class PredictiveModelGenerator(object):
     def add_model_type(self, model_klass, parameter_validity_check, weight=None):
         if not issubclass(model_klass, PredictiveModel):
             raise ValueError("Model types added to the model generator must be subclasses of PredictiveModel.")
-        if model_klass not in self.models:
-            self.models[model_klass.__name__] = {
+        if model_klass.__name__ not in self.model_types:
+            self.model_types[model_klass.__name__] = {
                 "model_class": model_klass,
                 "parameter_validity_check": parameter_validity_check,
                 "weight": weight
                 }
 
     def choose_model_type(self):
-        normalized_weights = self._normalize_weights()
+        normalized_weights = self._normalize_weights(self.model_types)
         if normalized_weights == None:
             model_name = random.choice(self.model_types.keys())
             return self.model_types[model_name]
@@ -49,27 +49,27 @@ class PredictiveModelGenerator(object):
 
         return ParameterSet(parameter_values, validity_check=validity_check)
 
-    def _normalize_weights(self):
+    def _normalize_weights(self, model_types):
         non_weighted = 0
         total_weight = 0
-        for information_hash in self.model_types.itervalues():
-            if "weight" in information_hash:
+        for information_hash in model_types.itervalues():
+            if "weight" in information_hash and information_hash["weight"] != None:
                 total_weight += information_hash["weight"]
             else:
                 non_weighted += 1
 
-        if non_weighted == len(self.model_types):
+        if non_weighted == len(model_types):
             return None
 
-        average_weight = float(total_weight) / (len(self.model_types) - non_weighted)
+        average_weight = float(total_weight) / (len(model_types) - non_weighted)
         total_weight += average_weight * non_weighted
 
         normalized_weights = {}
-        for model_name, information_hash in self.model_types.iteritems():
-            if "weight" in information_hash:
+        for model_name, information_hash in model_types.iteritems():
+            if "weight" in information_hash and information_hash["weight"] != None:
                 normalized_weight = float(information_hash["weight"]) / total_weight
             else:
-                normalized_weight = average_weight
+                normalized_weight = float(average_weight) / total_weight
             normalized_weights[model_name] = normalized_weight
 
         return normalized_weights

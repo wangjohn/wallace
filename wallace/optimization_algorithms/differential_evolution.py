@@ -7,6 +7,12 @@ class DifferentialEvolution(OptimizationAlgorithm):
     def initialize_population(self):
         self.population = []
 
+    def update_population(self):
+        pass
+
+    def has_finished(self):
+        pass
+
 class DifferentialEvolutionCrossover(object):
     def __init__(self, settings):
         self.settings = settings

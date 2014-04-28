@@ -43,7 +43,7 @@ class ParameterSet(object):
         return ParameterSet(parameter_values, self.validity_check, self.default_values)
 
     @classmethod
-    def create_from_dict(cls, dictionary):
+    def create_from_dict(klass, dictionary):
         """
         Takes a dictionary and converts it into a ParameterSet. Dictionaries
         should be of the following form:
@@ -86,7 +86,7 @@ class ParameterSet(object):
 
             _initialize_validity_check(parameter_name, param_options, validity_check)
 
-        return cls(parameter_values, validity_check, default_values)
+        return klass(parameter_values, validity_check, default_values)
 
 def _initialize_validity_check(parameter_name, param_options, validity_check):
     param_type = _get_param_option(param_options, "type", True, parameter_name)

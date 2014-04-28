@@ -33,7 +33,7 @@ class AbstractSettings(object):
         self.settings[attribute_name] = value
 
     @classmethod
-    def set_default(cls, attribute_name, value):
-        cls.DEFAULTS[attribute_name] = value
+    def set_default(klass, attribute_name, value):
+        klass.DEFAULTS[attribute_name] = value
         getter_method = lambda self : self._resolve_options_attribute(attribute_name)
-        setattr(cls, attribute_name, getter_method)
+        setattr(klass, attribute_name, getter_method)

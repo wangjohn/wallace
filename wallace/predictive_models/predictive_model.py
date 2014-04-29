@@ -5,6 +5,8 @@ class PredictiveModel(object):
         self.dependent_variable = dependent_variable
         self.independent_variables = independent_variables
 
+        self._validate_parameter_set(self.parameter_set)
+
     def train(self, dataset):
         raise NotImplementedError()
 
@@ -13,6 +15,14 @@ class PredictiveModel(object):
 
     def get_independent_variable_data(self, dataset):
         return dataset.get_filtered_matrix(self.independent_variables)
+
+    def required_parameters(self):
+        return []
+
+    def _validate_parameter_set(self, parameter_set):
+        for parameter in self.required_parameters():
+            if not parameter_set.has_parameter(parameter):
+                raise AssertionError("The model's parameter set does not have the required parameter '%s'." % parameter)
 
 class TrainedPredictiveModel(object):
     def __init__(self, predictive_model):

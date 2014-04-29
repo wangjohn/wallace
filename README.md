@@ -1,4 +1,4 @@
-wallace
+Wallace
 =======
 
-Framework for distributed evolutionary algorithms
+Framework for distributed evolutionary algorithms.

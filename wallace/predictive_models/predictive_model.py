@@ -28,3 +28,12 @@ class TrainedPredictiveModel(object):
         predicted_results = self.predict(dataset)
         actual_results = self.predictive_model.get_dependent_variable_data(dataset)
         return evaluation_method.evaluate_fitness(results, actual_results)
+
+class TrainedSklearnModel(TrainedPredictiveModel):
+    def __init__(self, predictive_model, fitted_regression):
+        TrainedPredictiveModel.__init__(self, predictive_model)
+        self.fitted_regression = fitted_regression
+
+    def predict(self, dataset):
+        independent_data = self.predictive_model.get_independent_variable_data(dataset)
+        return self.fitted_regression.predict(independent_data)

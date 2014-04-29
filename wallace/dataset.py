@@ -75,3 +75,16 @@ class Dataset(object):
     def _check_headers(self):
         if self.headers == None:
             raise ValueError("Headers are not defined on this dataset and cannot be used for accesses.")
+
+class DatasetVariable(object):
+    def __init__(self, variable):
+        self.variable = variable
+
+    def get_column_index(self, dataset):
+        if isinstance(self.variable, int):
+            if 0 <= self.variable and self.variable < dataset.num_cols:
+                return self.variable
+            else:
+                raise ValueError("Variable is out of the range of the dataset.")
+        else:
+            return self.dataset.column_index(self.variable)

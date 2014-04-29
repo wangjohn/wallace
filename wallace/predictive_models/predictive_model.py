@@ -5,49 +5,49 @@ class PredictiveModel(object):
         self.parameter_set = parameter_set
         self.settings = settings
         self.dependent_variable = dependent_variable
-        self.independent_variables = []
-
-    def independent_variables(self):
-        return self.independent_variables
-
-    def dependent_variable(self):
-        return self.dependent_variable
+        self.independent_variables = independent_variables
 
     def train(self, dataset):
         raise NotImplementedError()
+
+    def get_dependent_variable_data(self, dataset):
+        return dataset.get_filtered_column(self.dependent_variable)
+
+    def get_independent_variable_data(self, dataset):
+        return dataset.get_filtered_matrix(self.independent_variables)
+
+class TrainedPredictiveModel(object):
+    def __init__(self, predictive_model):
+        self.predictive_model = predictive_model
+
+    def model_type(self):
+        return self.predictive_model.__class__.__name__
+
+    def predict(self, dataset):
+        raise NotImplementedError()
+
+    def predict_and_evaluate_fitness(self, dataset, evaluation_method):
+        predicted_results = self.predict(dataset)
+        actual_results = self.predictive_model.get_dependent_variable_data(dataset)
+        return evaluation_method.evaluate_fitness(results, actual_results)
 
 from sklearn import linear_model
 class OLSLinearRegression(PredictiveModel):
     def train(self, dataset):
         model = linear_model.LinearRegression()
-        independent_data = dataset.get_filtered_matrix(self.independent_variables)
-        dependent_data = dataset.get_filtered_column(self.depedent_variable)
+        independent_data = self.get_independent_variable_data(dataset)
+        dependent_data = self.get_dependent_variable_data(dataset)
         trained_regression = model.fit(independent_data, dependent_data)
 
-        # TODO: create a corresponding trained predictive model
+        return TrainedOLSLinearRegression(self, trained_regression)
 
-# TODO: refactor this into the dataset
-class PredictiveModelVariable(object):
-    def __init__(self, variable):
-        self.variable = variable
-
-    def get_column_index(self, dataset):
-        if isinstance(self.variable, int):
-            if 0 <= self.variable and self.variable < dataset.num_cols:
-                return self.variable
-            else:
-                raise ValueError("Variable is out of the range of the dataset.")
-        else:
-            return self.dataset.column_index(self.variable)
-
-class TrainedPredictiveModel(object):
-    def __init__(self, settings, predictive_model, dataset):
-        self.settings = settings
-        self.predictive_model = predictive_model
-        self.dataset = dataset
+class TrainedOLSLinearRegression(TrainedPredictiveModel):
+    def __init__(self, predictive_model, fitted_regression):
+        TrainedPredictiveModel.__init__(self, predictive_model)
+        self.fitted_regression = fitted_regression
 
     def predict(self, dataset):
-        raise NotImplementedError()
+        independent_data = self.predictive_model.get_independent_variable_data(dataset)
+        return self.fitted_regression.predict(independent_data)
 
-    def predict_and_evaluate_fitness(self, dataset):
-        raise NotImplementedError()
+

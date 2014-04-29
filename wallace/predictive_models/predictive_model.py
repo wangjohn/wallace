@@ -20,9 +20,8 @@ from sklearn import linear_model
 class OLSLinearRegression(PredictiveModel):
     def train(self, dataset):
         model = linear_model.LinearRegression()
-        # TODO: write methods on datasets that allow the ability to get variable columns
-        independent_data = dataset.get_variable_columns(self.independent_variables)
-        dependent_data = dataset.get_variable_column(self.depedent_variable)
+        independent_data = dataset.get_filtered_matrix(self.independent_variables)
+        dependent_data = dataset.get_filtered_column(self.depedent_variable)
         trained_regression = model.fit(independent_data, dependent_data)
 
         # TODO: create a corresponding trained predictive model

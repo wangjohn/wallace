@@ -5,7 +5,7 @@ class Dataset(object):
         self.headers = headers
         self.data_matrix = data_matrix
         self.num_rows = len(self.data_matrix)
-        self.num_cols = len(self.headers)
+        self.num_cols = len(self.data_matrix[0])
 
     def get(self, row, col):
         return self.data_matrix[row][col]
@@ -24,8 +24,28 @@ class Dataset(object):
         raise ValueError("Header '%s' does not exist in this dataset.")
 
     def get_column(self, col):
+        column = []
         for row in xrange(self.num_rows):
-            yield self.data_matrix[row][col]
+            column.append(self.data_matrix[row][col])
+        return column
+
+    def get_filtered_matrix(self, variables):
+        indices = []
+        for variable in variables:
+            indices.append(variable.get_column_index(self))
+        indices = sorted(indices)
+
+        filtered_dataset = []
+        for row in self.data_matrix:
+            variable_row = []
+            for j in indices:
+                variable_row.append(row[j])
+            filtered_dataset.append(variable_row)
+        return filtered_dataset
+
+    def get_filtered_column(self, variable):
+        col = variable.get_column_index(self)
+        return self.get_column(col)
 
     def get_column_with_header(self, header):
         self._check_headers()

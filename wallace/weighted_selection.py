@@ -15,12 +15,12 @@ class WeightedSelection(object):
         total_weight = 0
         for weight in weighted_selections.itervalues():
             if weight == None:
-                total_weight += weight
-            else:
                 non_weighted += 1
+            else:
+                total_weight += weight
 
         if non_weighted == len(weighted_selections):
-            return None
+            return self._uniformly_weighted_selections(weighted_selections)
 
         average_weight = float(total_weight) / (len(weighted_selections) - non_weighted)
         total_weight += average_weight * non_weighted
@@ -35,14 +35,24 @@ class WeightedSelection(object):
 
         return normalized_weights
 
-    def choose(self):
+    def _uniformly_weighted_selections(self, selections):
+        normalized_weights = {}
+        total_selections = len(selections)
+        for selection in selections.iterkeys():
+            normalized_weights[selection] = float(1) / total_selections
+        return normalized_weights
+
+    def choose(self, rand_generator=None, rand_number=None):
         normalized_weights = self.normalize_weights(self.weighted_selections)
-        if normalized_weights == None:
-            return random.choice(self.weighted_selections.keys())
+        if rand_generator != None:
+            rand = rand_generator()
+        elif rand_number != None:
+            rand = rand_number
         else:
             rand = random.random()
-            current_sum = 0
-            for selection, weight in normalized_weights.iteritems():
-                if rand <= weight + current_sum:
-                    return selection
-                current_sum += weight
+
+        current_sum = 0
+        for selection, weight in normalized_weights.iteritems():
+            if rand <= weight + current_sum:
+                return selection
+            current_sum += weight

@@ -91,7 +91,7 @@ class ParameterSet(object):
 
         return klass(parameter_values, validity_check, default_values)
 
-    def _get(self, parameter_name)
+    def _get(self, parameter_name):
         if parameter_name in self.parameter_values:
             return self.parameter_values[parameter_name]
         if parameter_name in self.default_values:

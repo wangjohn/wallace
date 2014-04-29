@@ -4,14 +4,17 @@ from wallace.predictive_models.predictive_model import PredictiveModel
 from wallace.parameters import ParameterSet
 
 class PredictiveModelGenerator(object):
-    def __init__(self, settings):
+    def __init__(self, settings, default_validity_check=None):
         self.settings = settings
         self.model_types = {}
+        self.default_validity_check = default_validity_check
 
-    def add_model_type(self, model_klass, parameter_validity_check, weight=None):
+    def add_model_type(self, model_klass, parameter_validity_check=None, weight=None):
         if not issubclass(model_klass, PredictiveModel):
             raise ValueError("Model types added to the model generator must be subclasses of PredictiveModel.")
         if model_klass.__name__ not in self.model_types:
+            if parameter_validity_check == None:
+                parameter_validity_check = self.default_validity_check
             self.model_types[model_klass.__name__] = {
                 "model_class": model_klass,
                 "parameter_validity_check": parameter_validity_check,
@@ -43,7 +46,7 @@ class PredictiveModelGenerator(object):
         validity_check = model_information["parameter_validity_check"]
 
         parameter_values = {}
-        for parameter_name in validity_check.list_parameter_names():
+        for parameter_name in model.required_parameters():
             value = validity_check.get_valid_value(parameter_name)
             parameter_values[parameter_name] = value
 

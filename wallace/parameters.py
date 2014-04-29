@@ -87,7 +87,7 @@ class ParameterSet(object):
             if "default" in param_options:
                 default_values[parameter_name] = param_options["default"]
 
-            _initialize_validity_check(parameter_name, param_options, validity_check)
+            initialize_validity_check(parameter_name, param_options, validity_check)
 
         return klass(parameter_values, validity_check, default_values)
 
@@ -98,7 +98,7 @@ class ParameterSet(object):
             return self.default_values[parameter_name]
 
 
-def _initialize_validity_check(parameter_name, param_options, validity_check):
+def initialize_validity_check(parameter_name, param_options, validity_check):
     param_type = _get_param_option(param_options, "type", True, parameter_name)
     if param_type == "range":
         lower_bound = _get_param_option(param_options, "lower_bound", True, parameter_name)

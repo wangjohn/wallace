@@ -1,5 +1,3 @@
-import random
-
 class PredictiveModel(object):
     def __init__(self, settings, parameter_set, dependent_variable, independent_variables):
         self.parameter_set = parameter_set
@@ -30,24 +28,3 @@ class TrainedPredictiveModel(object):
         predicted_results = self.predict(dataset)
         actual_results = self.predictive_model.get_dependent_variable_data(dataset)
         return evaluation_method.evaluate_fitness(results, actual_results)
-
-from sklearn import linear_model
-class OLSLinearRegression(PredictiveModel):
-    def train(self, dataset):
-        model = linear_model.LinearRegression()
-        independent_data = self.get_independent_variable_data(dataset)
-        dependent_data = self.get_dependent_variable_data(dataset)
-        trained_regression = model.fit(independent_data, dependent_data)
-
-        return TrainedOLSLinearRegression(self, trained_regression)
-
-class TrainedOLSLinearRegression(TrainedPredictiveModel):
-    def __init__(self, predictive_model, fitted_regression):
-        TrainedPredictiveModel.__init__(self, predictive_model)
-        self.fitted_regression = fitted_regression
-
-    def predict(self, dataset):
-        independent_data = self.predictive_model.get_independent_variable_data(dataset)
-        return self.fitted_regression.predict(independent_data)
-
-

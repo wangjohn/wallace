@@ -18,20 +18,30 @@ class OptimizationAlgorithm(object):
             model_class = self.predictive_model_generator.choose_model_type()
             parameter_set = self.predictive_model_generator.get_parameter_set(model_class)
 
-            independent_variables = self.generate_independent_variables()
+            independent_variables = self.generate_independent_variables(initialize=True)
             new_model = model_class(self.settings, parameter_set, dependent_variable, independent_variables)
             model_population.append(new_model)
 
         self.model_population = model_population
 
-    def generate_independent_variables(self):
+    def generate_independent_variables(self, initialize=False):
         raise NotImplementedError()
 
     def update_population(self):
         raise NotImplementedError()
 
     def has_finished(self):
-        raise NotImplementedError()
+        max_steps = "optimization_algorithm.finishing_criteria.max_steps"
+        if self.settings.has(max_steps) and \
+                self.current_step >= self.settings.get(max_steps):
+            return True
+
+        fitness_threshold = "optimization_algorithm.finishing_criteria.fitness_threshold"
+        if self.settings.has(fitness_threshold) and \
+                self.model_tracking.best_fitness_level() < self.settings.get(fitness_threshold):
+            return True
+
+        return False
 
     def run(self):
         self.initialize_population()
@@ -66,3 +76,7 @@ class ModelTracking(object):
         best_models = sorted(self.best_models, reverse=True)
         for negative_fitness, model in best_models:
             yield (-negative_fitness, model)
+
+    def best_fitness(self):
+        best_models = sorted(self.best_models, reverse=True)
+        return -best_models[0][0]

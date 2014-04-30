@@ -30,6 +30,9 @@ class AbstractSettings(object):
         else:
             raise ValueError("Settings have no attribute '%s'" % attribute_name)
 
+    def has(self, attribute_name):
+        return (attribute_name in self.settings) or (attribute_name in self.DEFAULTS)
+
     @classmethod
     def set_default(klass, attribute_name, value):
         klass.DEFAULTS[attribute_name] = value

@@ -11,11 +11,14 @@ class ParameterSet(object):
             self.default_values = default_values
 
     def get(self, parameter_name):
-        if parameter_name in self.parameter_values:
-            return self.parameter_values[parameter_name]
-        if parameter_name in self.default_values:
-            return self.default_values[parameter_name]
-        raise KeyError("Parameter '%s' was not defined" % parameter_name)
+        result = self._get(parameter_name)
+        if result == None:
+            raise KeyError("Parameter '%s' was not defined" % parameter_name)
+        else:
+            return result
+
+    def has_parameter(self, parameter_name):
+        return self._get(parameter_name) != None
 
     def get_valid_value(self, parameter_name):
         if self.validity_check == None:
@@ -84,11 +87,18 @@ class ParameterSet(object):
             if "default" in param_options:
                 default_values[parameter_name] = param_options["default"]
 
-            _initialize_validity_check(parameter_name, param_options, validity_check)
+            initialize_validity_check(parameter_name, param_options, validity_check)
 
         return klass(parameter_values, validity_check, default_values)
 
-def _initialize_validity_check(parameter_name, param_options, validity_check):
+    def _get(self, parameter_name):
+        if parameter_name in self.parameter_values:
+            return self.parameter_values[parameter_name]
+        if parameter_name in self.default_values:
+            return self.default_values[parameter_name]
+
+
+def initialize_validity_check(parameter_name, param_options, validity_check):
     param_type = _get_param_option(param_options, "type", True, parameter_name)
     if param_type == "range":
         lower_bound = _get_param_option(param_options, "lower_bound", True, parameter_name)

@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from wallace.predictive_models.ols_linear_regression import OLSLinearRegression, TrainedOLSLinearRegression
+from wallace.predictive_models.ols_linear_regression import OLSLinearRegression
 from wallace.dataset import Dataset, DatasetVariable
 
 class OLSRegressionTest(TestCase):

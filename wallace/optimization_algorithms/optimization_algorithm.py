@@ -1,9 +1,10 @@
 from wallace import fitness_evaluation
 
 class OptimizationAlgorithm(object):
-    def __init__(self, dataset, settings):
+    def __init__(self, dataset, settings, predictive_model_generator):
         self.dataset = dataset
         self.settings = settings
+        self.predictive_model_generator = predictive_model_generator
 
         self.model_population = []
         self.current_step = 0

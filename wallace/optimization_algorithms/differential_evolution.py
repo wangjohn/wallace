@@ -4,10 +4,13 @@ from wallace.optimization_algorithms.optimization_algorithm import OptimizationA
 from wallace.weighted_selection import WeightedSelection
 
 class DifferentialEvolution(OptimizationAlgorithm):
-    def __init__(self, dataset, settings):
-        OptimizationAlgorithm.__init__(self, dataset, settings)
+    def __init__(self, dataset, dependent_variable, settings, predictive_model_generator):
+        OptimizationAlgorithm.__init__(self, dataset, dependent_variable, settings, predictive_model_generator)
+        self.category_parameter_weights = {}
+        self.model_type_weights = {}
 
     def update_population(self):
+        parameter_weights = {}
         chosen_models = random.sample(self.model_population, 3)
         pass
 

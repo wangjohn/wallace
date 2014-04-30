@@ -1,5 +1,7 @@
 import random
+
 from wallace.optimization_algorithms.optimization_algorithm import OptimizationAlgorithm
+from wallace.weighted_selection import WeightedSelection
 
 class DifferentialEvolution(OptimizationAlgorithm):
     def __init__(self, dataset, settings):

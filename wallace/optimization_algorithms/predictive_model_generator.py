@@ -9,30 +9,39 @@ class PredictiveModelGenerator(object):
         self.settings = settings
         self.model_types = {}
         self.default_validity_check = default_validity_check
+        self.weighted_selection = WeightedSelection()
 
     def add_model_type(self, model_klass, parameter_validity_check=None, weight=None):
         if not issubclass(model_klass, PredictiveModel):
             raise ValueError("Model types added to the model generator must be subclasses of PredictiveModel.")
-        if model_klass.__name__ not in self.model_types:
+        model_name = model_klass.__name__
+        if model_name not in self.model_types:
             if parameter_validity_check == None:
                 parameter_validity_check = self.default_validity_check
-            self.model_types[model_klass.__name__] = {
-                "model_class": model_klass,
-                "parameter_validity_check": parameter_validity_check,
-                "weight": weight
+            self.model_types[model_name] = {
+                    "model_class": model_klass,
+                    "parameter_validity_check": parameter_validity_check
                 }
+            self.weighted_selection.add_selection(model_name, weight)
+
+    def increase_weight(self, model_klass, learning_parameter=0.05, taper=True):
+        if issubclass(model_name, PredictiveModel):
+            model_name = model_klass.__name__
+        else:
+            model_name = model_klass
+        self.weighted_selection.increase_weight(model_name, learning_parameter, taper)
 
     def choose_model_type(self):
-        weighted_selection = WeightedSelection()
-        for model_name, information_hash in self.model_types.iteritems():
-            weighted_selection.add_selection(model_name, information_hash["weight"])
-
-        model_name = weighted_selection.choose()
+        weighted_selection = WeightedSelection(weights)
+        model_name = self.weighted_selection.choose()
         return self.model_types[model_name]
 
     def get_parameter_set_from_class(self, model_klass):
         model_name = model_klass.__name__
         return self.get_parameter_set(model_name)
+
+    def list_model_types(self):
+        return self.model_types.values()
 
     def get_parameter_set(self, model_name):
         if issubclass(model_name, PredictiveModel):

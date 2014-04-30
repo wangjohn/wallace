@@ -28,7 +28,7 @@ class PredictiveModelGenerator(object):
             weighted_selection.add_selection(model_name, information_hash["weight"])
 
         model_name = weighted_selection.choose()
-        return self.model_types[model_name]["model_class"]
+        return self.model_types[model_name]
 
     def get_parameter_set_from_class(self, model_klass):
         model_name = model_klass.__name__

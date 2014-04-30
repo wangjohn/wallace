@@ -51,3 +51,13 @@ class SettingsTest(TestCase):
         settings_object.set("something.whatever", "something")
 
         self.assertEqual("something", settings_object.get("something.whatever"))
+
+    def test_setting_has_attribute(self):
+        settings_object = settings.AbstractSettings()
+        self.assertTrue(settings_object.has("setting_1"))
+        self.assertTrue(settings_object.has("setting_2"))
+        self.assertTrue(settings_object.has("setting_3"))
+        self.assertFalse(settings_object.has("setting_4"))
+
+        settings_object.set("setting_4", "1234")
+        self.assertTrue(settings_object.has("setting_4"))

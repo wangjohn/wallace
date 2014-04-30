@@ -28,13 +28,15 @@ class PredictiveModelGenerator(object):
             weighted_selection.add_selection(model_name, information_hash["weight"])
 
         model_name = weighted_selection.choose()
-        return self.model_types[model_name]
+        return self.model_types[model_name]["model_class"]
 
     def get_parameter_set_from_class(self, model_klass):
         model_name = model_klass.__name__
         return self.get_parameter_set(model_name)
 
     def get_parameter_set(self, model_name):
+        if issubclass(model_name, PredictiveModel):
+            model_name = model_name.__name__
         if model_name not in self.model_types:
             raise ValueError("Model '%s' is not a valid model type for this model generator." % model_name)
 

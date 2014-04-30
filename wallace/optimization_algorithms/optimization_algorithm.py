@@ -1,8 +1,9 @@
 from wallace import fitness_evaluation
 
 class OptimizationAlgorithm(object):
-    def __init__(self, dataset, settings, predictive_model_generator):
+    def __init__(self, dataset, dependent_variable, settings, predictive_model_generator):
         self.dataset = dataset
+        self.dependent_variable = dependent_variable
         self.settings = settings
         self.predictive_model_generator = predictive_model_generator
 
@@ -11,6 +12,19 @@ class OptimizationAlgorithm(object):
         self.model_tracking = ModelTracking(self.settings)
 
     def initialize_population(self):
+        model_population = []
+        population_size = self.settings.get("optimization_algorithm.population_size")
+        for i in xrange(population_size):
+            model_class = self.predictive_model_generator.choose_model_type()
+            parameter_set = self.predictive_model_generator.get_parameter_set(model_class)
+
+            independent_variables = self.generate_independent_variables()
+            new_model = model_class(self.settings, parameter_set, dependent_variable, independent_variables)
+            model_population.append(new_model)
+
+        self.model_population = model_population
+
+    def generate_independent_variables(self):
         raise NotImplementedError()
 
     def update_population(self):

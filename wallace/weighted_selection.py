@@ -17,7 +17,7 @@ class WeightedSelection(object):
 
         selection_weight = self.weighted_selections[selection]
         if taper:
-            tapering_rate = float(selection_weight) / 1.0
+            tapering_rate = float(1.0 - selection_weight) / 1.0
             new_selection_weight = (1.0 + learning_parameter*tapering_rate) * selection_weight
         else:
             new_selection_weight = (1.0 + learning_parameter) * selection_weight

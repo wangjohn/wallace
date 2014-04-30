@@ -5,10 +5,28 @@ class WeightedSelection(object):
         if weighted_selections == None:
             self.weighted_selections = {}
         else:
-            self.weighted_selections = weighted_selections
+            self.weighted_selections = self.normalize_weights(weighted_selections)
 
     def add_selection(self, selection, weight=None):
         self.weighted_selections[selection] = weight
+        self.weighted_selections = self.normalize_weights(self.weighted_selections)
+
+    def increase_weight(self, selection, learning_parameter=0.05):
+        if selection not in self.weighted_selections:
+            raise ValueError("Selection '%s' is not known by the WeightedSelection." % selection)
+
+        selection_weight = self.weighted_selections[selection]
+        new_selection_weight = (1.0 + learning_parameter) * selection_weight
+        attrition_rate = 1 + float(selection_weight - new_selection_weight) / (1 - selection_weight)
+
+        weighted_selections = {}
+        for sel, weight in self.weighted_selections.iteritems():
+            if sel == selection:
+                weighted_selections[sel] = new_selection_weight
+            else:
+                weighted_selections[sel] = weight * attrition_rate
+
+        self.weighted_selections = weighted_selections
 
     def normalize_weights(self, weighted_selections):
         non_weighted = 0

@@ -19,13 +19,13 @@ class OptimizationAlgorithm(object):
             model_class = model_information["model_class"]
             parameter_set = self.predictive_model_generator.get_parameter_set(model_class)
 
-            independent_variables = self.generate_independent_variables(initialize=True)
+            independent_variables = self.initialize_independent_variables()
             new_model = model_class(self.settings, parameter_set, dependent_variable, independent_variables)
             model_population.append(new_model)
 
         self.model_population = model_population
 
-    def generate_independent_variables(self, initialize=False):
+    def initialize_independent_variables(self):
         raise NotImplementedError()
 
     def update_population(self):

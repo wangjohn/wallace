@@ -1,17 +1,16 @@
-from wallace.optimization_algorithms import OptimizationAlgorithm
+import random
+from wallace.optimization_algorithms.optimization_algorithm import OptimizationAlgorithm
 
 class DifferentialEvolution(OptimizationAlgorithm):
     def __init__(self, dataset, settings):
         OptimizationAlgorithm.__init__(self, dataset, settings)
 
-    def initialize_population(self):
-        self.population = []
-
     def update_population(self):
+        chosen_models = random.sample(self.model_population, 3)
         pass
 
-    def has_finished(self):
-        pass
+    def initialize_independent_variables(self):
+        raise NotImplementedError()
 
 class DifferentialEvolutionCrossover(object):
     def __init__(self, settings):

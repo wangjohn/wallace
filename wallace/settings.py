@@ -11,22 +11,22 @@ class AbstractSettings(object):
         self.settings = {}
         if settings != None:
             for attribute_name, value in settings.iteritems():
-                self.set_attribute(attribute_name, value)
+                self.set(attribute_name, value)
 
-    def _resolve_attribute(self, attribute):
+    def _resolve_attribute(self, attribute, *args):
         if hasattr(attribute, "__call__"):
             return attribute(*args)
         else:
             return attribute
 
-    def set_attribute(self, attribute_name, value):
+    def set(self, attribute_name, value):
         self.settings[attribute_name] = value
 
-    def get_attribute(self, attribute_name):
+    def get(self, attribute_name, *args):
         if attribute_name in self.settings:
-            return self._resolve_attribute(self.settings[attribute_name])
+            return self._resolve_attribute(self.settings[attribute_name], *args)
         elif attribute_name in self.DEFAULTS:
-            return self._resolve_attribute(self.DEFAULTS[attribute_name])
+            return self._resolve_attribute(self.DEFAULTS[attribute_name], *args)
         else:
             raise ValueError("Settings have no attribute '%s'" % attribute_name)
 

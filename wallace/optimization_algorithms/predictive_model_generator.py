@@ -42,6 +42,14 @@ class PredictiveModelGenerator(object):
     def list_model_types(self):
         return self.model_types.values()
 
+    def get_full_validity_check(self):
+        full_validity_check = ParametersGeneralValidityCheck()
+        for model_name in self.model_types.iterkeys():
+            _, validity_check = self._get_parameter_values(model_name)
+            full_validity_check.merge(validity_check)
+
+        return full_validity_check
+
     def get_full_parameter_set(self):
         full_parameter_values = {}
         full_validity_check = ParametersGeneralValidityCheck()

@@ -6,6 +6,7 @@ class OptimizationAlgorithm(object):
         self.dependent_variable = dependent_variable
         self.settings = settings
         self.predictive_model_generator = predictive_model_generator
+        self.full_validity_check = self.predictive_model_generator.get_full_validity_check()
 
         self.model_population = []
         self.current_step = 0

@@ -1,0 +1,26 @@
+from unittest import TestCase
+
+from wallace.independent_variables import IndependentVariableSelection
+from wallace.settings import AbstractSettings
+from wallace.dataset import Dataset, DatasetVariable
+
+class IndependentVariableSelectionTest(TestCase):
+
+    def setUp(self):
+        data_matrix = [[1,2,3], [2,3,4], [5,6,7]]
+        headers = ["column_0", "column_1", "column_2"]
+        self.header_dataset = Dataset(data_matrix, headers)
+        self.nonheader_dataset = Dataset(data_matrix)
+
+        self.headered_dependent_variable = DatasetVariable("column_0")
+        self.nonheadered_dependent_variable = DatasetVariable(0)
+
+    def test_initializing_small_dataset_with_header(self):
+        settings = AbstractSettings()
+        selection = IndependentVariableSelection(settings, self.header_dataset, self.headered_dependent_variable)
+
+        variables = selection.initialize_independent_variables(2)
+        headers = [var.variable for var in variables]
+        self.assertIn("column_1", headers)
+        self.assertIn("column_2", headers)
+

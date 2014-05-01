@@ -159,6 +159,9 @@ class ParametersGeneralValidityCheck(ParametersValidityCheck):
         self._check_parameter_existence(parameter_name)
         return self.parameters[parameter_name].check_validity(value)
 
+    def merge(self, validity_check):
+        self.parameters.update(validity_check.parameters)
+
     def get_valid_value(self, parameter_name):
         self._check_parameter_existence(parameter_name)
         return self.parameters[parameter_name].get_valid_value()

@@ -17,7 +17,7 @@ class OptimizationAlgorithm(object):
         for i in xrange(population_size):
             model_information = self.predictive_model_generator.choose_model_type()
             model_class = model_information["model_class"]
-            parameter_set = self.predictive_model_generator.get_parameter_set(model_class)
+            parameter_set = self.predictive_model_generator.get_full_parameter_set()
 
             independent_variables = self.initialize_independent_variables()
             new_model = model_class(self.settings, parameter_set, dependent_variable, independent_variables)

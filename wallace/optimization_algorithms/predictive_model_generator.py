@@ -1,7 +1,7 @@
 import random
 
 from wallace.predictive_models.predictive_model import PredictiveModel
-from wallace.parameters import ParameterSet
+from wallace.parameters import ParameterSet, ParametersGeneralValidityCheck
 from wallace.weighted_selection import WeightedSelection
 
 class PredictiveModelGenerator(object):
@@ -42,7 +42,21 @@ class PredictiveModelGenerator(object):
     def list_model_types(self):
         return self.model_types.values()
 
+    def get_full_parameter_set(self):
+        full_parameter_values = {}
+        full_validity_check = ParametersGeneralValidityCheck()
+        for model_name in self.model_types.iterkeys():
+            parameter_values, validity_check = self._get_parameter_values(model_name)
+            full_parameter_values.update(parameter_values)
+            full_validity_check.merge(validity_check)
+
+        return ParameterSet(full_parameter_values, validity_check=full_validity_check)
+
     def get_parameter_set(self, model_name):
+        parameter_values, validity_check = self._get_parameter_values(model_name)
+        return ParameterSet(parameter_values, validity_check=validity_check)
+
+    def _get_parameter_values(self, model_name):
         if issubclass(model_name, PredictiveModel):
             model_name = model_name.__name__
         if model_name not in self.model_types:
@@ -56,4 +70,5 @@ class PredictiveModelGenerator(object):
             value = validity_check.get_valid_value(parameter_name)
             parameter_values[parameter_name] = value
 
-        return ParameterSet(parameter_values, validity_check=validity_check)
+        return (parameter_values, validity_check)
+

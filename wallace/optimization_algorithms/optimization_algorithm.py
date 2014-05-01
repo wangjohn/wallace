@@ -20,7 +20,7 @@ class OptimizationAlgorithm(object):
             parameter_set = self.predictive_model_generator.get_full_parameter_set()
 
             independent_variables = self.initialize_independent_variables()
-            new_model = model_class(self.settings, parameter_set, dependent_variable, independent_variables)
+            new_model = model_class(self.settings, parameter_set, self.dependent_variable, independent_variables)
             model_population.append(new_model)
 
         self.model_population = model_population

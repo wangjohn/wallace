@@ -7,7 +7,6 @@ class DifferentialEvolution(OptimizationAlgorithm):
     def __init__(self, dataset, dependent_variable, settings, predictive_model_generator):
         OptimizationAlgorithm.__init__(self, dataset, dependent_variable, settings, predictive_model_generator)
         self.category_parameter_weights = {}
-        self.model_type_weights = {}
 
     def update_population(self):
         parameter_weights = {}

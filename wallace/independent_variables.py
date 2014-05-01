@@ -1,6 +1,7 @@
 import random
 
 from wallace.weighted_selection import WeightedSelection
+from wallace.dataset import DatasetVariable
 
 class IndependentVariableSelection(object):
     def __init__(self, settings, dataset, dependent_variable):
@@ -13,7 +14,7 @@ class IndependentVariableSelection(object):
     def _initialize_selection_probabilities(self, independent_variables):
         selections = {}
         for variable in independent_variables:
-            selections[variable] = None
+            selections[variable.variable] = None
         return WeightedSelection(selections)
 
     def initialize_independent_variables(self, num_variables=None):
@@ -24,7 +25,15 @@ class IndependentVariableSelection(object):
         return random.sample(self.independent_variables, num_variables)
 
     def get_probability(self, variable):
-        return self.selection_probabilities.get_probability(variable)
+        selection = self._get_selection(variable)
+        return self.selection_probabilities.get_probability(selection)
 
     def increase_probability(self, variable):
-        self.selection_probabilities.increase_weight(variable)
+        selection = self._get_selection(variable)
+        self.selection_probabilities.increase_weight(selection)
+
+    def _get_selection(self, variable):
+        if isinstance(variable, DatasetVariable):
+            return variable.variable
+        else:
+            return variable

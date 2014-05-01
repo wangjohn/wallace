@@ -24,3 +24,21 @@ class IndependentVariableSelectionTest(TestCase):
         self.assertIn("column_1", headers)
         self.assertIn("column_2", headers)
 
+    def test_initializaing_small_dataset_without_header(self):
+        settings = AbstractSettings()
+        selection = IndependentVariableSelection(settings, self.nonheader_dataset, self.nonheadered_dependent_variable)
+
+        variables = selection.initialize_independent_variables(2)
+        headers = [var.variable for var in variables]
+        self.assertIn(1, headers)
+        self.assertIn(2, headers)
+
+    def test_getting_probability_of_variables(self):
+        settings = AbstractSettings()
+        selection = IndependentVariableSelection(settings, self.header_dataset, self.headered_dependent_variable)
+
+        self.assertAlmostEqual(0.5, selection.get_probability(DatasetVariable("column_1")))
+        self.assertAlmostEqual(0.5, selection.get_probability(DatasetVariable("column_2")))
+
+        self.assertAlmostEqual(0.5, selection.get_probability("column_1"))
+        self.assertAlmostEqual(0.5, selection.get_probability("column_2"))

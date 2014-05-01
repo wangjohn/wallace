@@ -54,13 +54,12 @@ class OptimizationAlgorithm(object):
     def step(self):
         self.current_step += 1
         self.update_population()
-        self.evaluate_population_fitness()
 
-    def evaluate_population_fitness(self):
-        for model in self.model_population:
-            evaluation = fitness_evaluation.CrossValidationFitnessEvaluation(self.settings, model, self.dataset)
-            fitness = evaluation.evaluate()
-            self.model_tracking.insert(fitness, model)
+    def evaluate_fitness(self, model):
+        evaluation = fitness_evaluation.CrossValidationFitnessEvaluation(self.settings, model, self.dataset)
+        fitness = evaluation.evaluate()
+        self.model_tracking.insert(fitness, model)
+        return fitness
 
 class ModelTracking(object):
     def __init__(self, settings):

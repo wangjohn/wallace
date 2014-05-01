@@ -42,3 +42,11 @@ class IndependentVariableSelectionTest(TestCase):
 
         self.assertAlmostEqual(0.5, selection.get_probability("column_1"))
         self.assertAlmostEqual(0.5, selection.get_probability("column_2"))
+
+    def test_increasing_probability_of_variables(self):
+        settings = AbstractSettings()
+        selection = IndependentVariableSelection(settings, self.header_dataset, self.headered_dependent_variable)
+        selection.increase_probability(DatasetVariable("column_1"))
+
+        self.assertLess(0.5, selection.get_probability(DatasetVariable("column_1")))
+        self.assertGreater(0.5, selection.get_probability(DatasetVariable("column_2")))

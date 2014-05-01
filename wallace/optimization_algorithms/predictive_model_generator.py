@@ -32,7 +32,6 @@ class PredictiveModelGenerator(object):
         self.weighted_selection.increase_weight(model_name, learning_parameter, taper)
 
     def choose_model_type(self):
-        weighted_selection = WeightedSelection(weights)
         model_name = self.weighted_selection.choose()
         return self.model_types[model_name]
 

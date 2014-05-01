@@ -11,7 +11,6 @@ class PredictiveModelGeneratorTests(TestCase):
         chosen_model = model_generator.choose_model_type()
         self.assertEqual(PredictiveModel, chosen_model["model_class"])
         self.assertEqual("fake_validity_check", chosen_model["parameter_validity_check"])
-        self.assertEqual(None, chosen_model["weight"])
 
     def test_default_validity_check(self):
         model_generator = PredictiveModelGenerator({}, "default_validity_check")
@@ -20,4 +19,3 @@ class PredictiveModelGeneratorTests(TestCase):
         chosen_model = model_generator.choose_model_type()
         self.assertEqual(PredictiveModel, chosen_model["model_class"])
         self.assertEqual("default_validity_check", chosen_model["parameter_validity_check"])
-        self.assertEqual(None, chosen_model["weight"])

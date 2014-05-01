@@ -7,7 +7,7 @@ class IndependentVariableSelection(object):
         self.settings = settings
         self.dataset = dataset
         self.dependent_variable = dependent_variable
-        self.independent_variables = self.dataset.get_independent_variables()
+        self.independent_variables = self.dataset.get_independent_variables(self.dependent_variable)
         self.selection_probabilities = self._initialize_selection_probabilities(self.independent_variables)
 
     def _initialize_selection_probabilities(self, independent_variables):

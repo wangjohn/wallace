@@ -99,4 +99,4 @@ class DatasetVariable(object):
             else:
                 raise ValueError("Variable is out of the range of the dataset.")
         else:
-            return self.dataset.column_index(self.variable)
+            return dataset.column_index(self.variable)

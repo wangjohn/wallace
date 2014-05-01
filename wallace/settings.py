@@ -4,7 +4,7 @@ class AbstractSettings(object):
             "model_tracking.models_to_track": 50,
             "differential_evolution.crossover_probability": 0.5,
             "differential_evolution.differential_weight": 0.8,
-            "differential_evolution.population_size": 20
+            "optimization_algorithm.population_size": 40
         }
 
     def __init__(self, settings=None):

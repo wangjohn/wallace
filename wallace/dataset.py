@@ -15,6 +15,18 @@ class Dataset(object):
         col = self.column_from_header(header)
         return self.get(row, col)
 
+    def get_independent_variables(self, dependent_variable):
+        dependent_column = dependent_variable.get_column_index(self)
+        independent_variables = []
+        for j in xrange(self.num_cols):
+            if j != dependent_column:
+                if self.headers == None:
+                    variable = j
+                else:
+                    variable = self.headers[j]
+                independent_variables.append(DatasetVariable(variable))
+        return independent_variables
+
     def column_index(self, header):
         self._check_headers()
         for i in xrange(len(self.headers)):

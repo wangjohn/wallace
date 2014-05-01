@@ -11,6 +11,12 @@ class WeightedSelection(object):
         self.weighted_selections[selection] = weight
         self.weighted_selections = self.normalize_weights(self.weighted_selections)
 
+    def get_probability(self, selection):
+        if selection not in self.weighted_selections:
+            raise ValueError("Selection '%s' is not known by the WeightedSelection." % selection)
+
+        return self.weighted_selections[selection]
+
     def increase_weight(self, selection, learning_parameter=0.05, taper=True):
         if selection not in self.weighted_selections:
             raise ValueError("Selection '%s' is not known by the WeightedSelection." % selection)

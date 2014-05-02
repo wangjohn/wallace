@@ -28,6 +28,12 @@ class IndependentVariableSelection(object):
         selection = self._get_selection(variable)
         return self.selection_probabilities.get_probability(selection)
 
+    def get_probabilities(self):
+        probabilities = {}
+        for independent_variable in self.independent_variables:
+            probabilities[independent_variable] = self.get_probability(independent_variable)
+        return probabilities
+
     def increase_probability(self, variable):
         selection = self._get_selection(variable)
         self.selection_probabilities.increase_weight(selection)

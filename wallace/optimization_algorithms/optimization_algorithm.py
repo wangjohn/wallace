@@ -61,6 +61,11 @@ class OptimizationAlgorithm(object):
         self.model_tracking.insert(fitness, model)
         return fitness
 
+class OptimizationAlgorithmModelWrapper(object):
+    def __init__(self, model, independent_variable_selection):
+        self.model = model
+        self.independent_variable_selection = independent_variable_selection
+
 class ModelTracking(object):
     def __init__(self, settings):
         self.models_to_track = self.settings.model_tracking_models_to_track()

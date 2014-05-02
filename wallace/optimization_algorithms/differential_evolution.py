@@ -3,6 +3,7 @@ import random
 from wallace.optimization_algorithms.optimization_algorithm import OptimizationAlgorithm
 from wallace.weighted_selection import WeightedSelection
 from wallace.parameters import ParameterSet
+from wallace.independent_variables import IndependentVariableSelection
 
 class DifferentialEvolution(OptimizationAlgorithm):
     def __init__(self, dataset, dependent_variable, settings, predictive_model_generator):
@@ -31,7 +32,8 @@ class DifferentialEvolution(OptimizationAlgorithm):
         self.model_population = updated_population
 
     def initialize_independent_variables(self):
-        raise NotImplementedError()
+        independent_variable_selection = IndependentVariableSelection(self.settings, self.dataset, self.dependent_variable)
+        return independent_variable_selection.initialize_independent_variables()
 
 class DESelection(object):
     def __init__(self, settings):
@@ -83,13 +85,15 @@ class DEParameterSelection(object):
         return ParameterSet(parameter_values, validity_check=self.validity_check)
 
 class DEIndependentVariableSelection(object):
-    def __init__(self, target_model, model_population, dataset):
+    def __init__(self, settings, target_model, model_population, dataset):
+        self.settings = settings
         self.target_model = target_model
         self.model_population = model_population
         self.dataset = dataset
 
     def generate_independent_variables(self):
-        # TODO: implement this
+        de_selection = DESelection(self.settings)
+        model1, model2, model3 = de_selection.generate_distinct(self.target_model, self.model_population, 3)
+        independent_variable_selection
         independent_variables = []
-        for variable in self.dataset.
         pass

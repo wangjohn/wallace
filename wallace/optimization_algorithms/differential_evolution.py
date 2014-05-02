@@ -16,8 +16,8 @@ class DifferentialEvolution(OptimizationAlgorithm):
             parameter_selection = DEParameterSelection(self.settings, target_model, self.model_population, self.full_validity_check)
             parameter_set = parameter_selection.generate_parameter_set()
 
-            independent_variable_selection = target_wrapper.independent_variable_selection #TODO: must update the variable selection.
-            independent_variables = independent_variable_selection.generate_independent_variables()
+            independent_variable_selection = target_wrapper.independent_variable_selection
+            independent_variables = self.select_independent_variables(independent_variable_selection)
 
             model_information = self.predictive_model_generator.choose_model_type()
             model_class = model_information["model_class"]
@@ -25,6 +25,7 @@ class DifferentialEvolution(OptimizationAlgorithm):
             updated_model = model_class(self.settings, parameter_set, self.dependent_variable, independent_variables)
 
             if self.evaluate_fitness(updated_model) <= self.evaluate_fitness(target_model):
+                self.update_variable_probabilities(independent_variable_selection, independent_variables)
                 updated_wrapper = OptimizationAlgorithmModelWrapper(updated_model, independent_variable_selection)
             else:
                 updated_wrapper = OptimizationAlgorithmModelWrapper(target_model, independent_variable_selection)
@@ -32,6 +33,14 @@ class DifferentialEvolution(OptimizationAlgorithm):
             updated_population.append(updated_wrapper)
 
         self.model_population = updated_population
+
+    def update_variable_probabilities(self, independent_variable_selection, independent_variables):
+        for variable in independent_variables:
+            independent_variable_selection.increase_probability(variable)
+
+    def select_independent_variables(self, independent_variable_selection):
+        # TODO: finish implementing selection of independent variables.
+        raise NotImplementedError()
 
 class DESelection(object):
     def __init__(self, settings):

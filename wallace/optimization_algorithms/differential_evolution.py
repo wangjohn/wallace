@@ -34,6 +34,7 @@ class DifferentialEvolution(OptimizationAlgorithm):
 
         self.model_population = updated_population
 
+    # TODO: probably factor this out into the independent variable selection class.
     def update_variable_probabilities(self, independent_variable_selection, independent_variables):
         for variable in independent_variables:
             independent_variable_selection.increase_probability(variable)

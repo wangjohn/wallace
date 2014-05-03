@@ -13,11 +13,12 @@ class DifferentialEvolution(OptimizationAlgorithm):
         updated_population = []
         for target_wrapper in self.model_population:
             target_model = target_wrapper.model
-            parameter_selection = DEParameterSelection(self.settings, target_model, self.model_population, self.full_validity_check)
+            parameter_selection = DEParameterSelection(self.settings, target_wrapper, self.model_population, self.full_validity_check)
             parameter_set = parameter_selection.generate_parameter_set()
 
             independent_variable_selection = target_wrapper.independent_variable_selection
-            independent_variables = self.select_independent_variables(independent_variable_selection)
+            # TODO: should be using DESelection features on 3 different models.
+            independent_variables = independent_variable_selection.select_independent_variables()
 
             model_information = self.predictive_model_generator.choose_model_type()
             model_class = model_information["model_class"]
@@ -25,7 +26,7 @@ class DifferentialEvolution(OptimizationAlgorithm):
             updated_model = model_class(self.settings, parameter_set, self.dependent_variable, independent_variables)
 
             if self.evaluate_fitness(updated_model) <= self.evaluate_fitness(target_model):
-                self.update_variable_probabilities(independent_variable_selection, independent_variables)
+                independent_variable_selection.increase_probabilities(independent_variables)
                 updated_wrapper = OptimizationAlgorithmModelWrapper(updated_model, independent_variable_selection)
             else:
                 updated_wrapper = OptimizationAlgorithmModelWrapper(target_model, independent_variable_selection)
@@ -34,14 +35,18 @@ class DifferentialEvolution(OptimizationAlgorithm):
 
         self.model_population = updated_population
 
-    # TODO: probably factor this out into the independent variable selection class.
-    def update_variable_probabilities(self, independent_variable_selection, independent_variables):
-        for variable in independent_variables:
-            independent_variable_selection.increase_probability(variable)
+class DEIndependentVariableSelection(object):
+    def __init__(self, settings, target_wrapper, model_population):
+        self.settings = settings
+        self.target_wrapper = target_wrapper
+        self.model_population = self.model_population
 
-    def select_independent_variables(self, independent_variable_selection):
-        # TODO: finish implementing selection of independent variables.
-        raise NotImplementedError()
+    def generate_independent_variables(self):
+        de_selection = DESelection(self.settings)
+        wrapper1, wrapper2, wrapper3 = de_selection.generate_distinct(self.target_wrapper, self.model_population, 3)
+        variable_selection1 = wrapper1.independent_variable_selection
+        variable_selection2 = wrapper2.independent_variable_selection
+        variable_selection3 = wrapper3.independent_variable_selection
 
 class DESelection(object):
     def __init__(self, settings):
@@ -49,7 +54,7 @@ class DESelection(object):
 
     def generate_distinct(self, target, population, num_distinct=3):
         population = list(population)
-        population.remove(target_model)
+        population.remove(target)
         return random.sample(population, num_models)
 
     def mutate(self, param1, param2, param3):
@@ -64,9 +69,9 @@ class DESelection(object):
         return self.settings.get("differential_evolution.differential_weight")
 
 class DEParameterSelection(object):
-    def __init__(self, settings, target_model, model_population, validity_check):
+    def __init__(self, settings, target_wrapper, model_population, validity_check):
         self.settings = settings
-        self.target_model = target_model
+        self.target_wrapper = target_wrapper
         self.model_population = self.model_population
         self.validity_check = validity_check
 
@@ -78,14 +83,14 @@ class DEParameterSelection(object):
                 updated_value = self.validity_check.get_valid_value(parameter_name)
             else:
                 de_selection = DESelection(self.settings)
-                model1, model2, model3 = de_selection.generate_distinct(self.target_model, self.model_population, 3)
-                param1 = model1.parameter_set.get(parameter_name)
-                param2 = model2.parameter_set.get(parameter_name)
-                param3 = model3.parameter_set.get(parameter_name)
+                model1, model2, model3 = de_selection.generate_distinct(self.target_wrapper, self.model_population, 3)
+                param1 = model1.model.parameter_set.get(parameter_name)
+                param2 = model2.model.parameter_set.get(parameter_name)
+                param3 = model3.model.parameter_set.get(parameter_name)
                 updated_value = de_selection.mutate(param1, param2, param3)
 
                 if updated_value == None:
-                    updated_value = self.target_model.parameter_set.get(parameter_name)
+                    updated_value = self.target_wrapper.model.parameter_set.get(parameter_name)
                 elif not self.validity_check.check_validity(parameter_name, updated_value).is_valid:
                     updated_value = self.validity_check.get_valid_value(parameter_name)
 

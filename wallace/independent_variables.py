@@ -34,9 +34,16 @@ class IndependentVariableSelection(object):
             probabilities[independent_variable] = self.get_probability(independent_variable)
         return probabilities
 
+    def select_independent_variables(self):
+        raise NotImplementedError()
+
     def increase_probability(self, variable):
         selection = self._get_selection(variable)
         self.selection_probabilities.increase_weight(selection)
+
+    def increase_probabilities(self, variables):
+        for variable in variables:
+            self.increase_probability(variable)
 
     def _get_selection(self, variable):
         if isinstance(variable, DatasetVariable):

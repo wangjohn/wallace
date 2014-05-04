@@ -20,6 +20,9 @@ class WeightedSelection(object):
     def contains(self, selection):
         return selection in self.weighted_selections
 
+    def selections(self):
+        return self.weighted_selections.keys()
+
     def increase_weight(self, selection, learning_parameter=0.05, taper=True):
         if selection not in self.weighted_selections:
             raise ValueError("Selection '%s' is not known by the WeightedSelection." % selection)
@@ -80,3 +83,20 @@ class WeightedSelection(object):
             if rand <= weight + current_sum:
                 return selection
             current_sum += weight
+
+    @classmethod
+    def sample(klass, weighted_selection, number):
+        if number > len(weighted_selection.selections()):
+            raise ValueError("Sample is larger than population.")
+
+        results = []
+        while len(results) < number:
+            result = weighted_selection.choose()
+            results.append(result)
+
+            new_weights = {}
+            for selection in weighted_selection.selections():
+                new_weights[selection] = weighted_selection.get_probability(selection)
+            weighted_selection = WeightedSelection(new_weights)
+
+        return results

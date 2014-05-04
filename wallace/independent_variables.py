@@ -30,6 +30,10 @@ class IndependentVariableSelection(object):
 
         return random.sample(self.potential_independent_variables, num_variables)
 
+    def select_independent_variables(self):
+        num_variables = self.variable_count_probabilities.choose()
+        return WeightedSelection.sample(self.selection_probabilities, num_variables)
+
     def get_probability(self, variable):
         selection = self._get_selection(variable)
         return self.selection_probabilities.get_probability(selection)

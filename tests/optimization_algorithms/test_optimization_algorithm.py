@@ -1,11 +1,12 @@
 from unittest import TestCase
 
-from wallace.optimization_algorithms.optimization_algorithm import OptimizationAlgorithm
+from wallace.optimization_algorithms.optimization_algorithm import OptimizationAlgorithm, OptimizationAlgorithmModelWrapper
 from wallace.optimization_algorithms.predictive_model_generator import PredictiveModelGenerator
 from wallace.dataset import Dataset, DatasetVariable
 from wallace.predictive_models.predictive_model import PredictiveModel
 from wallace.settings import AbstractSettings
 from wallace.parameters import ParametersGeneralValidityCheck
+from wallace.independent_variables import IndependentVariableSelection
 
 class OptimizationAlgorithmTest(TestCase):
     def setUp(self):
@@ -15,7 +16,7 @@ class OptimizationAlgorithmTest(TestCase):
         settings = AbstractSettings({
             "differential_evolution.crossover_probability": 1.0,
             "differential_evolution.differential_weight": 1.0,
-            "optimization_algorithm.population_size": 20,
+            "optimization_algorithm.population_size": 5,
             "independent_variable_selection.initial_independent_variables_percentage": 1.0
             })
         validity_check = ParametersGeneralValidityCheck()
@@ -30,6 +31,22 @@ class OptimizationAlgorithmTest(TestCase):
 
         self.optimization_algorithm = OptimizationAlgorithm(dataset, dependent_variable, settings, predictive_model_generator)
 
+    def assert_in_range(self, value, lower_bound, upper_bound):
+        self.assertGreaterEqual(value, lower_bound)
+        self.assertLessEqual(value, upper_bound)
+
     def test_initialization_of_optimization_algorithm(self):
         self.optimization_algorithm.initialize_population()
-        self.assertEqual(20, len(self.model_population))
+        self.assertEqual(5, len(self.optimization_algorithm.model_population))
+
+        for model_wrapper in self.optimization_algorithm.model_population:
+            self.assertIsInstance(model_wrapper, OptimizationAlgorithmModelWrapper)
+            self.assertIsInstance(model_wrapper.model, PredictiveModel)
+            self.assertIsInstance(model_wrapper.independent_variable_selection, IndependentVariableSelection)
+
+            self.assertEqual(3, len(model_wrapper.model.independent_variables))
+            self.assert_in_range(model_wrapper.model.parameter_set.get("range_param_0"), 0.0, 1.0)
+            self.assert_in_range(model_wrapper.model.parameter_set.get("range_param_1"), 0.0, 1.0)
+            self.assert_in_range(model_wrapper.model.parameter_set.get("range_param_2"), 0.0, 1.0)
+            self.assertIn(model_wrapper.model.parameter_set.get("category_param_0"), ["0", "1", "2", "3"])
+            self.assertIn(model_wrapper.model.parameter_set.get("category_param_1"), ["0", "1", "2", "3"])

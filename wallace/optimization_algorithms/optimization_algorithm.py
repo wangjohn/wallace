@@ -1,4 +1,5 @@
 from wallace import fitness_evaluation
+from wallace.independent_variables import IndependentVariableSelection
 
 class OptimizationAlgorithm(object):
     def __init__(self, dataset, dependent_variable, settings, predictive_model_generator):
@@ -67,7 +68,8 @@ class OptimizationAlgorithmModelWrapper(object):
 
 class ModelTracking(object):
     def __init__(self, settings):
-        self.models_to_track = self.settings.model_tracking_models_to_track()
+        self.settings = settings
+        self.models_to_track = self.settings.get("model_tracking.models_to_track")
         self.best_models = []
 
     def insert(self, fitness, model):

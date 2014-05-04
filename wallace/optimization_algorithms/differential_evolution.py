@@ -3,7 +3,6 @@ import random
 from wallace.optimization_algorithms.optimization_algorithm import OptimizationAlgorithm, OptimizationAlgorithmModelWrapper
 from wallace.weighted_selection import WeightedSelection
 from wallace.parameters import ParameterSet
-from wallace.independent_variables import IndependentVariableSelection
 
 class DifferentialEvolution(OptimizationAlgorithm):
     def __init__(self, dataset, dependent_variable, settings, predictive_model_generator):

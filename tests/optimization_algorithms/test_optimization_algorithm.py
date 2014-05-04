@@ -8,6 +8,11 @@ from wallace.settings import AbstractSettings
 from wallace.parameters import ParametersGeneralValidityCheck
 from wallace.independent_variables import IndependentVariableSelection
 
+class FakePredictiveModel(PredictiveModel):
+    @classmethod
+    def required_parameters(klass):
+        return ["range_param_0", "range_param_1", "range_param_2", "category_param_0", "category_param_1"]
+
 class OptimizationAlgorithmTest(TestCase):
     def setUp(self):
         data_matrix = [[1,2,3,4], [2,3,4,5], [3,4,5,6], [0,1,3,4]]
@@ -27,7 +32,7 @@ class OptimizationAlgorithmTest(TestCase):
         validity_check.set_category_parameter("category_param_1", ["0","1","2","3"], [0.1, 0.1, 0.3, 0.5])
 
         predictive_model_generator = PredictiveModelGenerator(settings, validity_check)
-        predictive_model_generator.add_model_type(PredictiveModel)
+        predictive_model_generator.add_model_type(FakePredictiveModel)
 
         self.optimization_algorithm = OptimizationAlgorithm(dataset, dependent_variable, settings, predictive_model_generator)
 
@@ -41,7 +46,7 @@ class OptimizationAlgorithmTest(TestCase):
 
         for model_wrapper in self.optimization_algorithm.model_population:
             self.assertIsInstance(model_wrapper, OptimizationAlgorithmModelWrapper)
-            self.assertIsInstance(model_wrapper.model, PredictiveModel)
+            self.assertIsInstance(model_wrapper.model, FakePredictiveModel)
             self.assertIsInstance(model_wrapper.independent_variable_selection, IndependentVariableSelection)
 
             self.assertEqual(3, len(model_wrapper.model.independent_variables))

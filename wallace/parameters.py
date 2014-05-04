@@ -192,7 +192,7 @@ class RangeParameter(BasicParameter):
         self.upper_bound = upper_bound
 
     def get_valid_value(self, data=None):
-        return random.uniform(lower_bound, upper_bound)
+        return random.uniform(self.lower_bound, self.upper_bound)
 
     def check_validity(self, value):
         if self.lower_bound <= value and value <= self.upper_bound:
@@ -210,7 +210,7 @@ class IntegerRangeParameter(BasicParameter):
         self._check_initialization()
 
     def get_valid_value(self, data=None):
-        return random.randrange(lower_bound, upper_bound)
+        return random.randrange(self.lower_bound, self.upper_bound)
 
     def check_validity(self, value):
         if not isinstance(value, int):

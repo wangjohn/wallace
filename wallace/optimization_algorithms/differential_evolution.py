@@ -63,10 +63,10 @@ class DESelection(object):
     def generate_distinct(self, target, population, num_distinct=3):
         population = list(population)
         population.remove(target)
-        return random.sample(population, num_models)
+        return random.sample(population, num_distinct)
 
     def mutate(self, param1, param2, param3):
-        rand = random.rand()
+        rand = random.random()
         if rand < self.crossover_probability():
             return param1 + self.differential_weight()*(param2 - param3)
 

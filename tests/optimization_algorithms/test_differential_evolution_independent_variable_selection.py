@@ -31,5 +31,9 @@ class DEIndependentVariableSelectionTest(TestCase):
         self.de_variable_selection = DEIndependentVariableSelection(self.settings, self.target_wrapper, self.model_population, self.potential_independent_variables)
 
     def test_generate_independent_variables(self):
-        self.de_variable_selection.generate_independent_variables()
+        variables = self.de_variable_selection.generate_independent_variables()
+
+        self.assertEqual(3, len(variables))
+        for var in variables:
+            self.assertIsInstance(var, DatasetVariable)
 

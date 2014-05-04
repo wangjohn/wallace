@@ -39,27 +39,6 @@ class DifferentialEvolution(OptimizationAlgorithm):
 
         self.model_population = updated_population
 
-class DEIndependentVariableSelection(object):
-    def __init__(self, settings, target_wrapper, model_population, potential_independent_variables):
-        self.settings = settings
-        self.target_wrapper = target_wrapper
-        self.model_population = self.model_population
-        self.potential_independent_variables = potential_independent_variables
-
-    def generate_independent_variables(self):
-        de_selection = DESelection(self.settings)
-        wrappers = de_selection.generate_distinct(self.target_wrapper, self.model_population, 3)
-        independent_variable_selections = [wrapper.independent_variable_selection for wrapper in wrappers]
-        probability_hashes = [selection.get_probabilities() for selection in independent_variable_selections]
-
-        independent_variables = []
-        for independent_variable in self.potential_independent_variables:
-            probabilities = [probability_container[independent_variable] for probability_hash in probability_hashes]
-            variable_probability = de_selection.mutate(*probabilities)
-            if random.random() < variable_probability:
-                independent_variables.append(independent_variable)
-        return independent_variables
-
 class DESelection(object):
     def __init__(self, settings):
         self.settings = settings
@@ -106,3 +85,34 @@ class DEParameterSelection(object):
 
             parameter_values[parameter_name] = updated_value
         return ParameterSet(parameter_values, validity_check=self.validity_check)
+
+class DEIndependentVariableSelection(object):
+    def __init__(self, settings, target_wrapper, model_population, potential_independent_variables):
+        self.settings = settings
+        self.target_wrapper = target_wrapper
+        self.model_population = model_population
+        self.potential_independent_variables = potential_independent_variables
+        self.de_selection = DESelection(self.settings)
+
+    def generate_independent_variables(self):
+        wrappers = self.de_selection.generate_distinct(self.target_wrapper, self.model_population, 3)
+        independent_variable_selections = [wrapper.independent_variable_selection for wrapper in wrappers]
+
+        independent_variables = []
+        for independent_variable in self.potential_independent_variables:
+            variable_probability = self.get_variable_probability(independent_variable_selections, independent_variable)
+            print variable_probability
+            if random.random() < variable_probability:
+                independent_variables.append(independent_variable)
+        return independent_variables
+
+    def get_variable_probability(self, independent_variable_selections, independent_variable):
+        probabilities = [selection.get_probability(independent_variable) for selection in independent_variable_selections]
+        variable_probability = self.de_selection.mutate(*probabilities)
+        if variable_probability == None:
+            return self.original_probability(independent_variable)
+        else:
+            return variable_probability
+
+    def original_probability(self, independent_variable):
+        return self.target_wrapper.independent_variable_selection.get_probability(independent_variable)

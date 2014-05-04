@@ -86,6 +86,8 @@ class WeightedSelection(object):
 
     @classmethod
     def sample(klass, weighted_selection, number):
+        if isinstance(weighted_selection, dict):
+            weighted_selection = WeightedSelection(weighted_selection)
         if number > len(weighted_selection.selections()):
             raise ValueError("Sample is larger than population.")
 

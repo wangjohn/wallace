@@ -33,6 +33,7 @@ class DifferentialEvolution(OptimizationAlgorithm):
                 independent_variable_selection.increase_probabilities(independent_variables)
                 updated_wrapper = OptimizationAlgorithmModelWrapper(updated_model, independent_variable_selection)
             else:
+                independent_variable_selection.increase_probabilities(target_model.independent_variables)
                 updated_wrapper = OptimizationAlgorithmModelWrapper(target_model, independent_variable_selection)
 
             updated_population.append(updated_wrapper)
@@ -98,12 +99,12 @@ class DEIndependentVariableSelection(object):
         wrappers = self.de_selection.generate_distinct(self.target_wrapper, self.model_population, 3)
         independent_variable_selections = [wrapper.independent_variable_selection for wrapper in wrappers]
 
-        independent_variables = []
+        probabilities = {}
         for independent_variable in self.potential_independent_variables:
             variable_probability = self.get_variable_probability(independent_variable_selections, independent_variable)
-            if random.random() < variable_probability:
-                independent_variables.append(independent_variable)
-        return independent_variables
+            probabilities[independent_variable] = variable_probability
+
+        return self.target_wrapper.independent_variable_selection.select_independent_variables(probabilities)
 
     def get_variable_probability(self, independent_variable_selections, independent_variable):
         probabilities = [selection.get_probability(independent_variable) for selection in independent_variable_selections]

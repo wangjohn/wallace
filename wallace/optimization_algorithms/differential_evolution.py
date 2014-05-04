@@ -50,7 +50,7 @@ class DEIndependentVariableSelection(object):
 
         independent_variables = []
         for independent_variable in self.dataset.get_independent_variables():
-            probabilities = [probability_container[indepdenent_variable] for probability_hash in probability_hashes]
+            probabilities = [probability_container[independent_variable] for probability_hash in probability_hashes]
             variable_probability = de_selection.mutate(*probabilities)
             if random.random() < variable_probability:
                 independent_variables.append(independent_variable)

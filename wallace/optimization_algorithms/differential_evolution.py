@@ -101,7 +101,6 @@ class DEIndependentVariableSelection(object):
         independent_variables = []
         for independent_variable in self.potential_independent_variables:
             variable_probability = self.get_variable_probability(independent_variable_selections, independent_variable)
-            print variable_probability
             if random.random() < variable_probability:
                 independent_variables.append(independent_variable)
         return independent_variables

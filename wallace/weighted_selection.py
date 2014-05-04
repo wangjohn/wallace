@@ -17,6 +17,9 @@ class WeightedSelection(object):
 
         return self.weighted_selections[selection]
 
+    def contains(self, selection):
+        return selection in self.weighted_selections
+
     def increase_weight(self, selection, learning_parameter=0.05, taper=True):
         if selection not in self.weighted_selections:
             raise ValueError("Selection '%s' is not known by the WeightedSelection." % selection)

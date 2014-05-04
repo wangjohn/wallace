@@ -33,7 +33,7 @@ class DEIndependentVariableSelectionTest(TestCase):
     def test_generate_independent_variables(self):
         variables = self.de_variable_selection.generate_independent_variables()
 
-        self.assertEqual(3, len(variables))
+        self.assertGreater(len(variables), 0)
         for var in variables:
             self.assertIsInstance(var, DatasetVariable)
 

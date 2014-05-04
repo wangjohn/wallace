@@ -29,9 +29,13 @@ class DEParameterSelectionTest(TestCase):
 
         model_population = []
         for i in xrange(4):
+            if i == 0:
+                param1 = 0.2
+            else:
+                param1 = 0.3
             parameter_values = {
-                    "range_param_0": 0.5,
-                    "range_param_1": 0.5,
+                    "range_param_0": 0.25 + 0.1*i,
+                    "range_param_1": param1,
                     "range_param_2": 0.5,
                     "category_param_0": "0",
                     "category_param_1": "0"
@@ -47,12 +51,40 @@ class DEParameterSelectionTest(TestCase):
         self.target_wrapper = model_population[0]
         self.de_parameter_selection = DEParameterSelection(settings, self.target_wrapper, model_population, validity_check)
 
-    def test_generation_of_parameter_set(self):
+    def test_generation_of_basic_parameter_set(self):
         parameter_set = self.de_parameter_selection.generate_parameter_set()
 
-        self.assertEqual(0.5, parameter_set.get("range_param_0"))
-        self.assertEqual(0.5, parameter_set.get("range_param_1"))
+        self.assertIn(round(parameter_set.get("range_param_0"), 2), [.25, .45, .65])
+        self.assertAlmostEqual(0.3, parameter_set.get("range_param_1"))
+        self.assertAlmostEqual(0.5, parameter_set.get("range_param_2"))
+        self.assertIn(parameter_set.get("category_param_0"), ["0", "1", "2", "3"])
+        self.assertIn(parameter_set.get("category_param_1"), ["0", "1", "2", "3"])
+
+    def test_generation_of_parameter_set_with_different_mutation_params(self):
+        settings = AbstractSettings({
+            "differential_evolution.crossover_probability": 1.0,
+            "differential_evolution.differential_weight": 0.75,
+            })
+        de_parameter_selection = DEParameterSelection(settings, self.target_wrapper, self.model_population, self.validity_check)
+        parameter_set = de_parameter_selection.generate_parameter_set()
+
+        self.assertIn(round(parameter_set.get("range_param_0"), 3), [0.275, 0.300, 0.425, 0.475, 0.600, 0.625])
+        self.assertAlmostEqual(0.3, parameter_set.get("range_param_1"))
+        self.assertAlmostEqual(0.5, parameter_set.get("range_param_2"))
+        self.assertIn(parameter_set.get("category_param_0"), ["0", "1", "2", "3"])
+        self.assertIn(parameter_set.get("category_param_1"), ["0", "1", "2", "3"])
+
+    def test_generation_of_parameter_set_without_crossover(self):
+        settings = AbstractSettings({
+            "differential_evolution.crossover_probability": 0.0,
+            "differential_evolution.differential_weight": 0.75,
+            })
+        de_parameter_selection = DEParameterSelection(settings, self.target_wrapper, self.model_population, self.validity_check)
+        parameter_set = de_parameter_selection.generate_parameter_set()
+
+        self.assertEqual(0.25, parameter_set.get("range_param_0"))
+        self.assertEqual(0.2, parameter_set.get("range_param_1"))
         self.assertEqual(0.5, parameter_set.get("range_param_2"))
-        self.assertEqual(0.5, parameter_set.get("category_param_0"))
-        self.assertEqual(0.5, parameter_set.get("category_param_1"))
+        self.assertIn(parameter_set.get("category_param_0"), ["0", "1", "2", "3"])
+        self.assertIn(parameter_set.get("category_param_1"), ["0", "1", "2", "3"])
 

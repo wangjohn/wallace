@@ -80,7 +80,7 @@ class DEParameterSelection(object):
     def __init__(self, settings, target_wrapper, model_population, validity_check):
         self.settings = settings
         self.target_wrapper = target_wrapper
-        self.model_population = self.model_population
+        self.model_population = model_population
         self.validity_check = validity_check
 
     def generate_parameter_set(self):

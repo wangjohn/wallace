@@ -157,7 +157,7 @@ class ParametersGeneralValidityCheck(ParametersValidityCheck):
 
     def get_parameter_type(self, parameter_name):
         self._check_parameter_existence(parameter_name)
-        return self.parameters[parameter_name].__name__
+        return self.parameters[parameter_name].__class__.__name__
 
     def check_validity(self, parameter_name, value):
         self._check_parameter_existence(parameter_name)

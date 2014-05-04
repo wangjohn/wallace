@@ -17,7 +17,7 @@ class DifferentialEvolution(OptimizationAlgorithm):
             parameter_set = parameter_selection.generate_parameter_set()
 
             independent_variable_selection = target_wrapper.independent_variable_selection
-            de_variable_selection = DEIndependentVariableSelection(self.settings, target_wrapper, self.model_population, self.dataset)
+            de_variable_selection = DEIndependentVariableSelection(self.settings, target_wrapper, self.model_population, self.dataset.get_independent_variables(self.dependent_variable))
             independent_variables = de_variable_selection.generate_independent_variables()
 
             model_information = self.predictive_model_generator.choose_model_type()
@@ -36,11 +36,11 @@ class DifferentialEvolution(OptimizationAlgorithm):
         self.model_population = updated_population
 
 class DEIndependentVariableSelection(object):
-    def __init__(self, settings, target_wrapper, model_population, dataset):
+    def __init__(self, settings, target_wrapper, model_population, potential_independent_variables):
         self.settings = settings
         self.target_wrapper = target_wrapper
         self.model_population = self.model_population
-        self.dataset = dataset
+        self.potential_independent_variables = potential_independent_variables
 
     def generate_independent_variables(self):
         de_selection = DESelection(self.settings)
@@ -49,7 +49,7 @@ class DEIndependentVariableSelection(object):
         probability_hashes = [selection.get_probabilities() for selection in independent_variable_selections]
 
         independent_variables = []
-        for independent_variable in self.dataset.get_independent_variables():
+        for independent_variable in self.potential_independent_variables:
             probabilities = [probability_container[independent_variable] for probability_hash in probability_hashes]
             variable_probability = de_selection.mutate(*probabilities)
             if random.random() < variable_probability:

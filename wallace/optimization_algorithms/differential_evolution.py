@@ -7,6 +7,7 @@ from wallace.parameters import ParameterSet
 class DifferentialEvolution(OptimizationAlgorithm):
     def __init__(self, dataset, dependent_variable, settings, predictive_model_generator):
         OptimizationAlgorithm.__init__(self, dataset, dependent_variable, settings, predictive_model_generator)
+        self.potential_independent_variables = self.dataset.get_independent_variables(self.dependent_variable)
 
     def update_population(self):
         updated_population = []
@@ -16,7 +17,11 @@ class DifferentialEvolution(OptimizationAlgorithm):
             parameter_set = parameter_selection.generate_parameter_set()
 
             independent_variable_selection = target_wrapper.independent_variable_selection
-            de_variable_selection = DEIndependentVariableSelection(self.settings, target_wrapper, self.model_population, self.dataset.get_independent_variables(self.dependent_variable))
+            de_variable_selection = DEIndependentVariableSelection(
+                    self.settings,
+                    target_wrapper,
+                    self.model_population,
+                    self.potential_independent_variables)
             independent_variables = de_variable_selection.generate_independent_variables()
 
             model_information = self.predictive_model_generator.choose_model_type()

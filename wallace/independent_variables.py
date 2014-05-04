@@ -35,7 +35,14 @@ class IndependentVariableSelection(object):
         if probabilities == None:
             probabilities = self.selection_probabilities
 
-        return WeightedSelection.sample(probabilities, num_variables)
+        variables = WeightedSelection.sample(probabilities, num_variables)
+        result = []
+        for var in variables:
+            if isinstance(var, DatasetVariable):
+                result.append(var)
+            else:
+                result.append(DatasetVariable(var))
+        return result
 
     def get_probability(self, variable):
         selection = self._get_selection(variable)

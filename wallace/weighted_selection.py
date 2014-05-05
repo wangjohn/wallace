@@ -31,7 +31,9 @@ class WeightedSelection(object):
         self.weighted_selections[selection] = new_selection_weight
         self.weighted_selections = self.normalize_weights(self.weighted_selections)
 
-    def normalize_weights(self, weighted_selections):
+    def normalize_weights(self, weighted_selections=None):
+        if weighted_selections == None:
+            weighted_selections = self.weighted_selections
         non_weighted = 0
         total_weight = 0
         for weight in weighted_selections.itervalues():

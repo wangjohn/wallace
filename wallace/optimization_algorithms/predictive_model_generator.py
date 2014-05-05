@@ -17,7 +17,10 @@ class PredictiveModelGenerator(object):
         model_name = model_klass.__name__
         if model_name not in self.model_types:
             if parameter_validity_check == None:
-                parameter_validity_check = self.default_validity_check
+                if self.default_validity_check == None:
+                    parameter_validity_check = model_klass.validity_check()
+                else:
+                    parameter_validity_check = self.default_validity_check
             self.model_types[model_name] = {
                     "model_class": model_klass,
                     "parameter_validity_check": parameter_validity_check
@@ -74,7 +77,7 @@ class PredictiveModelGenerator(object):
         validity_check = model_information["parameter_validity_check"]
 
         parameter_values = {}
-        for parameter_name in model_information["model_class"].required_parameters():
+        for parameter_name in model_information["model_class"].validity_check().list_parameter_names():
             value = validity_check.get_valid_value(parameter_name)
             parameter_values[parameter_name] = value
 

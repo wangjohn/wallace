@@ -12,10 +12,6 @@ class RidgeRegression(PredictiveModel):
         return TrainedSklearnModel(self, trained_regression)
 
     @classmethod
-    def required_parameters(klass):
-        return ["ridge_regression_alpha"]
-
-    @classmethod
     def validity_check(klass):
         validity_check = ParametersGeneralValidityCheck()
         validity_check.set_range_parameter("ridge_regression_alpha", 0.0, 1.0)

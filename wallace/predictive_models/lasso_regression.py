@@ -1,6 +1,6 @@
 from sklearn import linear_model
 from wallace.predictive_models.predictive_model import PredictiveModel, TrainedSklearnModel
-from wallace.parameters import ParametersGeneralValidityCheck()
+from wallace.parameters import ParametersGeneralValidityCheck
 
 class LassoRegression(PredictiveModel):
     def train(self, dataset):
@@ -10,10 +10,6 @@ class LassoRegression(PredictiveModel):
         trained_regression = model.fit(independent_data, dependent_data)
 
         return TrainedSklearnModel(self, trained_regression)
-
-    @classmethod
-    def required_parameters(klass):
-        return ["lasso_regression_alpha"]
 
     @classmethod
     def validity_check(klass):

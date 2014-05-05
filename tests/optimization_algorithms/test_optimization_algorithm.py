@@ -10,8 +10,14 @@ from wallace.independent_variables import IndependentVariableSelection
 
 class FakePredictiveModel(PredictiveModel):
     @classmethod
-    def required_parameters(klass):
-        return ["range_param_0", "range_param_1", "range_param_2", "category_param_0", "category_param_1"]
+    def validity_check(klass):
+        validity_check = ParametersGeneralValidityCheck()
+        validity_check.set_range_parameter("range_param_0", 0.0, 1.0)
+        validity_check.set_range_parameter("range_param_1", 0.0, 1.0)
+        validity_check.set_range_parameter("range_param_2", 0.0, 1.0)
+        validity_check.set_category_parameter("category_param_0", ["0","1","2","3"])
+        validity_check.set_category_parameter("category_param_1", ["0","1","2","3"], [0.1, 0.1, 0.3, 0.5])
+        return validity_check
 
 class OptimizationAlgorithmTest(TestCase):
     def setUp(self):
@@ -24,14 +30,8 @@ class OptimizationAlgorithmTest(TestCase):
             "optimization_algorithm.population_size": 5,
             "independent_variable_selection.initial_independent_variables_percentage": 1.0
             })
-        validity_check = ParametersGeneralValidityCheck()
-        validity_check.set_range_parameter("range_param_0", 0.0, 1.0)
-        validity_check.set_range_parameter("range_param_1", 0.0, 1.0)
-        validity_check.set_range_parameter("range_param_2", 0.0, 1.0)
-        validity_check.set_category_parameter("category_param_0", ["0","1","2","3"])
-        validity_check.set_category_parameter("category_param_1", ["0","1","2","3"], [0.1, 0.1, 0.3, 0.5])
 
-        predictive_model_generator = PredictiveModelGenerator(settings, validity_check)
+        predictive_model_generator = PredictiveModelGenerator(settings)
         predictive_model_generator.add_model_type(FakePredictiveModel)
 
         self.optimization_algorithm = OptimizationAlgorithm(dataset, dependent_variable, settings, predictive_model_generator)

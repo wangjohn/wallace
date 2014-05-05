@@ -3,10 +3,16 @@ from unittest import TestCase
 from wallace.parameters import ParameterSet
 from wallace.predictive_models.predictive_model import PredictiveModel
 from wallace.dataset import DatasetVariable
+from wallace.parameters import ParametersGeneralValidityCheck
 
 class RequiredParametersPredictiveModel(PredictiveModel):
-    def required_parameters(self):
-        return ["param1", "param2", "param3"]
+    @classmethod
+    def validity_check(self):
+        validity_check = ParametersGeneralValidityCheck()
+        validity_check.set_range_parameter("param1", 0.0, 1.0)
+        validity_check.set_range_parameter("param2", 0.0, 1.0)
+        validity_check.set_range_parameter("param3", 0.0, 1.0)
+        return validity_check
 
 class PredictiveModelTest(TestCase):
     def test_required_parameters(self):

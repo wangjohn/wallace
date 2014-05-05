@@ -46,7 +46,7 @@ class WallaceInitialization(object):
         differential_evolution.run()
 
     @classmethod
-    def initialize(settings, dependent_variable, dataset_filename):
+    def initialize(klass, settings, dependent_variable, dataset_filename):
         if not isinstance(dependent_variable, DatasetVariable):
             dependent_variable = DatasetVariable(dependent_variable)
         dataset = Dataset.read_filename(dataset_filename)

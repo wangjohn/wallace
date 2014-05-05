@@ -1,6 +1,6 @@
 from settings import AbstractSettings
-
 from weighted_selection import WeightedSelection
+from dataset import Dataset, DatasetVariable
 
 from wallace.predictive_models.lasso_regression import LassoRegression
 from wallace.predictive_models.ols_linear_regression import OLSLinearRegression
@@ -17,7 +17,10 @@ class WallaceInitialization(object):
         }
 
     def __init__(self, settings, models=None):
-        self.settings = AbstractSettings(settings)
+        if isinstance(settings, AbstractSettings):
+            self.settings = settings
+        else:
+            self.settings = AbstractSettings(settings)
         self.models = models
 
     def create_predictive_model_generator(self, models=None):
@@ -43,5 +46,10 @@ class WallaceInitialization(object):
         differential_evolution.run()
 
     @classmethod
-    def initialize(settings_dict, dependent_variable, dataset_filename):
-        raise NotImplementedError()
+    def initialize(settings, dependent_variable, dataset_filename):
+        if not isinstance(dependent_variable, DatasetVariable):
+            dependent_variable = DatasetVariable(dependent_variable)
+        dataset = Dataset.read_filename(dataset_filename)
+
+        initialization = WallaceInitialization(settings)
+        initialization.run_differential_evolution(dataset, dependent_variable)

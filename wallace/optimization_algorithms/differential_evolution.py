@@ -29,11 +29,16 @@ class DifferentialEvolution(OptimizationAlgorithm):
 
             updated_model = model_class(self.settings, parameter_set, self.dependent_variable, independent_variables)
 
+            # Evaluate fitness of the updated model and increase weights/probabilities
+            # of selecting independent variables and also parameters based on whether
+            # the updated model ended up being better than the original.
             if self.evaluate_fitness(updated_model) <= self.evaluate_fitness(target_model):
                 independent_variable_selection.increase_probabilities(independent_variables)
+                self.predictive_model_generator.increase_weight(updated_model)
                 updated_wrapper = OptimizationAlgorithmModelWrapper(updated_model, independent_variable_selection)
             else:
                 independent_variable_selection.increase_probabilities(target_model.independent_variables)
+                self.predictive_model_generator.increase_weight(target_model)
                 updated_wrapper = OptimizationAlgorithmModelWrapper(target_model, independent_variable_selection)
 
             updated_population.append(updated_wrapper)

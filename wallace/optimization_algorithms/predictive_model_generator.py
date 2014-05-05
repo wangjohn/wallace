@@ -25,7 +25,9 @@ class PredictiveModelGenerator(object):
             self.weighted_selection.add_selection(model_name, weight)
 
     def increase_weight(self, model_klass, learning_parameter=0.05, taper=True):
-        if issubclass(model_name, PredictiveModel):
+        if isinstance(model_klass, PredictiveModel):
+            model_name = model_klass.__class__.__name__
+        elif issubclass(model_klass, PredictiveModel):
             model_name = model_klass.__name__
         else:
             model_name = model_klass

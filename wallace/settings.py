@@ -1,6 +1,9 @@
+from wallace.fitness_evaluation_methods.fitness_evaluation_method import MeanSquaredError
+
 class AbstractSettings(object):
     DEFAULTS = {
             "fitness_evaluation.crossfold_partitions": 10,
+            "fitness_evaluation.evaluation_method": MeanSquaredError,
             "model_tracking.models_to_track": 50,
             "differential_evolution.crossover_probability": 0.5,
             "differential_evolution.differential_weight": 0.8,

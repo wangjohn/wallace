@@ -63,9 +63,12 @@ class OptimizationAlgorithm(object):
         self.current_step += 1
         self.update_population()
 
-    def evaluate_fitness(self, model):
+    def evaluate_fitness(self, model, evaluation_method=None):
+        if evaluation_method == None:
+            evaluation_method = self.settings.get("fitness_evaluation.evaluation_method")
+
         evaluation = fitness_evaluation.CrossValidationFitnessEvaluation(self.settings, model, self.dataset)
-        fitness = evaluation.evaluate()
+        fitness = evaluation.evaluate(evaluation_method)
         self.model_tracking.insert(fitness, model)
         return fitness
 

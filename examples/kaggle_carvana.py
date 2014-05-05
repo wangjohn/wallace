@@ -1,3 +1,4 @@
+import wallace
 from wallace.initialization import WallaceInitialization
 
 settings = {

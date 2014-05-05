@@ -17,7 +17,8 @@ class IndependentVariableSelectionTest(TestCase):
 
     def test_initializing_small_dataset_with_header(self):
         settings = AbstractSettings()
-        selection = IndependentVariableSelection(settings, self.header_dataset, self.headered_dependent_variable)
+        independent_variables = self.header_dataset.get_independent_variables(self.headered_dependent_variable)
+        selection = IndependentVariableSelection(settings, self.headered_dependent_variable, independent_variables)
 
         variables = selection.initialize_independent_variables(2)
         headers = [var.variable for var in variables]
@@ -26,7 +27,8 @@ class IndependentVariableSelectionTest(TestCase):
 
     def test_initializaing_small_dataset_without_header(self):
         settings = AbstractSettings()
-        selection = IndependentVariableSelection(settings, self.nonheader_dataset, self.nonheadered_dependent_variable)
+        independent_variables = self.nonheader_dataset.get_independent_variables(self.nonheadered_dependent_variable)
+        selection = IndependentVariableSelection(settings, self.nonheadered_dependent_variable, independent_variables)
 
         variables = selection.initialize_independent_variables(2)
         headers = [var.variable for var in variables]
@@ -35,7 +37,8 @@ class IndependentVariableSelectionTest(TestCase):
 
     def test_getting_probability_of_variables(self):
         settings = AbstractSettings()
-        selection = IndependentVariableSelection(settings, self.header_dataset, self.headered_dependent_variable)
+        independent_variables = self.header_dataset.get_independent_variables(self.headered_dependent_variable)
+        selection = IndependentVariableSelection(settings, self.headered_dependent_variable, independent_variables)
 
         self.assertAlmostEqual(0.5, selection.get_probability(DatasetVariable("column_1")))
         self.assertAlmostEqual(0.5, selection.get_probability(DatasetVariable("column_2")))
@@ -45,7 +48,8 @@ class IndependentVariableSelectionTest(TestCase):
 
     def test_increasing_probability_of_variables(self):
         settings = AbstractSettings()
-        selection = IndependentVariableSelection(settings, self.header_dataset, self.headered_dependent_variable)
+        independent_variables = self.header_dataset.get_independent_variables(self.headered_dependent_variable)
+        selection = IndependentVariableSelection(settings, self.headered_dependent_variable, independent_variables)
         selection.increase_probability(DatasetVariable("column_1"))
 
         self.assertLess(0.5, selection.get_probability(DatasetVariable("column_1")))

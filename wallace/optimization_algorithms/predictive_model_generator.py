@@ -25,7 +25,9 @@ class PredictiveModelGenerator(object):
             self.weighted_selection.add_selection(model_name, weight)
 
     def increase_weight(self, model_klass, learning_parameter=0.05, taper=True):
-        if issubclass(model_name, PredictiveModel):
+        if isinstance(model_klass, PredictiveModel):
+            model_name = model_klass.__class__.__name__
+        elif issubclass(model_klass, PredictiveModel):
             model_name = model_klass.__name__
         else:
             model_name = model_klass
@@ -65,8 +67,6 @@ class PredictiveModelGenerator(object):
         return ParameterSet(parameter_values, validity_check=validity_check)
 
     def _get_parameter_values(self, model_name):
-        if issubclass(model_name, PredictiveModel):
-            model_name = model_name.__name__
         if model_name not in self.model_types:
             raise ValueError("Model '%s' is not a valid model type for this model generator." % model_name)
 
@@ -74,7 +74,7 @@ class PredictiveModelGenerator(object):
         validity_check = model_information["parameter_validity_check"]
 
         parameter_values = {}
-        for parameter_name in model.required_parameters():
+        for parameter_name in model_information["model_class"].required_parameters():
             value = validity_check.get_valid_value(parameter_name)
             parameter_values[parameter_name] = value
 

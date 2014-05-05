@@ -10,6 +10,7 @@ class LassoRegression(PredictiveModel):
 
         return TrainedSklearnModel(self, trained_regression)
 
+    @classmethod
     def required_parameters(self):
         return ["lasso_regression_alpha"]
 

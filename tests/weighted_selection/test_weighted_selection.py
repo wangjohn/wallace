@@ -63,10 +63,39 @@ class WeightedSelectionTest(TestCase):
         weighted_selection = WeightedSelection(selections)
         weighted_selection.increase_weight("1", learning_parameter=0.5, taper=True)
         selections = weighted_selection.weighted_selections
-        print selections
 
         self.assertAlmostEqual(0.259259259259, selections["1"])
         self.assertAlmostEqual(0.185185185185, selections["2"])
         self.assertAlmostEqual(0.185185185185, selections["3"])
         self.assertAlmostEqual(0.185185185185, selections["4"])
         self.assertAlmostEqual(0.185185185185, selections["5"])
+
+    def test_sample_from_simple_weighted_selection(self):
+        selections = {"1": None, "2": None}
+        weighted_selection = WeightedSelection(selections)
+
+        sampled_results = WeightedSelection.sample(weighted_selection, 2)
+        self.assertEqual(2, len(sampled_results))
+        self.assertIn("1", sampled_results)
+        self.assertIn("2", sampled_results)
+
+    def test_sample_raises_error_when_sample_is_larger_than_population(self):
+        selections = {"1": None, "2": None}
+        weighted_selection = WeightedSelection(selections)
+
+        with self.assertRaises(ValueError):
+            sampled_results = WeightedSelection.sample(weighted_selection, 3)
+
+    def test_sample_from_large_population_with_zero_probabilities(self):
+        selections = {}
+        for i in xrange(1000):
+            selections[i] = 0
+        selections[0] = 0.5
+        selections[1] = 0.5
+
+        weighted_selection = WeightedSelection(selections)
+        sampled_results = WeightedSelection.sample(weighted_selection, 2)
+
+        self.assertEqual(2, len(sampled_results))
+        self.assertIn(0, sampled_results)
+        self.assertIn(1, sampled_results)

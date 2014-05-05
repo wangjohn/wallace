@@ -10,6 +10,7 @@ class RidgeRegression(PredictiveModel):
 
         return TrainedSklearnModel(self, trained_regression)
 
+    @classmethod
     def required_parameters(self):
         return ["ridge_regression_alpha"]
 

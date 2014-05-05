@@ -3,11 +3,11 @@ import random
 from wallace.optimization_algorithms.optimization_algorithm import OptimizationAlgorithm, OptimizationAlgorithmModelWrapper
 from wallace.weighted_selection import WeightedSelection
 from wallace.parameters import ParameterSet
-from wallace.independent_variables import IndependentVariableSelection
 
 class DifferentialEvolution(OptimizationAlgorithm):
     def __init__(self, dataset, dependent_variable, settings, predictive_model_generator):
         OptimizationAlgorithm.__init__(self, dataset, dependent_variable, settings, predictive_model_generator)
+        self.potential_independent_variables = self.dataset.get_independent_variables(self.dependent_variable)
 
     def update_population(self):
         updated_population = []
@@ -17,7 +17,11 @@ class DifferentialEvolution(OptimizationAlgorithm):
             parameter_set = parameter_selection.generate_parameter_set()
 
             independent_variable_selection = target_wrapper.independent_variable_selection
-            de_variable_selection = DEIndependentVariableSelection(self.settings, target_wrapper, self.model_population, self.dataset)
+            de_variable_selection = DEIndependentVariableSelection(
+                    self.settings,
+                    target_wrapper,
+                    self.model_population,
+                    self.potential_independent_variables)
             independent_variables = de_variable_selection.generate_independent_variables()
 
             model_information = self.predictive_model_generator.choose_model_type()
@@ -25,36 +29,21 @@ class DifferentialEvolution(OptimizationAlgorithm):
 
             updated_model = model_class(self.settings, parameter_set, self.dependent_variable, independent_variables)
 
+            # Evaluate fitness of the updated model and increase weights/probabilities
+            # of selecting independent variables and also parameters based on whether
+            # the updated model ended up being better than the original.
             if self.evaluate_fitness(updated_model) <= self.evaluate_fitness(target_model):
                 independent_variable_selection.increase_probabilities(independent_variables)
+                self.predictive_model_generator.increase_weight(updated_model)
                 updated_wrapper = OptimizationAlgorithmModelWrapper(updated_model, independent_variable_selection)
             else:
+                independent_variable_selection.increase_probabilities(target_model.independent_variables)
+                self.predictive_model_generator.increase_weight(target_model)
                 updated_wrapper = OptimizationAlgorithmModelWrapper(target_model, independent_variable_selection)
 
             updated_population.append(updated_wrapper)
 
         self.model_population = updated_population
-
-class DEIndependentVariableSelection(object):
-    def __init__(self, settings, target_wrapper, model_population, dataset):
-        self.settings = settings
-        self.target_wrapper = target_wrapper
-        self.model_population = self.model_population
-        self.dataset = dataset
-
-    def generate_independent_variables(self):
-        de_selection = DESelection(self.settings)
-        wrappers = de_selection.generate_distinct(self.target_wrapper, self.model_population, 3)
-        independent_variable_selections = [wrapper.independent_variable_selection for wrapper in wrappers]
-        probability_hashes = [selection.get_probabilities() for selection in independent_variable_selections]
-
-        independent_variables = []
-        for independent_variable in self.dataset.get_independent_variables():
-            probabilities = [probability_container[indepdenent_variable] for probability_hash in probability_hashes]
-            variable_probability = de_selection.mutate(*probabilities)
-            if random.random() < variable_probability:
-                independent_variables.append(independent_variable)
-        return independent_variables
 
 class DESelection(object):
     def __init__(self, settings):
@@ -63,10 +52,10 @@ class DESelection(object):
     def generate_distinct(self, target, population, num_distinct=3):
         population = list(population)
         population.remove(target)
-        return random.sample(population, num_models)
+        return random.sample(population, num_distinct)
 
     def mutate(self, param1, param2, param3):
-        rand = random.rand()
+        rand = random.random()
         if rand < self.crossover_probability():
             return param1 + self.differential_weight()*(param2 - param3)
 
@@ -80,7 +69,7 @@ class DEParameterSelection(object):
     def __init__(self, settings, target_wrapper, model_population, validity_check):
         self.settings = settings
         self.target_wrapper = target_wrapper
-        self.model_population = self.model_population
+        self.model_population = model_population
         self.validity_check = validity_check
 
     def generate_parameter_set(self):
@@ -102,3 +91,33 @@ class DEParameterSelection(object):
 
             parameter_values[parameter_name] = updated_value
         return ParameterSet(parameter_values, validity_check=self.validity_check)
+
+class DEIndependentVariableSelection(object):
+    def __init__(self, settings, target_wrapper, model_population, potential_independent_variables):
+        self.settings = settings
+        self.target_wrapper = target_wrapper
+        self.model_population = model_population
+        self.potential_independent_variables = potential_independent_variables
+        self.de_selection = DESelection(self.settings)
+
+    def generate_independent_variables(self):
+        wrappers = self.de_selection.generate_distinct(self.target_wrapper, self.model_population, 3)
+        independent_variable_selections = [wrapper.independent_variable_selection for wrapper in wrappers]
+
+        probabilities = {}
+        for independent_variable in self.potential_independent_variables:
+            variable_probability = self.get_variable_probability(independent_variable_selections, independent_variable)
+            probabilities[independent_variable] = variable_probability
+
+        return self.target_wrapper.independent_variable_selection.select_independent_variables(probabilities)
+
+    def get_variable_probability(self, independent_variable_selections, independent_variable):
+        probabilities = [selection.get_probability(independent_variable) for selection in independent_variable_selections]
+        variable_probability = self.de_selection.mutate(*probabilities)
+        if variable_probability == None:
+            return self.original_probability(independent_variable)
+        else:
+            return variable_probability
+
+    def original_probability(self, independent_variable):
+        return self.target_wrapper.independent_variable_selection.get_probability(independent_variable)

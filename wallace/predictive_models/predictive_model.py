@@ -16,6 +16,7 @@ class PredictiveModel(object):
     def get_independent_variable_data(self, dataset):
         return dataset.get_filtered_matrix(self.independent_variables)
 
+    @classmethod
     def required_parameters(self):
         return []
 

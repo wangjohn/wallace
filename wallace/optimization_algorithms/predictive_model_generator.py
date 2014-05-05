@@ -5,11 +5,11 @@ from wallace.parameters import ParameterSet, ParametersGeneralValidityCheck
 from wallace.weighted_selection import WeightedSelection
 
 class PredictiveModelGenerator(object):
-    def __init__(self, settings, default_validity_check=None, model_types=None):
+    def __init__(self, settings, default_validity_check=None):
         self.settings = settings
         self.model_types = {}
         self.default_validity_check = default_validity_check
-        self.weighted_selection = WeightedSelection(model_types)
+        self.weighted_selection = WeightedSelection()
 
     def add_model_type(self, model_klass, parameter_validity_check=None, weight=None):
         if not issubclass(model_klass, PredictiveModel):

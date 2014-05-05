@@ -16,9 +16,8 @@ class WallaceInitialization(object):
             RidgeRegression: None
         }
 
-    def __init__(self, settings, dependent_variable, models=None):
+    def __init__(self, settings, models=None):
         self.settings = AbstractSettings(settings)
-        self.dependent_variable = dependent_variable
         self.models = models
 
     def create_predictive_model_generator(self, models=None):
@@ -38,6 +37,11 @@ class WallaceInitialization(object):
 
         return predictive_model_generator
 
-    def create_differential_evolution(self, dataset, dependent_variable):
+    def run_differential_evolution(self, dataset, dependent_variable):
         predictive_model_generator = self.create_predictive_model_generator()
-        return DifferentialEvolution(dataset, dependent_variable, self.settings, predictive_model_generator)
+        differential_evolution = DifferentialEvolution(dataset, dependent_variable, self.settings, predictive_model_generator)
+        differential_evolution.run()
+
+    @classmethod
+    def initialize(settings_dict, dependent_variable, dataset_filename):
+        raise NotImplementedError()

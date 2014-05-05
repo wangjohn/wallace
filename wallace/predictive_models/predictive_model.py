@@ -1,3 +1,5 @@
+from wallace.parameters import ParametersGeneralValidityCheck
+
 class PredictiveModel(object):
     def __init__(self, settings, parameter_set, dependent_variable, independent_variables):
         self.parameter_set = parameter_set
@@ -17,8 +19,12 @@ class PredictiveModel(object):
         return dataset.get_filtered_matrix(self.independent_variables)
 
     @classmethod
-    def required_parameters(self):
+    def required_parameters(klass):
         return []
+
+    @classmethod
+    def validity_check(klass):
+        return ParametersGeneralValidityCheck()
 
     def _validate_parameter_set(self, parameter_set):
         for parameter in self.required_parameters():

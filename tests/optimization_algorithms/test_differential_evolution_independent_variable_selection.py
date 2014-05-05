@@ -13,8 +13,8 @@ class DEIndependentVariableSelectionTest(TestCase):
         dependent_variable = DatasetVariable(0)
         independent_variables = [DatasetVariable(1), DatasetVariable(2), DatasetVariable(3)]
         settings = AbstractSettings({
-            "differential_evolution.crossover_probability": 0.5,
-            "differential_evolution.differential_weight": 0.8,
+            "differential_evolution.crossover_probability": 1.0,
+            "differential_evolution.differential_weight": 1.0,
             "independent_variable_selection.initial_independent_variables_percentage": 0.25
             })
 
@@ -37,3 +37,13 @@ class DEIndependentVariableSelectionTest(TestCase):
         for var in variables:
             self.assertIsInstance(var, DatasetVariable)
 
+    def test_getting_original_probability_from_model(self):
+        for i in xrange(len(self.potential_independent_variables)):
+            probability = self.de_variable_selection.original_probability(self.potential_independent_variables[i])
+            self.assertAlmostEqual(float(1)/len(self.potential_independent_variables), probability)
+
+    def test_getting_variable_probability_from_model(self):
+        independent_variable_selections = [wrapper.independent_variable_selection for wrapper in self.model_population]
+
+        probability = self.de_variable_selection.get_variable_probability(independent_variable_selections[:3], self.potential_independent_variables[0])
+        self.assertAlmostEqual(float(1)/len(self.potential_independent_variables), probability)

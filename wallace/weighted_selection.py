@@ -46,7 +46,7 @@ class WeightedSelection(object):
             else:
                 total_weight += weight
 
-        if non_weighted == len(weighted_selections):
+        if non_weighted == len(weighted_selections) or total_weight == 0:
             return self._uniformly_weighted_selections(weighted_selections)
 
         average_weight = float(total_weight) / (len(weighted_selections) - non_weighted)
@@ -93,12 +93,13 @@ class WeightedSelection(object):
 
         results = []
         while len(results) < number:
-            result = weighted_selection.choose()
-            results.append(result)
+            selected = weighted_selection.choose()
+            results.append(selected)
 
             new_weights = {}
             for selection in weighted_selection.selections():
-                new_weights[selection] = weighted_selection.get_probability(selection)
+                if selection != selected:
+                    new_weights[selection] = weighted_selection.get_probability(selection)
             weighted_selection = WeightedSelection(new_weights)
 
         return results

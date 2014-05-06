@@ -3,6 +3,7 @@ import random
 import logging
 
 from wallace.dataset import Dataset
+from wallace.data_type_classification import DataTypeClassification
 
 class DatasetFileReader(object):
     def __init__(self, settings, dataset_filename):
@@ -47,7 +48,7 @@ class DatasetFileReader(object):
 
         non_matching_types = 0
         for header_type, row_type in zip(header_data_types, row_data_types):
-            if header_type in [bool, str]:
+            if header_type in ["boolean", "string"]:
                 if header_type != row_type:
                     non_matching_types += 1
             else:
@@ -66,14 +67,7 @@ class DatasetFileReader(object):
     def parse_data_types(self, row):
         data_types = []
         for entry in row:
-            if DataTypeClassification.is_integer(entry):
-                data_types.append(int)
-            elif DataTypeClassification.is_float(entry):
-                data_types.append(float)
-            elif DataTypeClassification.is_boolean(entry):
-                data_types.append(bool)
-            else:
-                data_types.append(str)
+            data_types.append(DataTypeClassification.classify(entry))
         return data_types
 
     def greedy_read_lines(self, csv_reader, maximum_size):
@@ -98,30 +92,3 @@ class DatasetFileReader(object):
             else:
                 data_matrix.append(row)
         return data_matrix
-
-class DataTypeClassification(object):
-    @classmethod
-    def is_integer(klass, obj):
-        try:
-            int(obj)
-            return True
-        except ValueError:
-            return False
-
-    @classmethod
-    def is_float(klass, obj):
-        try:
-            float(obj)
-            return True
-        except ValueError:
-            return False
-
-    @classmethod
-    def is_boolean(klass, obj):
-        lowercased = obj.strip().lower()
-        return lowercased in ["true", "t", "false", "f"]
-
-    @classmethod
-    def is_missing_data(klass, obj):
-        lowercased = obj.strip().lower()
-        return lowercased in ["nan", "null", "na", ""]

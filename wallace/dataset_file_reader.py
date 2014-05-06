@@ -24,7 +24,7 @@ class DatasetFileReader(object):
                 data_matrix = self.greedy_read_lines(reader, maximum_size)
 
         data_matrix, headers = self.detect_headers(data_matrix)
-        data_matrix = DatasetCleaner(data_matrix, headers).clean()
+        data_matrix = DatasetCleaner(self.settings, data_matrix, headers).clean()
         self.logger.info("Read dataset from file: '%s'", self.dataset_filename)
         self.logger.info("Headers: %s", headers)
         self.logger.info("Dataset Size: %s", len(data_matrix))

@@ -82,3 +82,33 @@ class DataTypeClassificationTest(TestCase):
         self.assertEqual("boolean", DataTypeClassification.classify("False"))
         self.assertEqual("string", DataTypeClassification.classify("be"))
         self.assertEqual("string", DataTypeClassification.classify("alfred"))
+
+    def test_parsing_data_types_correctly_for_strings(self):
+        row = ["some string", "2string", "string24531234 34534 345", "2.345s"]
+        data_types = DataTypeClassification.classify_row(row)
+        self.assertEqual("string", data_types[0])
+        self.assertEqual("string", data_types[1])
+        self.assertEqual("string", data_types[2])
+        self.assertEqual("string", data_types[3])
+
+    def test_parsing_data_types_correctly_for_ints_and_floats(self):
+        row = ["1234", "  34.231 ", " 32. 43 ", " 5399999999999999 ", "23452345234523452345245.24"]
+        data_types = DataTypeClassification.classify_row(row)
+        self.assertEqual("integer", data_types[0])
+        self.assertEqual("float", data_types[1])
+        self.assertEqual("string", data_types[2])
+        self.assertEqual("integer", data_types[3])
+        self.assertEqual("float", data_types[4])
+
+    def test_parsing_data_types_correctly_for_bools(self):
+        row = ["t", "true", "True", "TRUE", "f", "false", "False", "FALSE"]
+        data_types = DataTypeClassification.classify_row(row)
+        self.assertEqual("boolean", data_types[0])
+        self.assertEqual("boolean", data_types[1])
+        self.assertEqual("boolean", data_types[2])
+        self.assertEqual("boolean", data_types[3])
+        self.assertEqual("boolean", data_types[4])
+        self.assertEqual("boolean", data_types[5])
+        self.assertEqual("boolean", data_types[6])
+        self.assertEqual("boolean", data_types[7])
+

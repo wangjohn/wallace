@@ -43,8 +43,8 @@ class DatasetFileReader(object):
         if len(data_matrix) <= 1:
             return (data_matrix, None)
 
-        header_data_types = self.parse_data_types(data_matrix[0])
-        row_data_types = self.parse_data_types(data_matrix[1])
+        header_data_types = DataTypeClassification.classify_row(data_matrix[0])
+        row_data_types = DataTypeClassification.classify_row(data_matrix[1])
 
         non_matching_types = 0
         for header_type, row_type in zip(header_data_types, row_data_types):
@@ -63,12 +63,6 @@ class DatasetFileReader(object):
         else:
             headers = data_matrix.pop(0)
             return (data_matrix, headers)
-
-    def parse_data_types(self, row):
-        data_types = []
-        for entry in row:
-            data_types.append(DataTypeClassification.classify(entry))
-        return data_types
 
     def greedy_read_lines(self, csv_reader, maximum_size):
         data_matrix = []

@@ -60,3 +60,8 @@ class DataTypeClassification(object):
             return "date"
         else:
             return "string"
+
+    @classmethod
+    def classify_row(klass, row):
+        return [klass.classify(entry) for entry in row]
+

@@ -34,8 +34,8 @@ class DatasetFileReader(object):
         both rows match, then we assume there were no headers. Otherwise we return
         the first row as headers.
         """
-        header_data_types = self.parse_data_type(data_matrix[0])
-        row_data_types = self.parse_data_type(data_matrix[1])
+        header_data_types = self.parse_data_types(data_matrix[0])
+        row_data_types = self.parse_data_types(data_matrix[1])
 
         non_matching_types = 0
         for header_type, row_type in zip(header_data_types, row_data_types):
@@ -55,7 +55,7 @@ class DatasetFileReader(object):
             headers = data_matrix.pop(0)
             return (data_matrix, headers)
 
-    def parse_data_type(self, row):
+    def parse_data_types(self, row):
         data_types = []
         for entry in row:
             if DataTypeClassification.is_integer(entry):

@@ -3,7 +3,7 @@ import random
 import logging
 
 from wallace.dataset import Dataset
-from wallace.data_type_classification import DataTypeClassificatio
+from wallace.data_type_classification import DataTypeClassification
 from wallace.dataset_cleaner import DatasetCleaner
 
 class DatasetFileReader(object):

@@ -33,6 +33,8 @@ class DatasetTest(TestCase):
             self.assertEqual(3, training_dataset.num_rows)
             self.assertEqual(1, test_dataset.num_rows)
             self.assertNotIn(test_dataset.get(0, 0), past_test_datasets)
+            self.assertListEqual(["number", "string", "another_string"], training_dataset.headers)
+            self.assertListEqual(["number", "string", "another_string"], test_dataset.headers)
 
             past_test_datasets.append(test_dataset.get(0, 0))
 

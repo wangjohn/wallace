@@ -12,6 +12,7 @@ class DatasetCleaner(object):
             return self.data_matrix
 
         num_columns = self.get_num_columns(self.data_matrix, self.headers)
+        data_types = DataTypeClassification.classify_row(self.data_matrix[0])
         for i in xrange(len(self.data_matrix)):
             if len(self.data_matrix[i]) != num_columns:
                 raise ValueError("Invalid data matrix. Number of columns is not static. See row %s." % i)

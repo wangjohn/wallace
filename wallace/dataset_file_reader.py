@@ -3,7 +3,8 @@ import random
 import logging
 
 from wallace.dataset import Dataset
-from wallace.data_type_classification import DataTypeClassification
+from wallace.data_type_classification import DataTypeClassificatio
+from wallace.dataset_cleaner import DatasetCleaner
 
 class DatasetFileReader(object):
     def __init__(self, settings, dataset_filename):
@@ -23,6 +24,7 @@ class DatasetFileReader(object):
                 data_matrix = self.greedy_read_lines(reader, maximum_size)
 
         data_matrix, headers = self.detect_headers(data_matrix)
+        data_matrix = DatasetCleaner(data_matrix, headers).clean()
         self.logger.info("Read dataset from file: '%s'", self.dataset_filename)
         self.logger.info("Headers: %s", headers)
         self.logger.info("Dataset Size: %s", len(data_matrix))

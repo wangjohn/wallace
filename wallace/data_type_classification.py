@@ -40,13 +40,15 @@ class DataTypeClassification(object):
 
     @classmethod
     def is_date(klass, entry):
+        return klass.get_date(entry) != None
+
+    @classmethod
+    def get_date(klass, entry):
         for date_format in klass.VALID_DATE_FORMATS:
             try:
-                datetime.strptime(entry, date_format)
-                return True
+                return datetime.strptime(entry, date_format)
             except ValueError:
                 pass
-        return False
 
     @classmethod
     def classify(klass, entry):

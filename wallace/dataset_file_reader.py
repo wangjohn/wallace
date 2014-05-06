@@ -34,6 +34,9 @@ class DatasetFileReader(object):
         both rows match, then we assume there were no headers. Otherwise we return
         the first row as headers.
         """
+        if len(data_matrix) <= 1:
+            return (data_matrix, None)
+
         header_data_types = self.parse_data_types(data_matrix[0])
         row_data_types = self.parse_data_types(data_matrix[1])
 

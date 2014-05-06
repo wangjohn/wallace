@@ -21,6 +21,6 @@ settings = {
     }
 
 dependent_variable = "IsBadBuy"
-dataset_filename = "~/datasets/kaggle_carvana_training.csv"
+dataset_filename = "/home/john/datasets/kaggle_carvana_training.csv"
 
 WallaceInitialization.initialize(settings, dependent_variable, dataset_filename)

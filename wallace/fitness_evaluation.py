@@ -14,7 +14,7 @@ class CrossValidationFitnessEvaluation(FitnessEvaluation):
         FitnessEvaluation.__init__(self, settings, model, dataset)
 
     def evaluate(self, evaluation_method):
-        num_partitions = self.settings.fitness_evaluation_crossfold_partitions()
+        num_partitions = self.settings.get("fitness_evaluation.crossfold_partitions")
         averaged_fitness = 0
         for training_dataset, test_dataset in self.dataset.crossfold_partitions(num_partitions):
             trained_model = model.train(training_dataset)

@@ -82,10 +82,6 @@ class Dataset(object):
             test_dataset = Dataset(shuffled[start:end], self.headers)
             yield (training_dataset, test_dataset)
 
-    @classmethod
-    def read_filename(klass, dataset_filename):
-        raise NotImplementedError()
-
     def _check_headers(self):
         if self.headers == None:
             raise ValueError("Headers are not defined on this dataset and cannot be used for accesses.")

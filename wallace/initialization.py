@@ -1,6 +1,6 @@
 from settings import AbstractSettings
 from weighted_selection import WeightedSelection
-from dataset import Dataset, DatasetVariable
+from dataset import DatasetVariable
 
 from wallace.predictive_models.lasso_regression import LassoRegression
 from wallace.predictive_models.ols_linear_regression import OLSLinearRegression
@@ -49,7 +49,7 @@ class WallaceInitialization(object):
     def initialize(klass, settings, dependent_variable, dataset_filename):
         if not isinstance(dependent_variable, DatasetVariable):
             dependent_variable = DatasetVariable(dependent_variable)
-        dataset = Dataset.read_filename(dataset_filename)
+        dataset = DatasetFileReader(setting, dataset_filename).read()
 
         initialization = WallaceInitialization(settings)
         initialization.run_differential_evolution(dataset, dependent_variable)

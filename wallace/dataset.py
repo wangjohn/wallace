@@ -42,6 +42,9 @@ class Dataset(object):
         return column
 
     def get_filtered_matrix(self, variables):
+        if len(variables) <= 0:
+            raise ValueError("Must have a non-empty list of variables when filtering dataset.")
+
         indices = []
         for variable in variables:
             indices.append(variable.get_column_index(self))

@@ -83,7 +83,7 @@ class Dataset(object):
             else:
                 test_end = self.num_rows
 
-            training_dataset = Dataset(shuffled[:test_start] + shuffled[test_end:])
+            training_dataset = Dataset(shuffled[:test_start] + shuffled[test_end:], self.headers)
             test_dataset = Dataset(shuffled[test_start:test_end], self.headers)
             yield (training_dataset, test_dataset)
 

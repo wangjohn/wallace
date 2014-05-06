@@ -1,3 +1,5 @@
+import random
+
 class Dataset(object):
     def __init__(self, data_matrix, headers=None):
         self.headers = headers
@@ -78,8 +80,8 @@ class Dataset(object):
             else:
                 test_end = self.num_rows
 
-            training_dataset = Dataset(shuffled[:start] + shuffled[end:])
-            test_dataset = Dataset(shuffled[start:end], self.headers)
+            training_dataset = Dataset(shuffled[:test_start] + shuffled[test_end:])
+            test_dataset = Dataset(shuffled[test_start:test_end], self.headers)
             yield (training_dataset, test_dataset)
 
     def _check_headers(self):

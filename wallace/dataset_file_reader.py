@@ -83,7 +83,7 @@ class DatasetFileReader(object):
         count = 0
         for row in csv_reader:
             count += 1
-            if count >= maximum_size:
+            if count > maximum_size:
                 if random.random() < (float(maximum_size) / count):
                     replaced_index = random.randrange(maximum_size)
                     data_matrix[replaced_index] = row

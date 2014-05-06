@@ -66,3 +66,18 @@ class DatasetFileReaderTest(TestCase):
         self.assertEqual(bool, data_types[5])
         self.assertEqual(bool, data_types[6])
         self.assertEqual(bool, data_types[7])
+
+    def test_greedy_read_lines_stops_correctly(self):
+        input_rows = [[1,2,3],[2,2,3],[3,2,3],[4,2,3],[5,2,3]]
+        data_matrix = self.dataset_file_reader.greedy_read_lines(input_rows, 3)
+
+        self.assertEqual(3, len(data_matrix))
+        self.assertListEqual([1,2,3], data_matrix[0])
+        self.assertListEqual([2,2,3], data_matrix[1])
+        self.assertListEqual([3,2,3], data_matrix[2])
+
+    def test_randomized_read_lines_stops_correctly(self):
+        input_rows = [[1,2,3],[2,2,3],[3,2,3],[4,2,3],[5,2,3]]
+        data_matrix = self.dataset_file_reader.randomized_read_lines(input_rows, 3)
+
+        self.assertEqual(3, len(data_matrix))

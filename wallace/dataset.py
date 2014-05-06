@@ -31,7 +31,7 @@ class Dataset(object):
             if self.headers[i] == header:
                 return i
 
-        raise ValueError("Header '%s' does not exist in this dataset.")
+        raise ValueError("Header '%s' does not exist in this dataset." % header)
 
     def get_column(self, col):
         column = []

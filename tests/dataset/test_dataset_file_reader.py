@@ -1,4 +1,5 @@
 from unittest import TestCase
+import os
 
 from wallace.settings import AbstractSettings
 from wallace.dataset_file_reader import DatasetFileReader
@@ -6,7 +7,8 @@ from wallace.dataset_file_reader import DatasetFileReader
 class DatasetFileReaderTest(TestCase):
     def setUp(self):
         settings = AbstractSettings({})
-        self.dataset_file_reader = DatasetFileReader(settings, "filename")
+        path = os.path.abspath(os.path.join(os.path.dirname(__file__), './sample_dataset.csv'))
+        self.dataset_file_reader = DatasetFileReader(settings, path)
 
     def test_detect_headers_for_representative_dataset(self):
         actual_headers = ["header0", "header1", "header2"]
@@ -81,3 +83,23 @@ class DatasetFileReaderTest(TestCase):
         data_matrix = self.dataset_file_reader.randomized_read_lines(input_rows, 3)
 
         self.assertEqual(3, len(data_matrix))
+
+    def test_reading_csv_correctly(self):
+        dataset = self.dataset_file_reader.read()
+
+        self.assertEqual(0, dataset.column_index("header1"))
+        self.assertEqual(1, dataset.column_index("header2"))
+        self.assertEqual(2, dataset.column_index("header3"))
+        self.assertEqual(3, dataset.column_index("header4"))
+
+        with self.assertRaises(ValueError):
+            dataset.column_index("some_header_that_doesn't_exist")
+
+        self.assertListEqual(['1252', 't', 'john', 'wang'], dataset.get_row(0))
+        self.assertListEqual(['1234', 'f', 'bob', 'hope'], dataset.get_row(1))
+        self.assertListEqual(['5555', 'f', 'rob', 'bernham'], dataset.get_row(2))
+        self.assertListEqual(['99', 't', 'paul', 'graham'], dataset.get_row(3))
+
+        with self.assertRaises(IndexError):
+            dataset.get_row(4)
+

@@ -1,11 +1,13 @@
 import csv
 import random
+import logging
 
 from wallace.dataset import Dataset
 
 class DatasetFileReader(object):
     def __init__(self, settings, dataset_filename):
         self.settings = settings
+        self.logger = logging.getLogger(__name__)
         self.dataset_filename = dataset_filename
 
     def read(self, maximum_size=None, delimiter=",", quoting=csv.QUOTE_NONE):
@@ -20,6 +22,9 @@ class DatasetFileReader(object):
                 data_matrix = self.greedy_read_lines(reader, maximum_size)
 
         data_matrix, headers = self.detect_headers(data_matrix)
+        self.logger.info("Read dataset from file: '%s'", self.dataset_filename)
+        self.logger.info("Headers: %s", headers)
+        self.logger.info("Dataset Size: %s", len(data_matrix))
         return Dataset(data_matrix, headers=headers)
 
     def detect_headers(self, data_matrix):

@@ -1,5 +1,6 @@
 from wallace import fitness_evaluation
 from wallace.independent_variables import IndependentVariableSelection
+import logging
 
 class OptimizationAlgorithm(object):
     def __init__(self, dataset, dependent_variable, settings, predictive_model_generator):
@@ -8,6 +9,7 @@ class OptimizationAlgorithm(object):
         self.settings = settings
         self.predictive_model_generator = predictive_model_generator
         self.full_validity_check = self.predictive_model_generator.get_full_validity_check()
+        self.logger = logging.getLogger(__name__)
 
         self.model_population = []
         self.current_step = 0
@@ -36,6 +38,7 @@ class OptimizationAlgorithm(object):
             model_population.append(model_wrapper)
 
         self.model_population = model_population
+        self.logger.info("Initialized optimization algorithm with population size %s", population_size)
 
     def update_population(self):
         raise NotImplementedError()
@@ -62,6 +65,7 @@ class OptimizationAlgorithm(object):
     def step(self):
         self.current_step += 1
         self.update_population()
+        self.logger.info("Optimization algorithm step: %s", current_step)
 
     def evaluate_fitness(self, model, evaluation_method=None):
         if evaluation_method == None:

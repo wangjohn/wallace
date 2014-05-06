@@ -2,6 +2,10 @@ from datetime import datetime
 
 class DataTypeClassification(object):
     VALID_DATE_FORMATS = [
+            "%m/%d/%y",
+            "%m-%d-%y",
+            "%d/%m/%y",
+            "%d-%m-%y",
             "%m/%d/%Y",
             "%m-%d-%Y",
             "%d/%m/%Y",

@@ -5,6 +5,8 @@ class AbstractSettings(object):
             "fitness_evaluation.crossfold_partitions": 10,
             "fitness_evaluation.evaluation_method": MeanSquaredError,
             "model_tracking.models_to_track": 50,
+            "dataset.maximum_dataset_size": 50000,
+            "dataset.randomize_file_reader": False,
             "differential_evolution.crossover_probability": 0.5,
             "differential_evolution.differential_weight": 0.8,
             "optimization_algorithm.population_size": 40,

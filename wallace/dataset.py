@@ -46,14 +46,12 @@ class Dataset(object):
             column.append(self.data_matrix[row][col])
         return column
 
-    def get_filtered_matrix(self, variables):
-        if len(variables) <= 0:
-            raise ValueError("Must have a non-empty list of variables when filtering dataset.")
+    def get_filtered_data_types(self, variables):
+        indices = self._variable_indices(variables)
+        return [self.data_types[index] for index in indices]
 
-        indices = []
-        for variable in variables:
-            indices.append(variable.get_column_index(self))
-        indices = sorted(indices)
+    def get_filtered_matrix(self, variables):
+        indices = self._variable_indices(variables)
 
         filtered_dataset = []
         for row in self.data_matrix:
@@ -91,6 +89,15 @@ class Dataset(object):
             training_dataset = Dataset(shuffled[:test_start] + shuffled[test_end:], self.headers, self.data_types)
             test_dataset = Dataset(shuffled[test_start:test_end], self.headers, self.data_types)
             yield (training_dataset, test_dataset)
+
+    def _variable_indices(self, variables):
+        if len(variables) <= 0:
+            raise ValueError("Must have a non-empty list of variables when filtering dataset.")
+
+        indices = []
+        for variable in variables:
+            indices.append(variable.get_column_index(self))
+        return sorted(indices)
 
     def _check_headers(self):
         if self.headers == None:

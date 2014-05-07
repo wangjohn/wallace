@@ -6,7 +6,7 @@ class SklearnModel(PredictiveModel):
     def get_dependent_variable_data(self, dataset):
         dependent_column = dataset.get_filtered_column(self.dependent_variable)
         encoder = self.get_encoder(dataset)
-        return encoder.transform(dependent_column).to_array()
+        return encoder.transform(dependent_column)
 
     def get_independent_variable_data(self, dataset):
         filtered_matrix = dataset.get_filtered_matrix(self.independent_variables)

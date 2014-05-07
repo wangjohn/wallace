@@ -1,11 +1,16 @@
 import random
+from wallace.data_type_classification import DataTypeClassification
 
 class Dataset(object):
-    def __init__(self, data_matrix, headers=None):
+    def __init__(self, data_matrix, headers=None, data_types=None):
         self.headers = headers
         self.data_matrix = data_matrix
         self.num_rows = len(self.data_matrix)
         self.num_cols = len(self.data_matrix[0])
+        if data_types == None:
+            self.data_types = DataTypeClassification.classify_row(self.data_matrix[0])
+        else:
+            self.data_types = data_types
 
     def get(self, row, col):
         return self.data_matrix[row][col]
@@ -83,8 +88,8 @@ class Dataset(object):
             else:
                 test_end = self.num_rows
 
-            training_dataset = Dataset(shuffled[:test_start] + shuffled[test_end:], self.headers)
-            test_dataset = Dataset(shuffled[test_start:test_end], self.headers)
+            training_dataset = Dataset(shuffled[:test_start] + shuffled[test_end:], self.headers, self.data_types)
+            test_dataset = Dataset(shuffled[test_start:test_end], self.headers, self.data_types)
             yield (training_dataset, test_dataset)
 
     def _check_headers(self):

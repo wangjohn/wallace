@@ -4,14 +4,12 @@ from wallace.predictive_models.predictive_model import PredictiveModel, TrainedP
 
 class SklearnModel(PredictiveModel):
     def get_dependent_variable_data(self, dataset):
-        dependent_column = dataset.get_filtered_column(self.dependent_variable)
-        encoder = self.get_encoder(dataset)
-        return encoder.transform(dependent_column)
+        return dataset.get_filtered_column(self.dependent_variable)
 
     def get_independent_variable_data(self, dataset):
         filtered_matrix = dataset.get_filtered_matrix(self.independent_variables)
         encoder = self.get_encoder(dataset)
-        return encoder.fit(filtered_matrix)
+        return encoder.fit_transform(filtered_matrix)
 
     def get_encoder(self, dataset):
         filtered_data_types = dataset.get_filtered_data_types(self.independent_variables)

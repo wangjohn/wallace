@@ -1,6 +1,7 @@
 import random
 
-from wallace.optimization_algorithms.optimization_algorithm import OptimizationAlgorithm, OptimizationAlgorithmModelWrapper
+from wallace.optimization_algorithms.optimization_algorithm import OptimizationAlgorithm
+from wallace.optimization_algorithms.optimization_algorithm_model_wrapper import OptimizationAlgorithmModelWrapper
 from wallace.weighted_selection import WeightedSelection
 from wallace.parameters import ParameterSet
 
@@ -32,14 +33,16 @@ class DifferentialEvolution(OptimizationAlgorithm):
             # Evaluate fitness of the updated model and increase weights/probabilities
             # of selecting independent variables and also parameters based on whether
             # the updated model ended up being better than the original.
-            if self.evaluate_fitness(updated_model) <= self.evaluate_fitness(target_model):
+            updated_fitness = self.evaluate_fitness(updated_model)
+            target_fitness = self.evaluate_fitness(target_model)
+            if updated_fitness <= target_fitness:
                 independent_variable_selection.increase_probabilities(independent_variables)
                 self.predictive_model_generator.increase_weight(updated_model)
-                updated_wrapper = OptimizationAlgorithmModelWrapper(updated_model, independent_variable_selection)
+                updated_wrapper = OptimizationAlgorithmModelWrapper(updated_model, independent_variable_selection, updated_fitness)
             else:
                 independent_variable_selection.increase_probabilities(target_model.independent_variables)
                 self.predictive_model_generator.increase_weight(target_model)
-                updated_wrapper = OptimizationAlgorithmModelWrapper(target_model, independent_variable_selection)
+                updated_wrapper = OptimizationAlgorithmModelWrapper(target_model, independent_variable_selection, target_fitness)
 
             updated_population.append(updated_wrapper)
 

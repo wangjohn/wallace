@@ -1,5 +1,6 @@
 from wallace import fitness_evaluation
 from wallace.independent_variables import IndependentVariableSelection
+from wallace.optimization_algorithms.optimization_algorithm_model_wrapper import OptimizationAlgorithmModelWrapper
 import logging
 
 class OptimizationAlgorithm(object):
@@ -75,11 +76,6 @@ class OptimizationAlgorithm(object):
         fitness = evaluation.evaluate(evaluation_method)
         self.model_tracking.insert(fitness, model)
         return fitness
-
-class OptimizationAlgorithmModelWrapper(object):
-    def __init__(self, model, independent_variable_selection):
-        self.model = model
-        self.independent_variable_selection = independent_variable_selection
 
 class ModelTracking(object):
     def __init__(self, settings):

@@ -13,17 +13,18 @@ class DatasetCleaner(object):
 
         num_columns = self.get_num_columns(self.data_matrix, self.headers)
         data_types = DataTypeClassification.classify_row(self.data_matrix[0])
+        resulting_data_matrix = []
         for i in xrange(len(self.data_matrix)):
             if len(self.data_matrix[i]) != num_columns:
                 raise ValueError("Invalid data matrix. Number of columns is not static. See row %s." % i)
 
             try:
                 cleaned_row = self.clean_row(self.data_matrix[i], data_types)
-                self.data_matrix[i] = cleaned_row
+                resulting_data_matrix.append(cleaned_row)
             except MissingDataException:
                 self._handle_missing_data_exception(i)
 
-        return self.data_matrix
+        return resulting_data_matrix
 
     def _handle_missing_data_exception(self, row_number):
         if not self.settings.get("dataset.remove_rows_with_missing_data"):

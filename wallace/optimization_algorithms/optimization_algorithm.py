@@ -1,6 +1,7 @@
 from wallace import fitness_evaluation
 from wallace.independent_variables import IndependentVariableSelection
 from wallace.optimization_algorithms.optimization_algorithm_model_wrapper import OptimizationAlgorithmModelWrapper
+from wallace.optimization_algorithms.optimization_algorithm_tracking import OptimizationAlgorithmTracking
 import logging
 
 class OptimizationAlgorithm(object):
@@ -15,6 +16,7 @@ class OptimizationAlgorithm(object):
         self.model_population = []
         self.current_step = 0
         self.model_tracking = ModelTracking(self.settings)
+        self.optimization_algorithm_tracking = OptimizationAlgorithmTracking(self.settings)
 
     def initialize_population(self):
         model_population = []
@@ -66,6 +68,7 @@ class OptimizationAlgorithm(object):
     def step(self):
         self.current_step += 1
         self.update_population()
+        self.optimization_algorithm_tracking.track_step(self.current_step, self.model_population)
         self.logger.info("Optimization algorithm step: %s", current_step)
 
     def evaluate_fitness(self, model, evaluation_method=None):

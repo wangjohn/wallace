@@ -1,5 +1,5 @@
 from sklearn import linear_model
-from wallace.predictive_models.predictive_model import PredictiveModel, TrainedSklearnModel
+from wallace.predictive_models.sklearn_model import SklearnModel, TrainedSklearnModel
 
 class OLSLinearRegression(PredictiveModel):
     def train(self, dataset):

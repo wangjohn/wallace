@@ -1,6 +1,8 @@
 from sklearn import preprocessing
 
-class SklearnModel(object):
+from wallace.predictive_models.predictive_model import PredictiveModel, TrainedPredictiveModel
+
+class SklearnModel(PredictiveModel):
     def get_dependent_variable_data(self, dataset):
         dependent_column = dataset.get_filtered_column(self.dependent_variable)
         encoder = self.get_encoder(dataset)

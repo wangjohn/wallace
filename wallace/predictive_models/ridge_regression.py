@@ -2,7 +2,7 @@ from sklearn import linear_model
 from wallace.predictive_models.sklearn_model import SklearnModel, TrainedSklearnModel
 from wallace.parameters import ParametersGeneralValidityCheck
 
-class RidgeRegression(PredictiveModel):
+class RidgeRegression(SklearnModel):
     def train(self, dataset):
         model = linear_model.Ridge(alpha=self.get_alpha())
         independent_data = self.get_independent_variable_data(dataset)

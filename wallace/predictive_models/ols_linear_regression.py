@@ -1,7 +1,7 @@
 from sklearn import linear_model
 from wallace.predictive_models.sklearn_model import SklearnModel, TrainedSklearnModel
 
-class OLSLinearRegression(PredictiveModel):
+class OLSLinearRegression(SklearnModel):
     def train(self, dataset):
         model = linear_model.LinearRegression()
         independent_data = self.get_independent_variable_data(dataset)

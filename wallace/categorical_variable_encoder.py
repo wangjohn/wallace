@@ -4,10 +4,12 @@ class CategoricalVariableEncoder(object):
     def __init__(self, settings):
         self.settings = settings
 
-    def convert_categorical_variables(self, data_matrix, category_indices):
+    def convert_categorical_variables(self, data_matrix, category_indices, category_value_mapping=None):
         if len(category_indices) == 0:
             return data_matrix
-        category_value_mapping = self.get_category_value_mapping(data_matrix, category_indices)
+
+        if category_value_mapping == None:
+            category_value_mapping = self.get_category_value_mapping(data_matrix, category_indices)
 
         for i in xrange(len(data_matrix)):
             for category_index in category_indices:

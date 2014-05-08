@@ -9,7 +9,7 @@ class OptimizationAlgorithmModelWrapper(object):
     def get_parameters(self):
         params = {}
         for parameter_name in self.model.parameter_set.validity_check.list_parameter_names():
-            params[name] = self.model.parameter_set.get(parameter_name)
+            params[parameter_name] = self.model.parameter_set.get(parameter_name)
 
         return params
 
@@ -17,7 +17,7 @@ class OptimizationAlgorithmModelWrapper(object):
         dictionary = {
             "fitness": self.fitness,
             "independent_variables": [var.variable for var in self.model.independent_variables],
-            "dependent_variable": self.model.dependent_variable.var,
+            "dependent_variable": self.model.dependent_variable.variable,
             "parameter_set": self.get_parameters()
             }
         return json.dumps(dictionary)

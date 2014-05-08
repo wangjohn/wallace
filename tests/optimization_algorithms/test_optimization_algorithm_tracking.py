@@ -43,4 +43,13 @@ class OptimizationAlgorithmTrackingTest(TestCase):
 
         tracking = OptimizationAlgorithmTracking(settings)
         tracking.track_step(0, self.model_population)
+        tracking.track_step(1, self.model_population)
 
+        logging_results = tracking.read_logging_file(temporary_file.name)
+
+        self.assertEqual(2, len(logging_results))
+        self.assertEqual(0, logging_results[0]["step"])
+        self.assertEqual(5, len(logging_results[0]["model_population"]))
+
+        self.assertEqual(1, logging_results[1]["step"])
+        self.assertEqual(5, len(logging_results[1]["model_population"]))

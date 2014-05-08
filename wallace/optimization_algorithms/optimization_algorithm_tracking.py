@@ -1,3 +1,5 @@
+import json
+
 class OptimizationAlgorithmTracking(object):
     def __init__(self, settings):
         self.settings = settings
@@ -39,4 +41,16 @@ class OptimizationAlgorithmTracking(object):
                 }
 
         with open(filename, 'a') as f:
-            f.write(json.dumps(data))
+            f.write(json.dumps(data) + "\n")
+
+    def read_logging_file(self, filename=None):
+        if filename == None:
+            filename = self.settings.get("optimization_algorithm_tracking.tracking_log_filename")
+
+        logging_file_results = []
+        with open(filename, 'r') as f:
+            for line in f:
+                logging_file_results.append(json.loads(line))
+        return logging_file_results
+
+

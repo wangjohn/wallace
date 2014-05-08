@@ -26,3 +26,16 @@ class OptimizationAlgorithmTracking(object):
 
         return step_number
 
+    def flush_data(self, step_number=None, filename=None):
+        step_number = self._get_step_number(step_number)
+        if filename == None:
+            filename = self.settings.get("optimization_algorithm_tracking.tracking_log_filename")
+
+        step_population = self.population_history[step_number]
+        data = {
+                "step": step_number,
+                "model_population": step_population
+                }
+
+        with open(filename, 'a') as f:
+            f.write(json.dumps(data))

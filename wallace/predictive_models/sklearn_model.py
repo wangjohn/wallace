@@ -16,7 +16,15 @@ class SklearnModel(PredictiveModel):
         filtered_matrix = variable_encoder.convert_categorical_variables(filtered_matrix, categorical_features)
 
         encoder = preprocessing.OneHotEncoder(categorical_features=categorical_features)
-        return encoder.fit_transform(filtered_matrix)
+        data_result = encoder.fit_transform(filtered_matrix)
+
+        # Take care of sparse and non-sparse matrices. If we have any categorical
+        # variables, then it is likely we will get back a sparse matrix and will
+        # need to convert it into an array.
+        try:
+            return data_result.toarray()
+        except AttributeError:
+            return data_result
 
     def get_categorical_features(self, filtered_data_types):
         categorical_features = []

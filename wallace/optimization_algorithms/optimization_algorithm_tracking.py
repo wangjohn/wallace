@@ -9,6 +9,7 @@ class OptimizationAlgorithmTracking(object):
         self.current_step = step_number
         self.population_history[step_number] = [wrapper.json() for wrapper in model_population]
         self.best_fitness_history[step_number] = max([wrapper.fitness for wrapper in model_population])
+        self.flush_data(step_number)
 
     def step_population_history(self, step_number=None):
         step_number = self._get_step_number(step_number)

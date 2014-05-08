@@ -1,9 +1,6 @@
 from collections import defaultdict
 
 class CategoricalVariableEncoder(object):
-    def __init__(self, settings):
-        self.settings = settings
-
     def convert_categorical_variables(self, data_matrix, category_indices, category_value_mapping=None):
         if len(category_indices) == 0:
             return data_matrix

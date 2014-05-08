@@ -1,7 +1,6 @@
 from unittest import TestCase
 
 from wallace.categorical_variable_encoder import CategoricalVariableEncoder
-from wallace.settings import AbstractSettings
 
 class CategoricalVariableEncoderTest(TestCase):
     def setUp(self):
@@ -13,7 +12,7 @@ class CategoricalVariableEncoderTest(TestCase):
                 ["5","3","d","m"]
                 ]
         self.categorical_indices = [2,3]
-        self.categorical_variable_encoder = CategoricalVariableEncoder(AbstractSettings({}))
+        self.categorical_variable_encoder = CategoricalVariableEncoder()
 
     def test_getting_category_values(self):
         category_values = self.categorical_variable_encoder.get_category_values(self.data_matrix, self.categorical_indices)

@@ -1,6 +1,7 @@
 from sklearn import preprocessing
 
 from wallace.predictive_models.predictive_model import PredictiveModel, TrainedPredictiveModel
+from wallace.categorical_variable_encoder import CategoricalVariableEncoder
 
 class SklearnModel(PredictiveModel):
     def get_dependent_variable_data(self, dataset):
@@ -8,18 +9,22 @@ class SklearnModel(PredictiveModel):
 
     def get_independent_variable_data(self, dataset):
         filtered_matrix = dataset.get_filtered_matrix(self.independent_variables)
-        encoder = self.get_encoder(dataset)
+        filtered_data_types = dataset.get_filtered_data_types(self.independent_variables)
+        categorical_features = self.get_categorical_features(filtered_data_types)
+
+        variable_encoder = CategoricalVariableEncoder()
+        filtered_matrix = variable_encoder.convert_categorical_variables(filtered_matrix, categorical_features)
+
+        encoder = preprocessing.OneHotEncoder(categorical_features=categorical_features)
         return encoder.fit_transform(filtered_matrix)
 
-    def get_encoder(self, dataset):
-        filtered_data_types = dataset.get_filtered_data_types(self.independent_variables)
+    def get_categorical_features(self, filtered_data_types):
         categorical_features = []
         for i in xrange(len(filtered_data_types)):
             data_type = filtered_data_types[i]
             if data_type == "string" or data_type == "boolean":
                 categorical_features.append(i)
-
-        return preprocessing.OneHotEncoder(categorical_features=categorical_features)
+        return categorical_features
 
 class TrainedSklearnModel(TrainedPredictiveModel):
     def __init__(self, predictive_model, fitted_regression):

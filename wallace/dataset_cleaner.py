@@ -51,6 +51,10 @@ class DatasetCleaner(object):
             raise MissingDataException()
         if data_type == "date":
             return (DataTypeClassification.get_date(entry) - datetime(1970, 1, 1)).total_seconds()
+        elif data_type == "integer":
+            return int(entry)
+        elif data_type == "float":
+            return float(entry)
 
         return entry
 

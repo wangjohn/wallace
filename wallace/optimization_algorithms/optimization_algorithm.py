@@ -65,6 +65,8 @@ class OptimizationAlgorithm(object):
         while not self.has_finished():
             self.step()
 
+        self.logger.info("Finished running optimization algorithm.")
+
     def step(self):
         self.current_step += 1
         self.update_population()

@@ -1,18 +1,23 @@
 from datetime import datetime
 from wallace.data_type_classification import DataTypeClassification
+import logging
 
 class DatasetCleaner(object):
     def __init__(self, settings, data_matrix, headers=None):
         self.settings = settings
         self.data_matrix = data_matrix
         self.headers = headers
+        self.logger = logging.getLogger(__name__)
 
     def clean(self):
+        self.logger.info("Cleaning dataset.")
         if len(self.data_matrix) <= 0:
             return self.data_matrix
 
         num_columns = self.get_num_columns(self.data_matrix, self.headers)
         data_types = DataTypeClassification.classify_row(self.data_matrix[0])
+        self.logger.info("Row data types: %s", str(data_types))
+
         resulting_data_matrix = []
         for i in xrange(len(self.data_matrix)):
             if len(self.data_matrix[i]) != num_columns:

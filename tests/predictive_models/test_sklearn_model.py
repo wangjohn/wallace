@@ -27,4 +27,4 @@ class SklearnModelTest(TestCase):
 
         self.assertEqual(5, len(independent_variable_data))
         num_categories = len(independent_variable_data[0])
-        self.assertEqual(6, num_categories)
+        self.assertEqual(5, num_categories)

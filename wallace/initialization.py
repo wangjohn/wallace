@@ -3,6 +3,7 @@ from weighted_selection import WeightedSelection
 from dataset import DatasetVariable
 from dataset_file_reader import DatasetFileReader
 from optimization_algorithms.predictive_model_generator import PredictiveModelGenerator
+from multiprocessing import Pool
 import logging
 
 from wallace.predictive_models.lasso_regression import LassoRegression
@@ -62,3 +63,9 @@ class WallaceInitialization(object):
 
         self.logger.info("Running differential evolution on dataset.")
         initialization.run_differential_evolution(dataset, dependent_variable)
+
+    @classmethod
+    def initialize_multiprocess_pool(klass, settings, dependent_variable, dataset_filename, processes=10):
+        self.logger.info("Initializing multiprocess pool with %s processes.", proccesses)
+        pool = Pool(processes=processes)
+        result = pool.apply_async(klass.initialize, args=(settings, dependent_variable, dataset_filename))

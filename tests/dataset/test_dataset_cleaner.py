@@ -37,7 +37,7 @@ class DatasetCleanerTest(TestCase):
         cleaned_row = self.dataset_cleaner.clean_row(["1", "4/25/2013", "Bob"], ["integer", "date", "string"])
         timestamp = (datetime(2013, 4, 25) - datetime(1970, 1, 1)).total_seconds()
 
-        self.assertEqual("1", cleaned_row[0])
+        self.assertEqual(1, cleaned_row[0])
         self.assertEqual(timestamp, cleaned_row[1])
         self.assertEqual("Bob", cleaned_row[2])
 
@@ -51,8 +51,8 @@ class DatasetCleanerTest(TestCase):
         timestamp1 = (datetime(2003, 5, 12) - datetime(1970, 1, 1)).total_seconds()
         timestamp2 = (datetime(1995, 3, 12) - datetime(1970, 1, 1)).total_seconds()
         self.assertEqual(2, len(cleaned_matrix))
-        self.assertListEqual(["3421", "1232", "hello", "t", timestamp1], cleaned_matrix[0])
-        self.assertListEqual(["2123", "2221", "mello", "f", timestamp2], cleaned_matrix[1])
+        self.assertListEqual([3421, 1232, "hello", "t", timestamp1], cleaned_matrix[0])
+        self.assertListEqual([2123, 2221, "mello", "f", timestamp2], cleaned_matrix[1])
 
     def test_incorrect_number_of_columns_raises_exception(self):
         matrix = list(self.data_matrix)

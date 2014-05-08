@@ -66,10 +66,10 @@ class DatasetFileReaderTest(TestCase):
         with self.assertRaises(ValueError):
             dataset.column_index("some_header_that_doesn't_exist")
 
-        self.assertListEqual(['1252', 't', 'john', 'wang'], dataset.get_row(0))
-        self.assertListEqual(['1234', 'f', 'bob', 'hope'], dataset.get_row(1))
-        self.assertListEqual(['5555', 'f', 'rob', 'bernham'], dataset.get_row(2))
-        self.assertListEqual(['99', 't', 'paul', 'graham'], dataset.get_row(3))
+        self.assertListEqual([1252, 't', 'john', 'wang'], dataset.get_row(0))
+        self.assertListEqual([1234, 'f', 'bob', 'hope'], dataset.get_row(1))
+        self.assertListEqual([5555, 'f', 'rob', 'bernham'], dataset.get_row(2))
+        self.assertListEqual([99, 't', 'paul', 'graham'], dataset.get_row(3))
 
         with self.assertRaises(IndexError):
             dataset.get_row(4)

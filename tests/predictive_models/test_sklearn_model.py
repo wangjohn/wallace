@@ -8,11 +8,11 @@ from wallace.settings import AbstractSettings
 class SklearnModelTest(TestCase):
     def setUp(self):
         data_matrix = [
-                ["1","2","3","a"],
-                ["2","3","2","b"],
-                ["3","2","1","a"],
-                ["5","5","1","c"],
-                ["2","2","2","a"]]
+                [1,2,3,"a"],
+                [2,3,2,"b"],
+                [3,2,1,"a"],
+                [5,5,1,"c"],
+                [2,2,2,"a"]]
         self.dataset = Dataset(data_matrix)
         self.settings = AbstractSettings({})
         self.parameter_set = ParameterSet({})
@@ -24,8 +24,7 @@ class SklearnModelTest(TestCase):
 
     def test_changing_categorical_independent_variables(self):
         independent_variable_data = self.sklearn_model.get_independent_variable_data(self.dataset)
-        print independent_variable_data
-        
+
         self.assertEqual(5, len(independent_variable_data))
         num_categories = len(independent_variable_data[0])
         self.assertEqual(6, num_categories)

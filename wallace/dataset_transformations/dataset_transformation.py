@@ -22,7 +22,15 @@ class DatasetTransformation(object):
         return self.rotate_matrix(transformed_columns)
 
     def rotate_matrix(self, data_matrix):
-        pass
+        num_cols = len(data_matrix[0])
+        rotated_matrix = []
+        for j in xrange(num_cols):
+            current_row = []
+            for i in xrange(len(data_matrix)):
+                current_row.append(data_matrix[i][j])
+            rotated_matrix.append(current_row)
+
+        return rotated_matrix
 
     def transform_column(self, column):
         raise NotImplementedError()

@@ -1,4 +1,4 @@
-from wallace.dataset import DatasetVariable
+from wallace.dataset import Dataset, DatasetVariable
 from wallace.dataset_transformations.dataset_transformation import DatasetTransformation
 
 class DatasetTransformer(object):
@@ -14,7 +14,7 @@ class DatasetTransformer(object):
         transformed_columns = []
         transformed_headers = []
         if variables == None:
-            variables = [DatasetVariable(i) for i in xrange(len(dataset.num_cols))]
+            variables = [DatasetVariable(i) for i in xrange(dataset.num_cols)]
 
         resulting_datasets = [dataset]
         for transformation in self.transformations:

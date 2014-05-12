@@ -1,4 +1,4 @@
-from wallace.dataset import DatasetVariable
+from wallace.dataset import Dataset, DatasetVariable
 
 class DatasetTransformation(object):
     def __init__(self, settings):
@@ -19,7 +19,25 @@ class DatasetTransformation(object):
             current_transformed = self.transform_column(current_column)
             self.append_lists(transformed_columns, current_transformed)
 
-        return self.rotate_matrix(transformed_columns)
+        if dataset.headers == None:
+            headers = None
+        else:
+            headers = []
+            for j in xrange(num_cols):
+                transformed_header = self.get_transformed_header(dataset, variables[j])
+                headers.append(transformed_header)
+
+        data_matrix = self.rotate_matrix(transformed_columns)
+        return Dataset(data_matrix, headers)
+
+    def get_transformed_header(self, dataset, variable):
+        if dataset.headers == None:
+            return None
+        else:
+            column_index = variable.get_column_index(dataset)
+            class_name = self.__class__.__name__.lower()
+            data_header = dataset.headers[column_index]
+            return "%s_%s" % (class_name, data_header)
 
     def append_lists(self, data_matrix, lists):
         is_single_list = False

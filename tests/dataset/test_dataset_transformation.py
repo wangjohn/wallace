@@ -33,10 +33,31 @@ class DatasetTransformationClass(TestCase):
                 ]
         dataset = Dataset(data_matrix)
 
-        transformed_matrix = self.dataset_transformation.transform(dataset)
+        transformed_dataset = self.dataset_transformation.transform(dataset)
+        transformed_matrix, transformed_headers = transformed_dataset.data_matrix, transformed_dataset.headers
         self.assertEqual(2, len(transformed_matrix))
         self.assertListEqual([1,2,3], transformed_matrix[0])
         self.assertListEqual([4,5,6], transformed_matrix[1])
+        self.assertEqual(None, transformed_headers)
+
+    def test_identity_transform_with_headers(self):
+        data_matrix = [
+                [1,2,3],
+                [4,5,6]
+                ]
+        headers = ["h0", "h1", "h2"]
+        dataset = Dataset(data_matrix, headers)
+
+        transformed_dataset = self.dataset_transformation.transform(dataset)
+        transformed_matrix, transformed_headers = transformed_dataset.data_matrix, transformed_dataset.headers
+        self.assertEqual(2, len(transformed_matrix))
+        self.assertListEqual([1,2,3], transformed_matrix[0])
+        self.assertListEqual([4,5,6], transformed_matrix[1])
+
+        self.assertEqual(3, len(transformed_headers))
+        self.assertEqual("identitytransformation_h0", transformed_headers[0])
+        self.assertEqual("identitytransformation_h1", transformed_headers[1])
+        self.assertEqual("identitytransformation_h2", transformed_headers[2])
 
     def test_appending_multiple_lists(self):
         data_matrix = []

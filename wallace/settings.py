@@ -9,6 +9,7 @@ class AbstractSettings(object):
             "dataset.maximum_dataset_size": 50000,
             "dataset.randomize_file_reader": False,
             "dataset.remove_rows_with_missing_data": True,
+            "dataset_transformation.log_transformation_base": 10,
             "differential_evolution.crossover_probability": 0.5,
             "differential_evolution.differential_weight": 0.8,
             "optimization_algorithm.population_size": 40,

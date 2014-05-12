@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from wallace.settings import AbstractSettings
 from wallace.dataset_transformations.dataset_transformation import DatasetTransformation
-from wallace.dataset import Dataset
+from wallace.dataset import Dataset, DatasetVariable
 
 class IdentityTransformation(DatasetTransformation):
     def transform_column(self, column):
@@ -75,3 +75,30 @@ class DatasetTransformationClass(TestCase):
 
         self.assertEqual(1, len(data_matrix))
         self.assertListEqual(["more", 2.3, "bobby"], data_matrix[0])
+
+    def test_header_transformation_for_dataset_without_headers(self):
+        data_matrix = [
+                [1,2,3],
+                [4,5,6]
+                ]
+        dataset = Dataset(data_matrix)
+        variable = DatasetVariable(0)
+        header = self.dataset_transformation.get_transformed_header(dataset, variable)
+
+        self.assertEqual(None, header)
+
+    def test_header_transformation_for_dataset_with_headers(self):
+        data_matrix = [
+                [1,2,3],
+                [4,5,6]
+                ]
+        headers = ["h0", "h1", "h2"]
+        dataset = Dataset(data_matrix, headers)
+
+        variable = DatasetVariable(0)
+        header = self.dataset_transformation.get_transformed_header(dataset, variable)
+        self.assertEqual("identitytransformation_h0", header)
+
+        variable = DatasetVariable("h2")
+        header = self.dataset_transformation.get_transformed_header(dataset, variable)
+        self.assertEqual("identitytransformation_h2", header)

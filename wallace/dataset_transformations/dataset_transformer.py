@@ -30,8 +30,8 @@ class DatasetTransformer(object):
         first_dataset = datasets[0]
         num_rows = first_dataset.num_rows
         data_matrix = []
-        for row in first_dataset:
-            data_matrix.append(list(row))
+        for i in xrange(num_rows):
+            data_matrix.append(list(first_dataset.get_row(i)))
 
         if first_dataset.headers == None:
             headers = None
@@ -39,7 +39,7 @@ class DatasetTransformer(object):
             headers = list(first_dataset.headers)
 
         for dataset in datasets[1:]:
-            headers = self.merge_headers(headers, dataset)
+            headers = self._merge_headers(headers, dataset)
             data_matrix = self._merge_data_matrix(data_matrix, dataset, num_rows)
         return Dataset(data_matrix, headers)
 

@@ -1,8 +1,9 @@
-from settings import AbstractSettings
-from weighted_selection import WeightedSelection
-from dataset import DatasetVariable
-from dataset_file_reader import DatasetFileReader
-from optimization_algorithms.predictive_model_generator import PredictiveModelGenerator
+from wallace.settings import AbstractSettings
+from wallace.weighted_selection import WeightedSelection
+from wallace.dataset import DatasetVariable
+from wallace.dataset_file_reader import DatasetFileReader
+from wallace.optimization_algorithms.predictive_model_generator import PredictiveModelGenerator
+from wallace.dataset_transformations.dataset_transformer import DatasetTransformer
 from multiprocessing import Pool
 import logging
 
@@ -58,6 +59,8 @@ class WallaceInitialization(object):
         self.logger.info("Initializing Wallace.")
         initialization = WallaceInitialization(settings)
         dataset = initialization.read_filename(dataset_filename)
+        dataset = DatasetTransformer.transform(dataset)
+
         if not isinstance(dependent_variable, DatasetVariable):
             dependent_variable = DatasetVariable(dependent_variable)
 

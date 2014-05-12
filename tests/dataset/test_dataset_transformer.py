@@ -33,6 +33,43 @@ class DatasetTransformerTest(TestCase):
         self.assertListEqual([2,3,"bye",2,3,"bye"], result_matrix[1])
         self.assertEqual(None, result.headers)
 
+    def test_using_transformer_on_multiple_transformations(self):
+        data_matrix = [
+                [1,2,"hi"],
+                [2,3,"bye"]
+                ]
+        dataset = Dataset(data_matrix)
+        transformations = [IdentityTransformation, IdentityTransformation]
+        transformer = DatasetTransformer(self.settings, transformations)
+
+        result = transformer.transform(dataset)
+        result_matrix = result.data_matrix
+
+        self.assertEqual(2, result.num_rows)
+        self.assertEqual(9, result.num_cols)
+        self.assertListEqual([1,2,"hi",1,2,"hi",1,2,"hi"], result_matrix[0])
+        self.assertListEqual([2,3,"bye",2,3,"bye",2,3,"bye"], result_matrix[1])
+        self.assertEqual(None, result.headers)
+
+    def test_using_transformer_on_data_matrix_with_headers(self):
+        data_matrix = [
+                [1,2,"hi"],
+                [2,3,"bye"]
+                ]
+        dataset = Dataset(data_matrix, ["h0", "h1", "h2"])
+        transformations = [IdentityTransformation]
+        transformer = DatasetTransformer(self.settings, transformations)
+
+        result = transformer.transform(dataset)
+        result_matrix = result.data_matrix
+
+        self.assertEqual(2, result.num_rows)
+        self.assertEqual(6, result.num_cols)
+        self.assertListEqual([1,2,"hi",1,2,"hi"], result_matrix[0])
+        self.assertListEqual([2,3,"bye",2,3,"bye"], result_matrix[1])
+        self.assertEqual(6, len(result.headers))
+        self.assertListEqual(["h0", "h1", "h2", "identitytransformation_h0", "identitytransformation_h1", "identitytransformation_h2"], result.headers)
+
     def test_dataset_merging_without_headers(self):
         data_matrix_1 = [
                 [1,2],

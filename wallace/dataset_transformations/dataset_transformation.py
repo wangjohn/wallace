@@ -16,10 +16,22 @@ class DatasetTransformation(object):
             for i in xrange(len(filtered_matrix)):
                 current_column.append(filtered_matrix[i][j])
 
-            current_transformed = self.transform_column(column)
-            transformed_columns.extend(current_transformed)
+            current_transformed = self.transform_column(current_column)
+            self.append_lists(data_matrix, current_transformed)
 
         return self.rotate_matrix(transformed_columns)
+
+    def append_lists(self, data_matrix, lists):
+        is_single_list = False
+        for element in lists:
+            if isinstance(element, list):
+                data_matrix.append(element)
+            else:
+                is_single_list = True
+                break
+
+        if is_single_list:
+            data_matrix.append(lists)
 
     def rotate_matrix(self, data_matrix):
         num_cols = len(data_matrix[0])

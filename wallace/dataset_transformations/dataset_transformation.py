@@ -17,7 +17,7 @@ class DatasetTransformation(object):
                 current_column.append(filtered_matrix[i][j])
 
             current_transformed = self.transform_column(current_column)
-            self.append_lists(data_matrix, current_transformed)
+            self.append_lists(transformed_columns, current_transformed)
 
         return self.rotate_matrix(transformed_columns)
 

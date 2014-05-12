@@ -34,6 +34,23 @@ class DatasetTransformationClass(TestCase):
         dataset = Dataset(data_matrix)
 
         transformed_matrix = self.dataset_transformation.transform(dataset)
-        self.assertEqual(3, len(transformed_matrix))
+        self.assertEqual(2, len(transformed_matrix))
         self.assertListEqual([1,2,3], transformed_matrix[0])
         self.assertListEqual([4,5,6], transformed_matrix[1])
+
+    def test_appending_multiple_lists(self):
+        data_matrix = []
+        lists = [[1,3,"hello"],[2,3,"more"]]
+        self.dataset_transformation.append_lists(data_matrix, lists)
+
+        self.assertEqual(2, len(data_matrix))
+        self.assertListEqual([1,3,"hello"], data_matrix[0])
+        self.assertListEqual([2,3,"more"], data_matrix[1])
+
+    def test_appending_single_list(self):
+        data_matrix = []
+        lists = ["more", 2.3, "bobby"]
+        self.dataset_transformation.append_lists(data_matrix, lists)
+
+        self.assertEqual(1, len(data_matrix))
+        self.assertListEqual(["more", 2.3, "bobby"], data_matrix[0])

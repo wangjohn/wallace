@@ -8,7 +8,7 @@ class LogTransformation(DatasetTransformation):
 
     def transform_column(self, column):
         base = self.DEFAULT_LOG_BASE
-        if self.settings.has("dataset_transformation.log_transformation_base")
+        if self.settings.has("dataset_transformation.log_transformation_base"):
             base = self.settings.get("dataset_transformation.log_transformation_base")
 
         return [math.log(val, base) for val in column]

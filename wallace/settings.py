@@ -1,5 +1,10 @@
 from wallace.fitness_evaluation_methods.fitness_evaluation_method import MeanSquaredError
 
+from wallace.dataset_transformations.log_transformation import LogTransformation
+from wallace.dataset_transformations.scale_transformation import ScaleTransformation
+from wallace.dataset_transformations.sqrt_transformation import SqrtTransformation
+from wallace.dataset_transformations.box_cox_transformation import BoxCoxTransformation
+
 class AbstractSettings(object):
     DEFAULTS = {
             "fitness_evaluation.crossfold_partitions": 10,
@@ -10,6 +15,7 @@ class AbstractSettings(object):
             "dataset.randomize_file_reader": False,
             "dataset.remove_rows_with_missing_data": True,
             "dataset_transformation.log_transformation_base": 10,
+            "dataset_transformation.default_transformations": [LogTransformation, ScaleTransformation, SqrtTransformation, BoxCoxTransformation],
             "differential_evolution.crossover_probability": 0.5,
             "differential_evolution.differential_weight": 0.8,
             "optimization_algorithm.population_size": 40,

@@ -90,6 +90,10 @@ class Dataset(object):
             test_dataset = Dataset(shuffled[test_start:test_end], self.headers, self.data_types)
             yield (training_dataset, test_dataset)
 
+    @classmethod
+    def merge_datasets(klass, datasets):
+        raise NotImplementedError()
+
     def _variable_indices(self, variables):
         if len(variables) <= 0:
             raise ValueError("Must have a non-empty list of variables when filtering dataset.")

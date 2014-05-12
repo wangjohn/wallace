@@ -19,16 +19,17 @@ class DatasetTransformation(object):
             current_transformed = self.transform_column(current_column)
             self.append_lists(transformed_columns, current_transformed)
 
-        if dataset.headers == None:
-            headers = None
-        else:
+        data_matrix = self.rotate_matrix(transformed_columns)
+        headers = self.get_transformed_headers(dataset, variables)
+        return Dataset(data_matrix, headers)
+
+    def get_transformed_headers(self, dataset, variables):
+        if dataset.headers != None:
             headers = []
-            for j in xrange(num_cols):
+            for j in xrange(len(variables)):
                 transformed_header = self.get_transformed_header(dataset, variables[j])
                 headers.append(transformed_header)
-
-        data_matrix = self.rotate_matrix(transformed_columns)
-        return Dataset(data_matrix, headers)
+            return headers
 
     def get_transformed_header(self, dataset, variable):
         if dataset.headers == None:

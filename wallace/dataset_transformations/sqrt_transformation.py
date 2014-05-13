@@ -5,4 +5,7 @@ import math
 
 class SqrtTransformation(DatasetTransformation):
     def transform_column(self, column):
-        return [math.sqrt(val) for val in column]
+        try:
+            return [math.sqrt(val) for val in column]
+        except ValueError:
+            return None

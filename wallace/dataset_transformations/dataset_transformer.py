@@ -19,7 +19,8 @@ class DatasetTransformer(object):
         resulting_datasets = [dataset]
         for transformation in self.transformations:
             current_dataset = transformation.transform(dataset, variables)
-            resulting_datasets.append(current_dataset)
+            if current_dataset != None:
+                resulting_datasets.append(current_dataset)
 
         return self.merge_datasets(resulting_datasets)
 
@@ -63,11 +64,11 @@ class DatasetTransformer(object):
     def _initialize_transformations(self, transformations):
         if transformations == None:
             if self.settings.has("dataset_transformation.default_transformations"):
-                return self.settings.get("dataset_transformation.default_transformations")
+                transformations = self.settings.get("dataset_transformation.default_transformations")
             else:
-                return []
-        else:
-            return [self._cast_transformation(transform) for transform in transformations]
+                transformations = []
+
+        return [self._cast_transformation(transform) for transform in transformations]
 
     def _cast_transformation(self, transform):
          if isinstance(transform, DatasetTransformation):

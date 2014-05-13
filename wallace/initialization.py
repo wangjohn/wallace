@@ -28,6 +28,7 @@ class WallaceInitialization(object):
             self.settings = AbstractSettings(settings)
         self.models = models
         self.logger = logging.getLogger(__name__)
+        self.logger.info("Initializing Wallace.")
 
     def create_predictive_model_generator(self, models=None):
         if models == None:
@@ -47,28 +48,29 @@ class WallaceInitialization(object):
         return predictive_model_generator
 
     def run_differential_evolution(self, dataset, dependent_variable):
+        self.logger.info("Running differential evolution on dataset.")
         predictive_model_generator = self.create_predictive_model_generator()
         differential_evolution = DifferentialEvolution(dataset, dependent_variable, self.settings, predictive_model_generator)
         differential_evolution.run()
 
     def read_filename(self, dataset_filename):
-        return DatasetFileReader(self.settings, dataset_filename).read()
+        dataset = DatasetFileReader(self.settings, dataset_filename).read()
+        return self.clean_and_transform_data(dataset)
+
+    def clean_and_transform_data(self, dataset):
+        return DatasetTransformer(self.settings).transform(dataset)
 
     @classmethod
     def initialize(klass, settings, dependent_variable, dataset_filename):
-        self.logger.info("Initializing Wallace.")
         initialization = WallaceInitialization(settings)
         dataset = initialization.read_filename(dataset_filename)
-        dataset = DatasetTransformer.transform(dataset)
 
         if not isinstance(dependent_variable, DatasetVariable):
             dependent_variable = DatasetVariable(dependent_variable)
 
-        self.logger.info("Running differential evolution on dataset.")
         initialization.run_differential_evolution(dataset, dependent_variable)
 
     @classmethod
     def initialize_multiprocess_pool(klass, settings, dependent_variable, dataset_filename, processes=10):
-        self.logger.info("Initializing multiprocess pool with %s processes.", proccesses)
         pool = Pool(processes=processes)
         result = pool.apply_async(klass.initialize, args=(settings, dependent_variable, dataset_filename))

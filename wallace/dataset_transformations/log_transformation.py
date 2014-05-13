@@ -11,4 +11,7 @@ class LogTransformation(DatasetTransformation):
         if self.settings.has("dataset_transformation.log_transformation_base"):
             base = self.settings.get("dataset_transformation.log_transformation_base")
 
-        return [math.log(val, base) for val in column]
+        try:
+            return [math.log(val, base) for val in column]
+        except ValueError:
+            return None

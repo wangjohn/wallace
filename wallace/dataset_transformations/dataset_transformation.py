@@ -9,19 +9,28 @@ class DatasetTransformation(object):
             variables = [DatasetVariable(i) for i in xrange(dataset.num_cols)]
 
         filtered_matrix = dataset.get_filtered_matrix(variables)
+        filtered_data_types = dataset.get_filtered_data_types(variables)
         num_cols = len(filtered_matrix[0])
         transformed_columns = []
         for j in xrange(num_cols):
-            current_column = []
-            for i in xrange(len(filtered_matrix)):
-                current_column.append(filtered_matrix[i][j])
+            if filtered_data_types[j] in self.valid_data_types():
+                self.transform_and_append_column(j, filtered_matrix, transformed_columns)
 
+        if len(transformed_columns) > 0:
+            data_matrix = self.rotate_matrix(transformed_columns)
+            headers = self.get_transformed_headers(dataset, variables)
+            return Dataset(data_matrix, headers)
+
+    def transform_and_append_column(self, column_index, filtered_matrix, transformed_columns):
+        current_column = []
+        for i in xrange(len(filtered_matrix)):
+            current_column.append(filtered_matrix[i][column_index])
+
+        try:
             current_transformed = self.transform_column(current_column)
             self.append_lists(transformed_columns, current_transformed)
-
-        data_matrix = self.rotate_matrix(transformed_columns)
-        headers = self.get_transformed_headers(dataset, variables)
-        return Dataset(data_matrix, headers)
+        except Exception:
+            pass
 
     def get_transformed_headers(self, dataset, variables):
         if dataset.headers != None:
@@ -62,6 +71,9 @@ class DatasetTransformation(object):
             rotated_matrix.append(current_row)
 
         return rotated_matrix
+
+    def valid_data_types(self):
+        return ["integer", "float"]
 
     def transform_column(self, column):
         raise NotImplementedError()

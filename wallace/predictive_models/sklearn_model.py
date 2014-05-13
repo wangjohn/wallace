@@ -29,7 +29,7 @@ class SklearnModel(PredictiveModel):
     def get_categorical_features(self, filtered_data_types):
         categorical_features = []
         for i in xrange(len(filtered_data_types)):
-            data_type = filtered_data_types[i]
+            data_type = filtered_data_types[i].data_type
             if data_type == "string" or data_type == "boolean":
                 categorical_features.append(i)
         return categorical_features

@@ -13,6 +13,24 @@ class DatasetTest(TestCase):
         headers = ["number", "string", "another_string"]
         self.dataset = Dataset(data_matrix, headers)
 
+    def test_data_types_and_categories_when_initializing_dataset(self):
+        self.assertEqual(3, len(self.dataset.data_types))
+        self.assertEqual("integer", self.dataset.data_types[0].data_type)
+        self.assertEqual("string", self.dataset.data_types[1].data_type)
+        self.assertEqual("string", self.dataset.data_types[2].data_type)
+
+        self.assertEqual(4, len(self.dataset.data_types[1].categories))
+        self.assertTrue(self.dataset.data_types[1].in_categories("detective"))
+        self.assertTrue(self.dataset.data_types[1].in_categories("pablo"))
+        self.assertTrue(self.dataset.data_types[1].in_categories("african"))
+        self.assertTrue(self.dataset.data_types[1].in_categories("applause"))
+
+        self.assertEqual(4, len(self.dataset.data_types[2].categories))
+        self.assertTrue(self.dataset.data_types[2].in_categories("book"))
+        self.assertTrue(self.dataset.data_types[2].in_categories("escobar"))
+        self.assertTrue(self.dataset.data_types[2].in_categories("queen"))
+        self.assertTrue(self.dataset.data_types[2].in_categories("movie"))
+
     def test_getting_independent_variables(self):
         dependent_variable_index = DatasetVariable(0)
         dependent_variable_header = DatasetVariable("number")

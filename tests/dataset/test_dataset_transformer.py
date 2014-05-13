@@ -14,7 +14,9 @@ class IdentityTransformation(DatasetTransformation):
 
 class DatasetTransformerTest(TestCase):
     def setUp(self):
-        self.settings = AbstractSettings()
+        self.settings = AbstractSettings({
+            "dataset_transformation.default_transformations": True
+            })
         self.transformations = [IdentityTransformation]
         self.transformer = DatasetTransformer(self.settings, self.transformations)
 

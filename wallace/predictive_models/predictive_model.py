@@ -40,4 +40,4 @@ class TrainedPredictiveModel(object):
     def predict_and_evaluate_fitness(self, dataset, evaluation_method):
         predicted_results = self.predict(dataset)
         actual_results = self.predictive_model.get_dependent_variable_data(dataset)
-        return evaluation_method.evaluate_fitness(results, actual_results)
+        return evaluation_method.evaluate_fitness(predicted_results, actual_results)

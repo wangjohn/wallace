@@ -103,7 +103,7 @@ class Dataset(object):
                     resulting_types.append(data_type)
 
         for i in xrange(len(resulting_types)):
-            if resulting_types[i].is_equal("string"):
+            if resulting_types[i].is_equal("string") and resulting_types[i].categories == None:
                 resulting_types[i] = DataType("string", categories=set(self.get_column(i)))
 
         return resulting_types

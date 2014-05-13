@@ -55,7 +55,10 @@ class WallaceInitialization(object):
 
     def read_filename(self, dataset_filename):
         dataset = DatasetFileReader(self.settings, dataset_filename).read()
-        return self.clean_and_transform_data(dataset)
+        if self.settings.get("dataset_transformation.transform_datasets"):
+            return self.clean_and_transform_data(dataset)
+        else:
+            return dataset
 
     def clean_and_transform_data(self, dataset):
         return DatasetTransformer(self.settings).transform(dataset)

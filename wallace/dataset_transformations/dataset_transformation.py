@@ -13,7 +13,7 @@ class DatasetTransformation(object):
         num_cols = len(filtered_matrix[0])
         transformed_columns = []
         for j in xrange(num_cols):
-            if filtered_data_types[j] in self.valid_data_types():
+            if filtered_data_types[j].data_type in self.valid_data_types():
                 self.transform_and_append_column(j, filtered_matrix, transformed_columns)
 
         if len(transformed_columns) > 0:

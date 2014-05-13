@@ -3,6 +3,7 @@ from datetime import datetime
 
 from wallace.dataset_cleaner import DatasetCleaner, MissingDataException
 from wallace.settings import AbstractSettings
+from wallace.data_type import DataType
 
 class DatasetCleanerTest(TestCase):
     def setUp(self):
@@ -20,21 +21,21 @@ class DatasetCleanerTest(TestCase):
 
     def test_clean_entry_on_missing_data_raises_exception(self):
         with self.assertRaises(MissingDataException):
-            self.dataset_cleaner.clean_entry("NaN", "string")
+            self.dataset_cleaner.clean_entry("NaN", DataType("string"))
 
         with self.assertRaises(MissingDataException):
-            self.dataset_cleaner.clean_entry("", "float")
+            self.dataset_cleaner.clean_entry("", DataType("float"))
 
         with self.assertRaises(MissingDataException):
-            self.dataset_cleaner.clean_entry("NA", "integer")
+            self.dataset_cleaner.clean_entry("NA", DataType("integer"))
 
     def test_clean_entry_on_date(self):
-        cleaned_entry = self.dataset_cleaner.clean_entry("4/25/2013", "date")
+        cleaned_entry = self.dataset_cleaner.clean_entry("4/25/2013", DataType("date"))
         timestamp = (datetime(2013, 4, 25) - datetime(1970, 1, 1)).total_seconds()
         self.assertEqual(timestamp, cleaned_entry)
 
     def test_clean_entry_on_row(self):
-        cleaned_row = self.dataset_cleaner.clean_row(["1", "4/25/2013", "Bob"], ["integer", "date", "string"])
+        cleaned_row = self.dataset_cleaner.clean_row(["1", "4/25/2013", "Bob"], [DataType("integer"), DataType("date"), DataType("string")])
         timestamp = (datetime(2013, 4, 25) - datetime(1970, 1, 1)).total_seconds()
 
         self.assertEqual(1, cleaned_row[0])
@@ -43,7 +44,7 @@ class DatasetCleanerTest(TestCase):
 
     def test_clean_entry_on_row_raises_exception_for_missin_data(self):
         with self.assertRaises(MissingDataException):
-            cleaned_row = self.dataset_cleaner.clean_row(["NaN", "4/25/2013", "Bob"], ["integer", "date", "string"])
+            cleaned_row = self.dataset_cleaner.clean_row(["NaN", "4/25/2013", "Bob"], [DataType("integer"), DataType("date"), DataType("string")])
 
     def test_fully_cleaning_the_dataset(self):
         cleaned_matrix = self.dataset_cleaner.clean()

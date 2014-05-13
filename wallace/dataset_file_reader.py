@@ -50,8 +50,8 @@ class DatasetFileReader(object):
 
         non_matching_types = 0
         for header_type, row_type in zip(header_data_types, row_data_types):
-            if header_type in ["boolean", "string"]:
-                if header_type != row_type:
+            if header_type.data_type in ["boolean", "string"]:
+                if header_type.data_type != row_type:
                     non_matching_types += 1
             else:
                 # Header type is not a boolean or string --  we assume that

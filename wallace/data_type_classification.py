@@ -67,4 +67,3 @@ class DataTypeClassification(object):
     @classmethod
     def classify_row(klass, row):
         return [klass.classify(entry) for entry in row]
-

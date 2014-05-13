@@ -1,5 +1,6 @@
 import random
 from wallace.data_type_classification import DataTypeClassification
+from wallace.data_type import DataType
 
 class Dataset(object):
     def __init__(self, data_matrix, headers=None, data_types=None):
@@ -7,10 +8,7 @@ class Dataset(object):
         self.data_matrix = data_matrix
         self.num_rows = len(self.data_matrix)
         self.num_cols = len(self.data_matrix[0])
-        if data_types == None:
-            self.data_types = DataTypeClassification.classify_row(self.data_matrix[0])
-        else:
-            self.data_types = data_types
+        self.data_types = self._initialize_data_types(data_types)
 
     def get(self, row, col):
         return self.data_matrix[row][col]
@@ -89,6 +87,26 @@ class Dataset(object):
             training_dataset = Dataset(shuffled[:test_start] + shuffled[test_end:], self.headers, self.data_types)
             test_dataset = Dataset(shuffled[test_start:test_end], self.headers, self.data_types)
             yield (training_dataset, test_dataset)
+
+    def _initialize_data_types(self, data_types):
+        if data_types == None:
+            resulting_types = DataTypeClassification.classify_row(self.data_matrix[0])
+        else:
+            if len(data_types) != self.num_cols:
+                raise ValueError("The data_types lists must be the same length as the number of columns in the dataset.")
+
+            resulting_types = []
+            for data_type in data_types:
+                if isinstance(data_type, str):
+                    resulting_types.append(DataType(data_type))
+                else:
+                    resulting_types.append(data_type)
+
+        for i in xrange(len(resulting_types)):
+            if resulting_types[i].is_equal("string"):
+                resulting_types[i] = DataType("string", categories=set(self.get_column(i)))
+
+        return resulting_types
 
     def _variable_indices(self, variables):
         if len(variables) <= 0:

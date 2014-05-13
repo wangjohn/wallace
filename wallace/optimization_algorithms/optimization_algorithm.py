@@ -3,6 +3,7 @@ from wallace.independent_variables import IndependentVariableSelection
 from wallace.optimization_algorithms.optimization_algorithm_model_wrapper import OptimizationAlgorithmModelWrapper
 from wallace.optimization_algorithms.optimization_algorithm_tracking import OptimizationAlgorithmTracking
 import logging
+import heapq
 
 class OptimizationAlgorithm(object):
     def __init__(self, dataset, dependent_variable, settings, predictive_model_generator):

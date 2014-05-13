@@ -56,6 +56,12 @@ class DatasetTest(TestCase):
 
             past_test_datasets.append(test_dataset.get(0, 0))
 
+        for training_dataset, test_dataset in self.dataset.crossfold_partitions(2):
+            self.assertEqual(2, training_dataset.num_rows)
+            self.assertEqual(2, test_dataset.num_rows)
+            self.assertListEqual(["number", "string", "another_string"], training_dataset.headers)
+            self.assertListEqual(["number", "string", "another_string"], test_dataset.headers)
+
     def test_get_filtered_matrix(self):
         variables = [DatasetVariable(0), DatasetVariable("string")]
 

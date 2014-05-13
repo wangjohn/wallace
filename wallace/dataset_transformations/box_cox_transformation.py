@@ -8,3 +8,6 @@ class BoxCoxTransformation(DatasetTransformation):
         array = numpy.array(column)
         np_array_result, _ = stats.boxcox(array)
         return np_array_result.tolist()
+
+    def valid_data_types(self):
+        return ["integer", "float"]

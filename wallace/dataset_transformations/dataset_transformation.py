@@ -73,7 +73,7 @@ class DatasetTransformation(object):
         return rotated_matrix
 
     def valid_data_types(self):
-        return ["integer", "float"]
+        raise NotImplementedError()
 
     def transform_column(self, column):
         raise NotImplementedError()

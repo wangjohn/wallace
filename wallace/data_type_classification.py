@@ -1,4 +1,5 @@
 from datetime import datetime
+from wallace.data_type import DataType
 
 class DataTypeClassification(object):
     VALID_DATE_FORMATS = [
@@ -53,15 +54,15 @@ class DataTypeClassification(object):
     @classmethod
     def classify(klass, entry):
         if klass.is_integer(entry):
-            return "integer"
+            return DataType("integer")
         elif klass.is_float(entry):
-            return "float"
+            return DataType("float")
         elif klass.is_boolean(entry):
-            return "boolean"
+            return DataType("boolean")
         elif klass.is_date(entry):
-            return "date"
+            return DataType("date")
         else:
-            return "string"
+            return DataType("string")
 
     @classmethod
     def classify_row(klass, row):

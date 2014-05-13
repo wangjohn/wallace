@@ -54,11 +54,11 @@ class DatasetCleaner(object):
     def clean_entry(self, entry, data_type):
         if DataTypeClassification.is_missing_data(entry):
             raise MissingDataException()
-        if data_type == "date":
+        if data_type.is_equal("date"):
             return (DataTypeClassification.get_date(entry) - datetime(1970, 1, 1)).total_seconds()
-        elif data_type == "integer":
+        elif data_type.is_equal("integer"):
             return int(entry)
-        elif data_type == "float":
+        elif data_type.is_equal("float"):
             return float(entry)
 
         return entry

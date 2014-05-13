@@ -12,3 +12,6 @@ class LogTransformation(DatasetTransformation):
             base = self.settings.get("dataset_transformation.log_transformation_base")
 
         return [math.log(val, base) for val in column]
+
+    def valid_data_types(self):
+        return ["integer", "float"]

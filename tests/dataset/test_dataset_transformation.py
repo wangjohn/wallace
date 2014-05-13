@@ -8,6 +8,9 @@ class IdentityTransformation(DatasetTransformation):
     def transform_column(self, column):
         return column
 
+    def valid_data_types(self):
+        return ["integer", "float", "string"]
+
 class DatasetTransformationClass(TestCase):
     def setUp(self):
         settings = AbstractSettings()

@@ -21,12 +21,7 @@ class CategoricalVariableEncoder(object):
 
         category_value_mapping = {}
         for category_index, values_set in categories.iteritems():
-            sorted_values_set = sorted(values_set)
-            value_mapping = {}
-            for i in xrange(len(sorted_values_set)):
-                value_mapping[sorted_values_set[i]] = i
-
-            category_value_mapping[category_index] = value_mapping
+            category_value_mapping[category_index] = self.create_value_map(values_set)
 
         return category_value_mapping
 
@@ -41,3 +36,11 @@ class CategoricalVariableEncoder(object):
                 categories[category_index].add(category_value)
 
         return categories
+
+    @classmethod
+    def create_value_map(self, values_set):
+        sorted_values_set = sorted(values_set)
+        value_mapping = {}
+        for i in xrange(len(sorted_values_set)):
+            value_mapping[sorted_values_set[i]] = i
+        return value_mapping

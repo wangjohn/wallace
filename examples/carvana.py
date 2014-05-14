@@ -17,10 +17,10 @@ settings = {
     "independent_variable_selection.initial_independent_variables_percentage": 0.25,
 
     "optimization_algorithm.population_size": 40,
-    "optimization_algorithm.finishing_criteria.max_steps": 100
+    "optimization_algorithm.finishing_criteria.max_steps": 2
     }
 
 dependent_variable = "IsBadBuy"
-dataset_filename = "/home/john/datasets/kaggle_carvana_training.csv"
+dataset_filename = os.path.join(os.path.dirname(__file__), "../example_datasets/carvana_example.csv")
 
 WallaceInitialization.initialize(settings, dependent_variable, dataset_filename)

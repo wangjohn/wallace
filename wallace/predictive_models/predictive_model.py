@@ -9,6 +9,9 @@ class PredictiveModel(object):
 
         self._validate_parameter_set(self.parameter_set)
 
+    def model_name(self):
+        return self.__class__.__name__
+
     def train(self, dataset):
         raise NotImplementedError()
 

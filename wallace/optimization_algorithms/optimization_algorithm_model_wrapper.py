@@ -16,6 +16,7 @@ class OptimizationAlgorithmModelWrapper(object):
     def json(self):
         dictionary = {
             "fitness": self.fitness,
+            "model_name": self.model.model_name(),
             "independent_variables": [var.variable for var in self.model.independent_variables],
             "dependent_variable": self.model.dependent_variable.variable,
             "parameter_set": self.get_parameters()

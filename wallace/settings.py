@@ -25,7 +25,7 @@ class AbstractSettings(object):
 
     DEFAULTS = {
             "fitness_evaluation.crossfold_partitions": 10,
-            "fitness_evaluation.evaluation_method": MeanSquaredError
+            "fitness_evaluation.evaluation_method": MeanSquaredError,
             "model_tracking.models_to_track": 50,
             "optimization_algorithm_tracking.tracking_log_filename": "logs/optimization_algorithm_logs.log",
             "dataset.maximum_dataset_size": 50000,

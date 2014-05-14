@@ -80,9 +80,9 @@ class OptimizationAlgorithm(object):
 
         evaluation = CrossValidationFitnessEvaluation(self.settings, model, self.dataset)
 
-        if evaluation_method.evaluation_type == "maximizer":
+        if evaluation_method.evaluation_type() == "maximizer":
             fitness = -evaluation.evaluate(evaluation_method)
-        elif evaluation_method.evaluation_type == "minimizer":
+        elif evaluation_method.evaluation_type() == "minimizer":
             fitness = evaluation.evaluate(evaluation_method)
         else:
             raise ValueError("Invalid evaluation type '%s'" % evaluation_method.evaluation_type)

@@ -5,6 +5,10 @@ class FitnessEvaluationMethod(object):
     def evaluate_fitness(klass, predicted_results, true_results):
         raise NotImplementedError()
 
+    @classmethod
+    def evaluation_type(klass):
+        return "minimizer"
+
 ##########################
 ### Regression Metrics ###
 ##########################
@@ -19,6 +23,10 @@ class R2Score(FitnessEvaluationMethod):
     def evaluate_fitness(klass, predicted_results, true_results):
         return sklearn.metrics.r2_score(true_results, predicted_results)
 
+    @classmethod
+    def evaluation_type(klass):
+        return "maximizer"
+
 class MeanAbsoluteError(FitnessEvaluationMethod):
     @classmethod
     def evaluate_fitness(klass, predicted_results, true_results):
@@ -32,3 +40,7 @@ class F1Score(FitnessEvaluationMethod):
     @classmethod
     def evaluate_fitness(klass, predicted_results, true_results):
         return sklearn.metrics.f1_score(true_results, predicted_results)
+
+    @classmethod
+    def evaluation_type(klass):
+        return "maximizer"

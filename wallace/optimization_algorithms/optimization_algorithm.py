@@ -1,4 +1,4 @@
-from wallace import fitness_evaluation
+from wallace.fitness_evaluation import CrossValidationFitnessEvaluation
 from wallace.independent_variables import IndependentVariableSelection
 from wallace.optimization_algorithms.optimization_algorithm_model_wrapper import OptimizationAlgorithmModelWrapper
 from wallace.optimization_algorithms.optimization_algorithm_tracking import OptimizationAlgorithmTracking
@@ -78,8 +78,15 @@ class OptimizationAlgorithm(object):
         if evaluation_method == None:
             evaluation_method = self.settings.get("fitness_evaluation.evaluation_method")
 
-        evaluation = fitness_evaluation.CrossValidationFitnessEvaluation(self.settings, model, self.dataset)
-        fitness = evaluation.evaluate(evaluation_method)
+        evaluation = CrossValidationFitnessEvaluation(self.settings, model, self.dataset)
+
+        if evaluation_method.evaluation_type == "maximizer":
+            fitness = -evaluation.evaluate(evaluation_method)
+        elif evaluation_method.evaluation_type == "minimizer":
+            fitness = evaluation.evaluate(evaluation_method)
+        else:
+            raise ValueError("Invalid evaluation type '%s'" % evaluation_method.evaluation_type)
+
         self.model_tracking.insert(fitness, model)
         return fitness
 

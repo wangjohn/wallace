@@ -72,7 +72,7 @@ class OptimizationAlgorithm(object):
         self.current_step += 1
         self.update_population()
         self.optimization_algorithm_tracking.track_step(self.current_step, self.model_population)
-        self.logger.info("Optimization algorithm step: %s", current_step)
+        self.logger.info("Optimization algorithm step: %s", self.current_step)
 
     def evaluate_fitness(self, model, evaluation_method=None):
         if evaluation_method == None:

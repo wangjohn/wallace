@@ -40,7 +40,7 @@ class OptimizationAlgorithmTracking(object):
                 "model_population": step_population
                 }
 
-        with open(filename, 'a') as f:
+        with open(filename, 'a+') as f:
             f.write(json.dumps(data) + "\n")
 
     def read_logging_file(self, filename=None):

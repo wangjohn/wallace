@@ -7,10 +7,10 @@ class ResultsLogger(object):
 
     def write_results(self, results_filename=None):
         message_list = [
-                self.header() + "\n\n",
-                self.dataset_source(),
-                self.best_models(),
-                self.settings()
+                self.print_header() + "\n\n",
+                self.print_dataset_source(),
+                self.print_best_models(),
+                self.print_settings()
                 ]
         message = "\n".join(message_list)
 
@@ -20,22 +20,22 @@ class ResultsLogger(object):
         with open(results_filename, 'w+') as f:
             f.write(message)
 
-    def header(self):
+    def print_header(self):
         return "Wallace Optimization Results - %s\n" % datetime.now().isoformat()
 
-    def dataset_source(self):
+    def print_dataset_source(self):
         if self.settings.has("dataset.dataset_filename"):
             return "Dataset Source: '%s'" % self.settings.get("dataset.dataset_filename")
         else:
             return ""
 
-    def settings(self):
+    def print_settings(self):
         setting_strings = []
         for setting_name, value in self.settings.iteritems():
             setting_strings.append("%s: %s" % (setting_name, value))
         return "\n".join(setting_strings)
 
-    def best_models(self, number=1):
+    def print_best_models(self, number=1):
         best_models = self.model_tracking.best_models()[:number]
         descriptions = []
         for i in xrange(len(best_models)):

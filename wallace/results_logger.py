@@ -1,9 +1,8 @@
 from datetime import datetime
 
 class ResultsLogger(object):
-    def __init__(self, settings, dataset_filename, model_tracking):
+    def __init__(self, settings, model_tracking):
         self.settings = settings
-        self.dataset_filename = dataset_filename
         self.model_tracking = model_tracking
 
     def write_results(self, results_filename=None):
@@ -25,7 +24,10 @@ class ResultsLogger(object):
         return "Wallace Optimization Results - %s\n" % datetime.now().isoformat()
 
     def dataset_source(self):
-        return "Dataset Source: '%s'" % self.dataset_filename
+        if self.settings.has("dataset.dataset_filename"):
+            return "Dataset Source: '%s'" % self.settings.get("dataset.dataset_filename")
+        else:
+            return ""
 
     def settings(self):
         setting_strings = []

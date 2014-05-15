@@ -2,6 +2,7 @@ from wallace.fitness_evaluation import CrossValidationFitnessEvaluation
 from wallace.independent_variables import IndependentVariableSelection
 from wallace.optimization_algorithms.optimization_algorithm_model_wrapper import OptimizationAlgorithmModelWrapper
 from wallace.optimization_algorithms.optimization_algorithm_tracking import OptimizationAlgorithmTracking
+from wallace.results_logger import ResultsLogger
 import logging
 import heapq
 
@@ -18,6 +19,7 @@ class OptimizationAlgorithm(object):
         self.current_step = 0
         self.model_tracking = ModelTracking(self.settings)
         self.optimization_algorithm_tracking = OptimizationAlgorithmTracking(self.settings)
+        self.results_logger = ResultsLogger(self.settings, self.model_tracking)
 
     def initialize_population(self):
         model_population = []
@@ -66,12 +68,14 @@ class OptimizationAlgorithm(object):
         while not self.has_finished():
             self.step()
 
+        self.results_logger.write_results()
         self.logger.info("Finished running optimization algorithm.")
 
     def step(self):
         self.current_step += 1
         self.update_population()
         self.optimization_algorithm_tracking.track_step(self.current_step, self.model_population)
+        self.results_logger.write_results()
         self.logger.info("Optimization algorithm step: %s", self.current_step)
 
     def evaluate_fitness(self, model, evaluation_method=None):

@@ -66,6 +66,7 @@ class WallaceInitialization(object):
     @classmethod
     def initialize(klass, settings, dependent_variable, dataset_filename):
         initialization = WallaceInitialization(settings)
+        initialization.settings.set("dataset.dataset_filename", dataset_filename)
         dataset = initialization.read_filename(dataset_filename)
 
         if not isinstance(dependent_variable, DatasetVariable):

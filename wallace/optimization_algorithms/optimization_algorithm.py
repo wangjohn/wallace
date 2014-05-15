@@ -105,8 +105,7 @@ class ModelTracking(object):
 
     def best_models(self):
         best_models = sorted(self.best_models, reverse=True)
-        for negative_fitness, model in best_models:
-            yield (-negative_fitness, model)
+        return [(model, -negative_fitness) for negative_fitness, model in best_models]
 
     def best_fitness(self):
         best_models = sorted(self.best_models, reverse=True)

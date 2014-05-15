@@ -14,11 +14,14 @@ class OptimizationAlgorithmModelWrapper(object):
         return params
 
     def json(self):
-        dictionary = {
+        return json.dumps(self.dictionary())
+
+    def dictionary(self):
+        return {
             "fitness": self.fitness,
             "model_name": self.model.model_name(),
             "independent_variables": [var.variable for var in self.model.independent_variables],
             "dependent_variable": self.model.dependent_variable.variable,
             "parameter_set": self.get_parameters()
             }
-        return json.dumps(dictionary)
+

@@ -31,5 +31,18 @@ class FinalizationLogging(object):
     def settings(self):
         pass
 
-    def best_model(self, model_tracking):
-        pass
+    def best_models(self, model_tracking, number=1):
+        best_models = model_tracking.best_models()[:number]
+        descriptions = []
+        for i in xrange(len(best_models)):
+            model, fitness = best_models[i]
+
+            model_description = ("Model Rank: %s\n" % (i+1)
+                    "Model Fitness: %s\n" % fitness
+                    "Model Name: %s\n" % model.model_name()
+                    "Model Dependent Variable: %s\n" % model.dependent_variable.variable
+                    "Model Independent Variables: %s\n" % ", ".join([var.variable for var in model.independent_variables])
+                    "Model Parameters: %s\n" % model.get_parameters())
+            descriptions.append(model_description)
+
+        return "\n".join(descriptions)

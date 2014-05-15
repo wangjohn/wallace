@@ -7,12 +7,12 @@ class ResultsLogger(object):
 
     def write_results(self, results_filename=None):
         message_list = [
-                self.print_header() + "\n\n",
+                self.print_header(),
                 self.print_dataset_source(),
                 self.print_best_models(),
                 self.print_settings()
                 ]
-        message = "\n".join(message_list)
+        message = "\n\n".join(message_list)
 
         if results_filename == None:
             results_filename = self.settings.get("optimization_algorithm_tracking.final_results_filename")
@@ -21,7 +21,8 @@ class ResultsLogger(object):
             f.write(message)
 
     def print_header(self):
-        return "Wallace Optimization Results - %s\n" % datetime.now().isoformat()
+        message = "Wallace Optimization Results - %s" % datetime.now().isoformat()
+        return self._header_text(message)
 
     def print_dataset_source(self):
         if self.settings.has("dataset.dataset_filename"):
@@ -30,14 +31,14 @@ class ResultsLogger(object):
             return ""
 
     def print_settings(self):
-        setting_strings = []
+        setting_strings = [self._header_text("Settings")]
         for setting_name in self.settings.list_setting_names():
             setting_strings.append("%s: %s" % (setting_name, self.settings.get(setting_name)))
         return "\n".join(setting_strings)
 
     def print_best_models(self, number=1):
         best_models = self.model_tracking.best_models()[:number]
-        descriptions = []
+        descriptions = [self._header_text("Best Models")]
         for i in xrange(len(best_models)):
             model, fitness = best_models[i]
 
@@ -52,3 +53,9 @@ class ResultsLogger(object):
             descriptions.append(model_description)
 
         return "\n".join(descriptions)
+
+    def _header_text(self, header_message):
+        return ("---------------------------------------------------------------\n" +
+                "%s\n" % header_message +
+                "---------------------------------------------------------------\n")
+

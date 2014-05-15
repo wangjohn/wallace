@@ -11,21 +11,37 @@ class PredictiveModelGenerator(object):
         self.default_validity_check = default_validity_check
         self.weighted_selection = WeightedSelection()
 
-    def add_model_type(self, model_klass, parameter_validity_check=None, weight=None):
-        if not issubclass(model_klass, PredictiveModel):
-            raise ValueError("Model types added to the model generator must be subclasses of PredictiveModel.")
-        model_name = model_klass.__name__
-        if model_name not in self.model_types:
-            if parameter_validity_check == None:
-                if self.default_validity_check == None:
-                    parameter_validity_check = model_klass.validity_check()
-                else:
-                    parameter_validity_check = self.default_validity_check
+    def set_model_types(self, model_klasses_and_probabilities):
+        weighted_selection_hash = {}
+        for model_klass, weight in model_klasses_and_probabilities.iteritems():
+            model_name, parameter_validity_check = self._get_model_information(model_klass)
             self.model_types[model_name] = {
                     "model_class": model_klass,
                     "parameter_validity_check": parameter_validity_check
+                    }
+            weighted_selection_hash[model_name] = weight
+        self.weighted_selection = WeightedSelection(weighted_selection_hash)
+
+    # TODO: deprecate this along with `add_selection` in `WeightedSelection` class.
+    def add_model_type(self, model_klass, parameter_validity_check=None, weight=None):
+        model_name, parameter_validity_check = self._get_model_information(model_klass, parameter_validity_check)
+        self.model_types[model_name] = {
+                "model_class": model_klass,
+                "parameter_validity_check": parameter_validity_check
                 }
-            self.weighted_selection.add_selection(model_name, weight)
+        self.weighted_selection.add_selection(model_name, weight)
+
+    def _get_model_information(self, model_klass, parameter_validity_check=None):
+        if not issubclass(model_klass, PredictiveModel):
+            raise ValueError("Model types added to the model generator must be subclasses of PredictiveModel.")
+        model_name = model_klass.__name__
+        if parameter_validity_check == None:
+            if self.default_validity_check == None:
+                parameter_validity_check = model_klass.validity_check()
+            else:
+                parameter_validity_check = self.default_validity_check
+
+        return (model_name, parameter_validity_check)
 
     def increase_weight(self, model_klass, learning_parameter=0.05, taper=True):
         if isinstance(model_klass, PredictiveModel):

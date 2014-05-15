@@ -42,8 +42,7 @@ class WallaceInitialization(object):
             models = WeightedSelection(models).normalize_weights()
 
         predictive_model_generator = PredictiveModelGenerator(self.settings)
-        for model, weight in models.iteritems():
-            predictive_model_generator.add_model_type(model, weight=weight)
+        predictive_model_generator.set_model_types(models)
 
         return predictive_model_generator
 

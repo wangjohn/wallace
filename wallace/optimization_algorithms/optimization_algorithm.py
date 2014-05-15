@@ -98,19 +98,19 @@ class ModelTracking(object):
     def __init__(self, settings):
         self.settings = settings
         self.models_to_track = self.settings.get("model_tracking.models_to_track")
-        self.best_models = []
+        self.best_models_heap = []
 
     def insert(self, fitness, model):
-        if model not in self.best_models:
-            if len(self.best_models) > self.models_to_track:
-                heapq.heappushpop(self.best_models, (-fitness, model))
+        if model not in self.best_models_heap:
+            if len(self.best_models_heap) > self.models_to_track:
+                heapq.heappushpop(self.best_models_heap, (-fitness, model))
             else:
-                heapq.heappush(self.best_models, (-fitness, model))
+                heapq.heappush(self.best_models_heap, (-fitness, model))
 
     def best_models(self):
-        best_models = sorted(self.best_models, reverse=True)
+        best_models = sorted(self.best_models_heap, reverse=True)
         return [(model, -negative_fitness) for negative_fitness, model in best_models]
 
     def best_fitness(self):
-        best_models = sorted(self.best_models, reverse=True)
+        best_models = sorted(self.best_models_heap, reverse=True)
         return -best_models[0][0]

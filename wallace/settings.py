@@ -65,6 +65,9 @@ class AbstractSettings(object):
         else:
             raise ValueError("Settings have no attribute '%s'" % attribute_name)
 
+    def list_setting_names(self):
+        return set(self.DEFAULTS.keys() + self.settings.keys())
+
     def get_description(self, attribute_name):
         if attribute_name in self.DESCRIPTIONS:
             return self.DESCRIPTIONS[attribute_name]

@@ -31,8 +31,8 @@ class ResultsLogger(object):
 
     def print_settings(self):
         setting_strings = []
-        for setting_name, value in self.settings.iteritems():
-            setting_strings.append("%s: %s" % (setting_name, value))
+        for setting_name in self.settings.list_setting_names():
+            setting_strings.append("%s: %s" % (setting_name, self.settings.get(setting_name)))
         return "\n".join(setting_strings)
 
     def print_best_models(self, number=1):

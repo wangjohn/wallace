@@ -42,7 +42,7 @@ class ResultsLogger(object):
             model, fitness = best_models[i]
 
             model_description = "\n".join([
-                                "Model Rank: %s" % i+1,
+                                "Model Rank: %s" % str(i+1),
                                 "Model Fitness: %s" % fitness,
                                 "Model Name: %s" % model.model_name(),
                                 "Model Dependent Variable: %s" % model.dependent_variable.variable,

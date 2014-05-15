@@ -41,12 +41,14 @@ class ResultsLogger(object):
         for i in xrange(len(best_models)):
             model, fitness = best_models[i]
 
-            model_description = ("Model Rank: %s\n" % (i+1)
-                    "Model Fitness: %s\n" % fitness
-                    "Model Name: %s\n" % model.model_name()
-                    "Model Dependent Variable: %s\n" % model.dependent_variable.variable
-                    "Model Independent Variables: %s\n" % ", ".join([var.variable for var in model.independent_variables])
-                    "Model Parameters: %s\n" % model.get_parameters())
+            model_description = "\n".join([
+                                "Model Rank: %s" % i+1,
+                                "Model Fitness: %s" % fitness,
+                                "Model Name: %s" % model.model_name(),
+                                "Model Dependent Variable: %s" % model.dependent_variable.variable,
+                                "Model Independent Variables: %s" % ", ".join([var.variable for var in model.independent_variables]),
+                                "Model Parameters: %s" % model.get_parameters()
+                                ])
             descriptions.append(model_description)
 
         return "\n".join(descriptions)

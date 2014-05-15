@@ -73,10 +73,11 @@ class OptimizationAlgorithm(object):
 
     def step(self):
         self.current_step += 1
+        self.logger.info("Optimization algorithm step: %s", self.current_step)
+        self.logger.info("Generating population with probabilities: %s", str(self.predictive_model_generator.model_probabilities()))
         self.update_population()
         self.optimization_algorithm_tracking.track_step(self.current_step, self.model_population)
         self.results_logger.write_results()
-        self.logger.info("Optimization algorithm step: %s", self.current_step)
 
     def evaluate_fitness(self, model, evaluation_method=None):
         if evaluation_method == None:

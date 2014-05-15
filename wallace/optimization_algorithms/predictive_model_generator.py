@@ -44,6 +44,12 @@ class PredictiveModelGenerator(object):
         model_name = model_klass.__name__
         return self.get_parameter_set(model_name)
 
+    def model_probabilities(self):
+        probabilities = {}
+        for selection in self.weighted_selection.selections():
+            probabilities[selection] = self.weighted_selection.get_probability(selection)
+        return probabilities
+
     def list_model_types(self):
         return self.model_types.values()
 

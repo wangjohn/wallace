@@ -21,6 +21,13 @@ class PredictiveModel(object):
     def get_independent_variable_data(self, dataset):
         return dataset.get_filtered_matrix(self.independent_variables)
 
+    def get_parameters(self):
+        params = {}
+        for parameter_name in self.parameter_set.validity_check.list_parameter_names():
+            params[parameter_name] = self.parameter_set.get(parameter_name)
+
+        return params
+
     @classmethod
     def validity_check(klass):
         return ParametersGeneralValidityCheck()

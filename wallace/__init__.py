@@ -1,3 +1,7 @@
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
 VERSION = (0, 0, 1)
 
 def get_version(version=None):

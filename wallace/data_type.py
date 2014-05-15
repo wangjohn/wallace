@@ -23,3 +23,9 @@ class DataType(object):
 
     def is_equal(self, data_type):
         return self.data_type == data_type
+
+    def __str__(self):
+        return self.data_type
+
+    def __repr__(self):
+        return self.__str__()

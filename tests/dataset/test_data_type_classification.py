@@ -112,3 +112,30 @@ class DataTypeClassificationTest(TestCase):
         self.assertEqual("boolean", data_types[6].data_type)
         self.assertEqual("boolean", data_types[7].data_type)
 
+    def test_classifying_data_matrix_correctly(self):
+        data_matrix = [
+                ["1"," 2","hi","true","f"," 42.23  "]
+                ]
+
+        classification = DataTypeClassification.classify_data_matrix(data_matrix)
+        self.assertEqual(6, len(classification))
+        self.assertEqual("integer", classification[0].data_type)
+        self.assertEqual("integer", classification[1].data_type)
+        self.assertEqual("string", classification[2].data_type)
+        self.assertEqual("boolean", classification[3].data_type)
+        self.assertEqual("boolean", classification[4].data_type)
+        self.assertEqual("float", classification[5].data_type)
+
+    def test_classifying_data_matrix_with_missing_values(self):
+        data_matrix = [
+                ["nan", "24", "true", "2.3"],
+                ["nan", "23", "false", "3.4"],
+                ["bag", "nan","true", "3.2"]
+                ]
+
+        classification = DataTypeClassification.classify_data_matrix(data_matrix)
+        self.assertEqual(4, len(classification))
+        self.assertEqual("string", classification[0].data_type)
+        self.assertEqual("integer", classification[1].data_type)
+        self.assertEqual("boolean", classification[2].data_type)
+        self.assertEqual("float", classification[3].data_type)

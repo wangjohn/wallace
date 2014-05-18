@@ -79,13 +79,13 @@ class DataTypeClassification(object):
         classifications = [None for i in xrange(num_columns)]
         row = 0
         while (None in classifications):
+            if row == len(data_matrix):
+                raise ValueError("Unable to classify data matrix. Too many missing data points.")
+
             for col in xrange(num_columns):
                 entry = data_matrix[row][col]
                 if classifications[col] == None and not klass.is_missing_data(entry):
                     classifications[col] = klass.classify(entry)
             row += 1
-
-            if row == len(data_matrix):
-                raise ValueError("Unable to classify data matrix. Too many missing data points.")
 
         return classifications

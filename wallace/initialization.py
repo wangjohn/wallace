@@ -7,18 +7,28 @@ from wallace.dataset_transformations.dataset_transformer import DatasetTransform
 from multiprocessing import Pool
 import logging
 
+from wallace.predictive_models.decision_tree_regression import DecisionTreeRegression
+from wallace.predictive_models.extra_trees_regression import ExtraTreesRegression
+from wallace.predictive_models.gradient_boosting_regression import GradientBoostingRegression
 from wallace.predictive_models.lasso_regression import LassoRegression
 from wallace.predictive_models.ols_linear_regression import OLSLinearRegression
+from wallace.predictive_models.random_forest_regression import RandomForestRegression
 from wallace.predictive_models.ridge_regression import RidgeRegression
+from wallace.predictive_models.svm_svc_regression import SvmSvcRegression
 
 from wallace.optimization_algorithms.differential_evolution import DifferentialEvolution
 
 class WallaceInitialization(object):
 
     DEFAULT_PREDICTIVE_MODELS = {
+            DecisionTreeRegression: None,
+            ExtraTreesRegression: None,
+            GradientBoostingRegression: None,
             LassoRegression: None,
             OLSLinearRegression: None,
-            RidgeRegression: None
+            RandomForestRegression: None,
+            RidgeRegression: None,
+            SvmSvcRegression: None
         }
 
     def __init__(self, settings, models=None):

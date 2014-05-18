@@ -36,6 +36,8 @@ class DataTypeClassification(object):
 
     @classmethod
     def is_missing_data(klass, obj):
+        if obj == None:
+            return True
         lowercased = obj.strip().lower()
         return lowercased in ["nan", "null", "na", ""]
 

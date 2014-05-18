@@ -61,3 +61,48 @@ class DatasetCleanerTest(TestCase):
 
         with self.assertRaises(ValueError):
             dataset_cleaner.clean()
+
+    def test_cleaning_sparse_columns(self):
+        settings = AbstractSettings({
+                "dataset.remove_rows_with_missing_data": True,
+                "dataset.maximum_missing_data_percentage": 0.25
+            })
+        non_sparse_data_matrix = [
+                ["13", "123"],
+                ["23", "234"],
+                ["34", "455"],
+                ["12", "345"],
+                ["11", "235"],
+                ["34", "234"],
+                [None, "234"]
+                ]
+        sparse_data_matrix = [
+                [None, "324"],
+                [None, "232"],
+                [None, "123"],
+                [None, "234"],
+                [None, "234"],
+                ["1111", "234"],
+                ["4324", None],
+                ["234", None]
+                ]
+        non_sparse_dataset_cleaner = DatasetCleaner(settings, non_sparse_data_matrix)
+        sparse_dataset_cleaner = DatasetCleaner(settings, sparse_data_matrix)
+
+        matrix = non_sparse_dataset_cleaner.clean()
+        self.assertEqual(6, len(matrix))
+        self.assertListEqual([13, 123], matrix[0])
+        self.assertListEqual([23, 234], matrix[1])
+        self.assertListEqual([34, 455], matrix[2])
+        self.assertListEqual([12, 345], matrix[3])
+        self.assertListEqual([11, 235], matrix[4])
+        self.assertListEqual([34, 234], matrix[5])
+
+        matrix = sparse_dataset_cleaner.clean()
+        self.assertEqual(6, len(matrix))
+        self.assertListEqual([None, 324], matrix[0])
+        self.assertListEqual([None, 232], matrix[1])
+        self.assertListEqual([None, 123], matrix[2])
+        self.assertListEqual([None, 234], matrix[3])
+        self.assertListEqual([None, 234], matrix[4])
+        self.assertListEqual([1111, 234], matrix[5])

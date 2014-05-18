@@ -90,7 +90,7 @@ class Dataset(object):
 
     def _initialize_data_types(self, data_types):
         if data_types == None:
-            resulting_types = DataTypeClassification.classify_row(self.data_matrix[0])
+            resulting_types = DataTypeClassification.classify_data_matrix(self.data_matrix)
         else:
             if len(data_types) != self.num_cols:
                 raise ValueError("The data_types lists must be the same length as the number of columns in the dataset.")

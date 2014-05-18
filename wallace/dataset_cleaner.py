@@ -15,7 +15,7 @@ class DatasetCleaner(object):
             return self.data_matrix
 
         num_columns = self.get_num_columns(self.data_matrix, self.headers)
-        data_types = DataTypeClassification.classify_row(self.data_matrix[0])
+        data_types = DataTypeClassification.classify_data_matrix(self.data_matrix)
         self.logger.info("Row data types: %s", str(data_types))
 
         resulting_data_matrix = []

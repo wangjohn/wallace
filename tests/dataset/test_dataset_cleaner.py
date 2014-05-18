@@ -84,7 +84,6 @@ class DatasetCleanerTest(TestCase):
                 [None, "234"],
                 ["1111", "234"],
                 ["4324", None],
-                ["234", None]
                 ]
         non_sparse_dataset_cleaner = DatasetCleaner(settings, non_sparse_data_matrix)
         sparse_dataset_cleaner = DatasetCleaner(settings, sparse_data_matrix)

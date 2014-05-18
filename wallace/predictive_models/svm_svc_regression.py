@@ -5,7 +5,7 @@ from wallace.parameters import ParametersGeneralValidityCheck
 class SvmSvcRegression(SklearnModel):
     def train(self, dataset):
         model = svm.SVC(
-                penalty_parmeter=self.get_penalty_parameter(),
+                C=self.get_penalty_parameter(),
                 kernel=self.get_kernel(),
                 shrinking=self.get_shrinking(),
                 )
@@ -20,7 +20,7 @@ class SvmSvcRegression(SklearnModel):
         validity_check = ParametersGeneralValidityCheck()
         validity_check.set_range_parameter("svm_svc_regression.penalty_parameter", 0.0, 5.0)
         validity_check.set_category_parameter("svm_svc_regression.kernel",
-            ["linear", "poly", "rbf", "sigmoid", "precomputed"])
+            ["linear", "poly", "rbf", "sigmoid"])
         validity_check.set_category_parameter("svm_svc_regression.shrinking", [True, False])
         return validity_check
 

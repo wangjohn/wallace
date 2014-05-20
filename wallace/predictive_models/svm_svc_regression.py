@@ -11,6 +11,9 @@ class SvmSvcRegression(SklearnModel):
                 )
         independent_data = self.get_independent_variable_data(dataset)
         dependent_data = self.get_dependent_variable_data(dataset)
+        print independent_data
+        print dependent_data
+
         trained_regression = model.fit(independent_data, dependent_data)
 
         return TrainedSklearnModel(self, trained_regression)

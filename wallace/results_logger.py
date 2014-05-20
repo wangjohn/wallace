@@ -17,8 +17,11 @@ class ResultsLogger(object):
         if results_filename == None:
             results_filename = self.settings.get("optimization_algorithm_tracking.final_results_filename")
 
-        with open(results_filename, 'w+') as f:
-            f.write(message)
+        if results_filename == None:
+            print message
+        else:
+            with open(results_filename, 'w+') as f:
+                f.write(message)
 
     def print_header(self):
         message = "Wallace Optimization Results - %s" % datetime.now().isoformat()

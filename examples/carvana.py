@@ -10,7 +10,7 @@ from wallace.initialization import WallaceInitialization
 settings = {
     "independent_variable_selection.initial_independent_variables_percentage": 0.25,
     "optimization_algorithm.population_size": 40,
-    "optimization_algorithm.finishing_criteria.max_steps": 200
+    "optimization_algorithm_tracking.final_results_filename": "final_results.log"
     }
 
 dependent_variable = "IsBadBuy"

@@ -31,7 +31,7 @@ class AbstractSettings(object):
             "fitness_evaluation.evaluation_method": MeanSquaredError,
             "model_tracking.models_to_track": 50,
             "optimization_algorithm_tracking.tracking_log_filename": "optimization_algorithm_logs.log",
-            "optimization_algorithm_tracking.final_results_filename": "final_results.txt",
+            "optimization_algorithm_tracking.final_results_filename": None,
             "dataset.maximum_dataset_size": 50000,
             "dataset.randomize_file_reader": False,
             "dataset.remove_rows_with_missing_data": True,

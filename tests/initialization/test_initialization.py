@@ -28,6 +28,12 @@ class InitializationTest(TestCase):
             self.assertIn("model_class", model_information)
             self.assertIn("parameter_validity_check", model_information)
 
+    def test_running_initialization(self):
+        settings = {"optimization_algorithm.finishing_criteria.max_steps": 1}
+        dependent_variable = "IsBadBuy"
+        dataset_filename = os.path.join(os.path.dirname(__file__), "example_dataset.csv")
+        WallaceInitialization.initialize(settings, dependent_variable, dataset_filename)
+
     def test_read_filename(self):
         dataset_filename = os.path.join(os.path.dirname(__file__), "example_dataset.csv")
         dataset = WallaceInitialization(self.settings).read_filename(dataset_filename)

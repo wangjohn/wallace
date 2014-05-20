@@ -22,6 +22,7 @@ class AbstractSettings(object):
             "differential_evolution.crossover_probability": "The probability of mutating a given value in differential evolution (CR).",
             "differential_evolution.differential_weight": "Used for weighting differences in differential evolution (F).",
             "optimization_algorithm.population_size": "Default number of models in the population for a given step of an optimization algorithm.",
+            "optimization_algorithm.finishing_criteria.max_steps": "Number of steps for an optimization algorithm to run before it finishes.",
             "independent_variable_selection.initial_independent_variables_percentage": "Percentage of total number of variables to start with when initializing an optimization algorithm."
         }
 
@@ -41,6 +42,7 @@ class AbstractSettings(object):
             "differential_evolution.crossover_probability": 0.5,
             "differential_evolution.differential_weight": 0.8,
             "optimization_algorithm.population_size": 40,
+            "optimization_algorithm.finishing_criteria.max_steps": 200,
             "independent_variable_selection.initial_independent_variables_percentage": 0.25
         }
 

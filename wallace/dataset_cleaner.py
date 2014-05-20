@@ -3,11 +3,15 @@ from wallace.data_type_classification import DataTypeClassification
 import logging
 
 class DatasetCleaner(object):
-    def __init__(self, settings, data_matrix, headers=None):
+    def __init__(self, settings, data_matrix, headers=None, data_types=None):
         self.settings = settings
         self.data_matrix = data_matrix
         self.headers = headers
         self.logger = logging.getLogger(__name__)
+        if data_types == None:
+            self.data_types = DataTypeClassification.classify_data_matrix(self.data_matrix)
+        else:
+            self.data_types = data_types
 
     def clean(self):
         self.logger.info("Cleaning dataset.")
@@ -15,8 +19,7 @@ class DatasetCleaner(object):
             return self.data_matrix
 
         num_columns = self.get_num_columns(self.data_matrix, self.headers)
-        data_types = DataTypeClassification.classify_data_matrix(self.data_matrix)
-        self.logger.info("Row data types: %s", str(data_types))
+        self.logger.info("Row data types: %s", str(self.data_types))
 
         resulting_data_matrix = []
         missing_data_points = {}
@@ -27,7 +30,7 @@ class DatasetCleaner(object):
             if len(self.data_matrix[i]) != num_columns:
                 raise ValueError("Invalid data matrix. Number of columns is not static. See row %s." % i)
 
-            cleaned_row = self.clean_row(self.data_matrix[i], data_types)
+            cleaned_row = self.clean_row(self.data_matrix[i], self.data_types)
             resulting_data_matrix.append(cleaned_row)
 
             for col in xrange(num_columns):

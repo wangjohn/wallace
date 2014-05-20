@@ -90,7 +90,7 @@ class Dataset(object):
 
     def _initialize_data_types(self, data_types):
         if data_types == None:
-            resulting_types = DataTypeClassification.classify_row(self.data_matrix[0])
+            resulting_types = DataTypeClassification.classify_data_matrix(self.data_matrix)
         else:
             if len(data_types) != self.num_cols:
                 raise ValueError("The data_types lists must be the same length as the number of columns in the dataset.")
@@ -102,6 +102,7 @@ class Dataset(object):
                 else:
                     resulting_types.append(data_type)
 
+        # Get categories for the string data types.
         for i in xrange(len(resulting_types)):
             if resulting_types[i].is_equal("string") and resulting_types[i].categories == None:
                 resulting_types[i] = DataType("string", categories=set(self.get_column(i)))

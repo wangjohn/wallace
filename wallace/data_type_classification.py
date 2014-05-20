@@ -36,8 +36,13 @@ class DataTypeClassification(object):
 
     @classmethod
     def is_missing_data(klass, obj):
-        lowercased = obj.strip().lower()
-        return lowercased in ["nan", "null", "na", ""]
+        if obj == None:
+            return True
+        if isinstance(obj, str):
+            lowercased = obj.strip().lower()
+            return lowercased in ["nan", "null", "na", ""]
+        else:
+            return False
 
     @classmethod
     def is_date(klass, entry):
@@ -67,3 +72,20 @@ class DataTypeClassification(object):
     @classmethod
     def classify_row(klass, row):
         return [klass.classify(entry) for entry in row]
+
+    @classmethod
+    def classify_data_matrix(klass, data_matrix):
+        num_columns = len(data_matrix[0])
+        classifications = [None for i in xrange(num_columns)]
+        row = 0
+        while (None in classifications):
+            if row == len(data_matrix):
+                raise ValueError("Unable to classify data matrix. Too many missing data points.")
+
+            for col in xrange(num_columns):
+                entry = data_matrix[row][col]
+                if classifications[col] == None and not klass.is_missing_data(entry):
+                    classifications[col] = klass.classify(entry)
+            row += 1
+
+        return classifications

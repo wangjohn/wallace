@@ -46,7 +46,7 @@ class DatasetFileReader(object):
             return (data_matrix, None)
 
         header_data_types = DataTypeClassification.classify_row(data_matrix[0])
-        row_data_types = DataTypeClassification.classify_row(data_matrix[1])
+        row_data_types = DataTypeClassification.classify_data_matrix(data_matrix[1:])
 
         non_matching_types = 0
         for header_type, row_type in zip(header_data_types, row_data_types):

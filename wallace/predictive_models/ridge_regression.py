@@ -14,8 +14,8 @@ class RidgeRegression(SklearnModel):
     @classmethod
     def validity_check(klass):
         validity_check = ParametersGeneralValidityCheck()
-        validity_check.set_range_parameter("ridge_regression_alpha", 0.0, 1.0)
+        validity_check.set_range_parameter("ridge_regression.alpha", 0.0, 1.0)
         return validity_check
 
     def get_alpha(self):
-        return self.parameter_set.get("ridge_regression_alpha")
+        return self.parameter_set.get("ridge_regression.alpha")

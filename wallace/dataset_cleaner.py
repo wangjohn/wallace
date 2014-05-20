@@ -15,27 +15,51 @@ class DatasetCleaner(object):
             return self.data_matrix
 
         num_columns = self.get_num_columns(self.data_matrix, self.headers)
-        data_types = DataTypeClassification.classify_row(self.data_matrix[0])
+        data_types = DataTypeClassification.classify_data_matrix(self.data_matrix)
         self.logger.info("Row data types: %s", str(data_types))
 
         resulting_data_matrix = []
+        missing_data_points = {}
+        for j in xrange(num_columns):
+            missing_data_points[j] = []
+
         for i in xrange(len(self.data_matrix)):
             if len(self.data_matrix[i]) != num_columns:
                 raise ValueError("Invalid data matrix. Number of columns is not static. See row %s." % i)
 
-            try:
-                cleaned_row = self.clean_row(self.data_matrix[i], data_types)
-                resulting_data_matrix.append(cleaned_row)
-            except MissingDataException:
-                self._handle_missing_data_exception(i)
+            cleaned_row = self.clean_row(self.data_matrix[i], data_types)
+            resulting_data_matrix.append(cleaned_row)
 
+            for col in xrange(num_columns):
+                if cleaned_row[col] == None:
+                    missing_data_points[col].append(i)
+
+        return self.handle_missing_data(missing_data_points, resulting_data_matrix)
+
+    def handle_missing_data(self, missing_data_points, data_matrix):
+        rows_to_drop = []
+        for column, missing_row_indices in missing_data_points.iteritems():
+            if len(missing_row_indices) > 0:
+                self._handle_missing_data_exception(column)
+
+            missing_percentage = float(len(missing_row_indices)) / len(data_matrix)
+            if missing_percentage < self.settings.get("dataset.maximum_missing_data_percentage"):
+                rows_to_drop.extend(missing_row_indices)
+
+        return self.drop_rows(set(rows_to_drop), data_matrix)
+
+    def drop_rows(self, rows_to_drop, data_matrix):
+        resulting_data_matrix = []
+        for i in xrange(len(data_matrix)):
+            if i not in rows_to_drop:
+                resulting_data_matrix.append(data_matrix[i])
         return resulting_data_matrix
 
-    def _handle_missing_data_exception(self, row_number):
+    def _handle_missing_data_exception(self, column):
         if not self.settings.get("dataset.remove_rows_with_missing_data"):
-            message = ("Invalid data matrix - contains missing data in row %s. "
+            message = ("Invalid data matrix - contains missing data in column %s. "
                     "To remove rows with missing data instead of throwing an error, "
-                    "set the `dataset.remove_rows_with_missing_data` setting to True.") % row_number
+                    "set the `dataset.remove_rows_with_missing_data` setting to True.") % column
             raise ValueError(message)
 
     def get_num_columns(self, data_matrix, headers):
@@ -53,8 +77,8 @@ class DatasetCleaner(object):
 
     def clean_entry(self, entry, data_type):
         if DataTypeClassification.is_missing_data(entry):
-            raise MissingDataException()
-        if data_type.is_equal("date"):
+            return None
+        elif data_type.is_equal("date"):
             return (DataTypeClassification.get_date(entry) - datetime(1970, 1, 1)).total_seconds()
         elif data_type.is_equal("integer"):
             return int(entry)
@@ -62,6 +86,3 @@ class DatasetCleaner(object):
             return float(entry)
 
         return entry
-
-class MissingDataException(Exception):
-    pass

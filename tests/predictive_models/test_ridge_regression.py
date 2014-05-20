@@ -7,7 +7,7 @@ from wallace.parameters import ParameterSet
 class RidgeRegressionTest(TestCase):
     def setUp(self):
         dictionary = {
-            "ridge_regression_alpha": {
+            "ridge_regression.alpha": {
                 "type": "range",
                 "lower_bound": 0.3,
                 "upper_bound": 0.9,

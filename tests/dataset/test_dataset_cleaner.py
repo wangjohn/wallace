@@ -30,21 +30,6 @@ class DatasetCleanerTest(TestCase):
         timestamp = (datetime(2013, 4, 25) - datetime(1970, 1, 1)).total_seconds()
         self.assertEqual(timestamp, cleaned_entry)
 
-    def test_clean_entry_on_row(self):
-        cleaned_row = self.dataset_cleaner.clean_row(["1", "4/25/2013", "Bob"], [DataType("integer"), DataType("date"), DataType("string")])
-        timestamp = (datetime(2013, 4, 25) - datetime(1970, 1, 1)).total_seconds()
-
-        self.assertEqual(1, cleaned_row[0])
-        self.assertEqual(timestamp, cleaned_row[1])
-        self.assertEqual("Bob", cleaned_row[2])
-
-    def test_clean_entry_on_row_raises_exception_for_missing_data(self):
-        cleaned_row = self.dataset_cleaner.clean_row(["NaN", "4/25/2013", "Bob"], [DataType("integer"), DataType("date"), DataType("string")])
-        timestamp = (datetime(2013, 4, 25) - datetime(1970, 1, 1)).total_seconds()
-        self.assertEqual(None, cleaned_row[0])
-        self.assertEqual(timestamp, cleaned_row[1])
-        self.assertEqual("Bob", cleaned_row[2])
-
     def test_fully_cleaning_the_dataset(self):
         cleaned_matrix = self.dataset_cleaner.clean()
 

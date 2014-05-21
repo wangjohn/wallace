@@ -66,6 +66,28 @@ class DatasetCleanerTest(TestCase):
         self.assertListEqual([5], missing_data_points[2])
         self.assertListEqual([0,2,5], missing_data_points[3])
 
+    def test_cleaning_inconsistent_columns(self):
+        data_matrix = [
+                ["102","512","null","null"],
+                ["212","234","ss","mm"],
+                ["2.1","4.3","ss","mm"],
+                ["231","321","ss","mm"],
+                ["null","null","bb","cc"],
+                ["4.1","3.2","kk","vv"]
+                ]
+        settings = AbstractSettings({
+                "dataset.remove_rows_with_missing_data": True,
+                "dataset.maximum_missing_data_percentage": 0.25
+            })
+
+        cleaner = DatasetCleaner(settings, data_matrix)
+        result_matrix = cleaner.clean()
+        self.assertEqual(4, len(result_matrix))
+        self.assertListEqual([212.0, 234.0, "ss", "mm"], result_matrix[0])
+        self.assertListEqual([2.1, 4.3, "ss", "mm"], result_matrix[1])
+        self.assertListEqual([231.0, 321.0, "ss", "mm"], result_matrix[2])
+        self.assertListEqual([4.1, 3.2, "kk", "vv"], result_matrix[3])
+
     def test_cleaning_sparse_columns(self):
         settings = AbstractSettings({
                 "dataset.remove_rows_with_missing_data": True,

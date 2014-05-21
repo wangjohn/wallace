@@ -28,7 +28,7 @@ class DatasetCleaner(object):
 
             self.clean_and_append_row(i, self.data_matrix, resulting_data_matrix)
 
-        return self.handle_missing_data(missing_data_points, resulting_data_matrix)
+        return self.handle_missing_data(resulting_data_matrix)
 
     def handle_missing_data(self, data_matrix):
         missing_data_points = self.compute_missing_data_points(data_matrix)
@@ -51,9 +51,9 @@ class DatasetCleaner(object):
             missing_data_points[j] = []
 
         for i in xrange(len(data_matrix)):
-            for col in xrange(num_columns):
-                if cleaned_row[col] == None:
-                    missing_data_points[col].append(i)
+            for j in xrange(num_columns):
+                if data_matrix[i][j] == None:
+                    missing_data_points[j].append(i)
 
         return missing_data_points
 

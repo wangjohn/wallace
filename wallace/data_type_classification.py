@@ -55,6 +55,7 @@ class DataTypeClassification(object):
                 return datetime.strptime(entry, date_format)
             except ValueError:
                 pass
+        raise ValueError("Unable to convert entry into a datetime object.")
 
     @classmethod
     def classify(klass, entry):

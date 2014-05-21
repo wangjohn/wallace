@@ -22,24 +22,17 @@ class DatasetCleaner(object):
         self.logger.info("Row data types: %s", str(self.data_types))
 
         resulting_data_matrix = []
-        missing_data_points = {}
-        for j in xrange(num_columns):
-            missing_data_points[j] = []
-
         for i in xrange(len(self.data_matrix)):
             if len(self.data_matrix[i]) != num_columns:
                 raise ValueError("Invalid data matrix. Number of columns is not static. See row %s." % i)
 
-            cleaned_row = self.clean_row(self.data_matrix[i], self.data_types)
-            resulting_data_matrix.append(cleaned_row)
-
-            for col in xrange(num_columns):
-                if cleaned_row[col] == None:
-                    missing_data_points[col].append(i)
+            self.clean_and_append_row(i, self.data_matrix, resulting_data_matrix)
 
         return self.handle_missing_data(missing_data_points, resulting_data_matrix)
 
-    def handle_missing_data(self, missing_data_points, data_matrix):
+    def handle_missing_data(self, data_matrix):
+        missing_data_points = self.compute_missing_data_points(data_matrix)
+
         rows_to_drop = []
         for column, missing_row_indices in missing_data_points.iteritems():
             if len(missing_row_indices) > 0:
@@ -50,6 +43,19 @@ class DatasetCleaner(object):
                 rows_to_drop.extend(missing_row_indices)
 
         return self.drop_rows(set(rows_to_drop), data_matrix)
+
+    def compute_missing_data_points(self, data_matrix):
+        num_columns = self.get_num_columns(data_matrix, self.headers)
+        missing_data_points = {}
+        for j in xrange(num_columns):
+            missing_data_points[j] = []
+
+        for i in xrange(len(data_matrix)):
+            for col in xrange(num_columns):
+                if cleaned_row[col] == None:
+                    missing_data_points[col].append(i)
+
+        return missing_data_points
 
     def drop_rows(self, rows_to_drop, data_matrix):
         resulting_data_matrix = []
@@ -71,12 +77,26 @@ class DatasetCleaner(object):
         else:
             return len(self.headers)
 
-    def clean_row(self, row, data_types):
+    def clean_and_append_row(self, row_number, data_matrix, resulting_data_matrix):
         cleaned_row = []
-        for entry, data_type in zip(row, data_types):
-            cleaned_entry = self.clean_entry(entry, data_type)
+        row = data_matrix[row_number]
+        for column_number in xrange(len(row)):
+            entry = row[column_number]
+            cleaned_entry = self.clean_and_handle_entry(row_number, column_number, entry, resulting_data_matrix)
             cleaned_row.append(cleaned_entry)
-        return cleaned_row
+
+        resulting_data_matrix.append(cleaned_row)
+
+    def clean_and_handle_entry(self, row_number, column_number, entry, resulting_data_matrix):
+        data_type = self.data_types[column_number]
+        try:
+            return self.clean_entry(entry, data_type)
+        except ValueError:
+            if data_type.is_equal("integer"):
+                self.update_data_type(row_number, column_number, "float", resulting_data_matrix)
+                return self.clean_entry(entry, "float")
+            else:
+                raise ValueError("Dataset column %s has inconsistent data types.")
 
     def clean_entry(self, entry, data_type):
         if DataTypeClassification.is_missing_data(entry):
@@ -89,3 +109,10 @@ class DatasetCleaner(object):
             return float(entry)
 
         return entry
+
+    def update_data_type(self, row_number, column_number, updated_type, resulting_data_matrix):
+        self.data_types[column_number] = updated_type
+        if updated_type == "float":
+            for i in xrange(row_number):
+                entry = resulting_data_matrix[i][column_number]
+                resulting_data_matrix[i][column_number] = self.clean_entry(entry, updated_type)

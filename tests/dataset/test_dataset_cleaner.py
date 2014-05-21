@@ -47,6 +47,25 @@ class DatasetCleanerTest(TestCase):
         with self.assertRaises(ValueError):
             dataset_cleaner.clean()
 
+    def test_computation_of_missing_data(self):
+        matrix = [
+                [None, 5, 2, None],
+                [None, None, 2, 3],
+                [2, None, 3, None],
+                [None, None, 4, 4],
+                [None, 2, 3, 4],
+                [None, None, None, None]
+                ]
+
+        cleaner = DatasetCleaner(self.settings, matrix)
+        missing_data_points = cleaner.compute_missing_data_points(matrix)
+
+        self.assertEqual(4, len(missing_data_points))
+        self.assertListEqual([0,1,3,4,5], missing_data_points[0])
+        self.assertListEqual([1,2,3,5], missing_data_points[1])
+        self.assertListEqual([5], missing_data_points[2])
+        self.assertListEqual([0,2,5], missing_data_points[3])
+
     def test_cleaning_sparse_columns(self):
         settings = AbstractSettings({
                 "dataset.remove_rows_with_missing_data": True,

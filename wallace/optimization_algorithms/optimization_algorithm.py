@@ -3,6 +3,7 @@ from wallace.independent_variables import IndependentVariableSelection
 from wallace.optimization_algorithms.optimization_algorithm_model_wrapper import OptimizationAlgorithmModelWrapper
 from wallace.optimization_algorithms.optimization_algorithm_tracking import OptimizationAlgorithmTracking
 from wallace.results_logger import ResultsLogger
+from datetime import datetime
 import logging
 import heapq
 
@@ -82,7 +83,8 @@ class OptimizationAlgorithm(object):
     def evaluate_fitness(self, model, evaluation_method=None):
         if evaluation_method == None:
             evaluation_method = self.settings.get("fitness_evaluation.evaluation_method")
-
+        start_time = datetime.now()
+        self.logger.info("Beginning to Evaluate Model %s", model)
         evaluation = CrossValidationFitnessEvaluation(self.settings, model, self.dataset)
 
         if evaluation_method.evaluation_type() == "maximizer":
@@ -93,6 +95,7 @@ class OptimizationAlgorithm(object):
             raise ValueError("Invalid evaluation type '%s'" % evaluation_method.evaluation_type)
 
         self.model_tracking.insert(fitness, model)
+        self.logger.info("Evaluated Model %s, Total Fitness Evaluation Time: %s", model, (datetime.now() - start_time).total_seconds())
         return fitness
 
 class ModelTracking(object):

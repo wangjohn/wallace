@@ -66,6 +66,17 @@ class DatasetCleanerTest(TestCase):
         self.assertListEqual([5], missing_data_points[2])
         self.assertListEqual([0,2,5], missing_data_points[3])
 
+    def test_cleaning_inconsistent_columns_not_integer_and_float_should_raise_error(self):
+        data_matrix = [
+                ["234","243","null"],
+                ["null","null","poop"],
+                ["23.2","bob","noop"]
+                ]
+        cleaner = DatasetCleaner(self.settings, data_matrix)
+
+        with self.assertRaises(ValueError):
+            result = cleaner.clean()
+
     def test_cleaning_inconsistent_columns(self):
         data_matrix = [
                 ["102","512","null","null"],

@@ -1,5 +1,6 @@
 from datetime import datetime
 from wallace.data_type_classification import DataTypeClassification
+from wallace.data_type import DataType
 import logging
 
 class DatasetCleaner(object):
@@ -93,8 +94,9 @@ class DatasetCleaner(object):
             return self.clean_entry(entry, data_type)
         except ValueError:
             if data_type.is_equal("integer"):
-                self.update_data_type(row_number, column_number, "float", resulting_data_matrix)
-                return self.clean_entry(entry, "float")
+                updated_type = DataType("float")
+                self.update_data_type(row_number, column_number, updated_type, resulting_data_matrix)
+                return self.clean_entry(entry, updated_type)
             else:
                 raise ValueError("Dataset column %s has inconsistent data types.")
 
@@ -112,7 +114,7 @@ class DatasetCleaner(object):
 
     def update_data_type(self, row_number, column_number, updated_type, resulting_data_matrix):
         self.data_types[column_number] = updated_type
-        if updated_type == "float":
+        if updated_type.is_equal("float"):
             for i in xrange(row_number):
                 entry = resulting_data_matrix[i][column_number]
                 resulting_data_matrix[i][column_number] = self.clean_entry(entry, updated_type)

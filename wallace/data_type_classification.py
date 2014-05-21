@@ -46,7 +46,11 @@ class DataTypeClassification(object):
 
     @classmethod
     def is_date(klass, entry):
-        return klass.get_date(entry) != None
+        try:
+            klass.get_date(entry)
+            return True
+        except ValueError:
+            return False
 
     @classmethod
     def get_date(klass, entry):

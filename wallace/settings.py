@@ -27,7 +27,7 @@ class AbstractSettings(object):
         }
 
     DEFAULTS = {
-            "fitness_evaluation.crossfold_partitions": 10,
+            "fitness_evaluation.crossfold_partitions": 3,
             "fitness_evaluation.evaluation_method": MeanSquaredError,
             "model_tracking.models_to_track": 50,
             "optimization_algorithm_tracking.tracking_log_filename": "optimization_algorithm_logs.log",

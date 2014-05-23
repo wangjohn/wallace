@@ -24,6 +24,7 @@ class BayesianRidgeRegression(SklearnModel):
         validity_check.set_range_parameter("bayesian_ridge_regression.alpha_2", 0.0, 0.001)
         validity_check.set_range_parameter("bayesian_ridge_regression.lambda_1", 0.0, 0.001)
         validity_check.set_range_parameter("bayesian_ridge_regression.lambda_2", 0.0, 0.001)
+        validity_check.set_integer_range_parameter("bayesian_ridge_regression.number_iterations", 10, 1000)
         return validity_check
 
     def get_alpha_1(self):
@@ -37,3 +38,6 @@ class BayesianRidgeRegression(SklearnModel):
 
     def get_lambda_2(self):
         return self.parameter_set.get("bayesian_ridge_regression.lambda_2")
+
+    def get_number_iterations(self):
+        return self.parameter_set.get("bayesian_ridge_regression.number_iterations")

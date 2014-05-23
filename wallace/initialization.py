@@ -9,13 +9,10 @@ import logging
 
 from wallace.predictive_models.bayesian_ridge_regression import BayesianRidgeRegression
 from wallace.predictive_models.decision_tree_regression import DecisionTreeRegression
-from wallace.predictive_models.extra_trees_regression import ExtraTreesRegression
-from wallace.predictive_models.gradient_boosting_regression import GradientBoostingRegression
 from wallace.predictive_models.lars_lasso_regression import LarsLassoRegression
 from wallace.predictive_models.lars_regression import LarsRegression
 from wallace.predictive_models.lasso_regression import LassoRegression
 from wallace.predictive_models.ols_linear_regression import OLSLinearRegression
-from wallace.predictive_models.random_forest_regression import RandomForestRegression
 from wallace.predictive_models.ridge_regression import RidgeRegression
 from wallace.predictive_models.svm_svc_regression import SvmSvcRegression
 
@@ -26,13 +23,10 @@ class WallaceInitialization(object):
     DEFAULT_PREDICTIVE_MODELS = {
             BayesianRidgeRegression: None,
             DecisionTreeRegression: None,
-            ExtraTreesRegression: None,
-            GradientBoostingRegression: None,
             LarsLassoRegression: None,
             LarsRegression: None,
             LassoRegression: None,
             OLSLinearRegression: None,
-            RandomForestRegression: None,
             RidgeRegression: None,
             SvmSvcRegression: None
         }

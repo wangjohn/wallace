@@ -44,7 +44,7 @@ class AbstractSettings(object):
             "differential_evolution.differential_weight": 0.8,
             "optimization_algorithm.population_size": 40,
             "optimization_algorithm.finishing_criteria.max_steps": 200,
-            "optimization_algorithm.default_stages": [],
+            "optimization_algorithm.default_stages": {},
             "independent_variable_selection.initial_independent_variables_percentage": 0.25
         }
 

@@ -16,6 +16,13 @@ class IntervalStorage(object):
         self.validate_interval(start, end)
         self.interval_map[entry] = (start, end)
 
+    def has_entry(self, point):
+        try:
+            self.get_entry(point)
+            return True
+        except ValueError:
+            return False
+
     def get_entry(self, point):
         for entry, interval in self.interval_map.iteritems():
             start, end = interval[0], interval[1]

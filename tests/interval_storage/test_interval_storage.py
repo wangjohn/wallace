@@ -34,3 +34,21 @@ class IntervalStorageTest(TestCase):
         self.assertEqual("2", interval_storage.get_entry(0.5))
         self.assertEqual("2", interval_storage.get_entry(0.8))
 
+    def test_interval_storage_with_three_intervals(self):
+        interval_storage = IntervalStorage()
+        interval_storage.add_interval("1", 0.0, 0.3)
+        interval_storage.add_interval("2", 0.3, 0.6)
+        interval_storage.add_interval("3", 0.6, 1.0)
+
+        self.assertEqual("1", interval_storage.get_entry(0.0))
+        self.assertEqual("1", interval_storage.get_entry(0.2))
+        self.assertEqual("2", interval_storage.get_entry(0.3))
+        self.assertEqual("2", interval_storage.get_entry(0.5))
+        self.assertEqual("3", interval_storage.get_entry(0.6))
+        self.assertEqual("3", interval_storage.get_entry(0.85))
+
+        with self.assertRaises(ValueError):
+            interval_storage.get_entry(1.0)
+
+        with self.assertRaises(ValueError):
+            interval_storage.get_entry(-0.01)

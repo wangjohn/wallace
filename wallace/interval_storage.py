@@ -1,16 +1,23 @@
 class IntervalStorage(object):
     def __init__(self, interval_map=None):
         if interval_map == None:
-            self.interval_map = None
+            self.interval_map = {}
         else:
             if not isinstance(interval_map, dict):
-                raise ValueError("Interval map must be a dictionary containing interval tuples as keys.")
+                raise ValueError("Interval map must be a dictionary containing entries as keys and interval tuples as values.")
 
             self.interval_map = interval_map
 
     def add_interval(self, entry, start, end):
         self.validate_interval(start, end)
         self.interval_map[entry] = (start, end)
+
+    def get_entry(self, point):
+        for entry, interval in self.interval_map.iteritems():
+            start, end = interval[0], interval[1]
+            if start <= point and point < end:
+                return entry
+        raise ValueError("Point '%s' is not contained in any stored interval." % point)
 
     def validate_interval(self, start, end):
         if start > end:

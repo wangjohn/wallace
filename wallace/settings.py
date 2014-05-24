@@ -23,6 +23,7 @@ class AbstractSettings(object):
             "differential_evolution.differential_weight": "Used for weighting differences in differential evolution (F).",
             "optimization_algorithm.population_size": "Default number of models in the population for a given step of an optimization algorithm.",
             "optimization_algorithm.finishing_criteria.max_steps": "Number of steps for an optimization algorithm to run before it finishes.",
+            "optimization_algorithm.default_stages": "The default OptimizationAlgorithmStages to use in an optimization algorithm.",
             "independent_variable_selection.initial_independent_variables_percentage": "Percentage of total number of variables to start with when initializing an optimization algorithm."
         }
 
@@ -43,6 +44,7 @@ class AbstractSettings(object):
             "differential_evolution.differential_weight": 0.8,
             "optimization_algorithm.population_size": 40,
             "optimization_algorithm.finishing_criteria.max_steps": 200,
+            "optimization_algorithm.default_stages": [],
             "independent_variable_selection.initial_independent_variables_percentage": 0.25
         }
 

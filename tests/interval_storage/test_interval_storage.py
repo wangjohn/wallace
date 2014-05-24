@@ -52,3 +52,36 @@ class IntervalStorageTest(TestCase):
 
         with self.assertRaises(ValueError):
             interval_storage.get_entry(-0.01)
+
+    def test_initializing_interval_storage_with_a_map(self):
+        interval_storage = IntervalStorage({
+            "1": (0.0, 0.3),
+            "2": (0.3, 0.6),
+            "3": (0.6, 1.0)
+            })
+
+        self.assertEqual("1", interval_storage.get_entry(0.0))
+        self.assertEqual("1", interval_storage.get_entry(0.2))
+        self.assertEqual("2", interval_storage.get_entry(0.3))
+        self.assertEqual("2", interval_storage.get_entry(0.5))
+        self.assertEqual("3", interval_storage.get_entry(0.6))
+        self.assertEqual("3", interval_storage.get_entry(0.85))
+
+    def test_initializing_interval_storage_with_a_map_with_invalid_intervals(self):
+        with self.assertRaises(ValueError):
+            interval_storage = IntervalStorage({
+                "1": (0.0, 0.5),
+                "2": (0.4, 1.0)
+                })
+
+        with self.assertRaises(ValueError):
+            interval_storage = IntervalStorage({
+                "1": (-10.0, 20.5),
+                "2": (0.4, 1.0)
+                })
+
+        with self.assertRaises(ValueError):
+            interval_storage = IntervalStorage({
+                "1": (0.0, 0.5),
+                "2": (0.5, 1.2)
+                })

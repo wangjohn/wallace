@@ -26,29 +26,33 @@ class OptimizationAlgorithmStageHandler(object):
         step_percentage = self._get_step_percentage(current_step, total_steps)
         return self.stage_storage.get_entry(step_percentage)
 
-    def run_stage(self, current_step, total_steps=None):
+    def run_stage(self, current_step, total_steps=None, payload=None):
         stage = None
         if self.has_stage(current_step, total_steps):
             stage = self.get_stage(current_step, total_steps)
 
         # If we've started using a new stage, check to see if we have to run the
         # `after_stage` method.
-        if stage == None or stage not in self.stages_used:
+        if (stage == None) or (stage not in self.stages_used):
             if len(self.stages_used) > 0:
                 last_stage, has_run_after_stage = self.stages_used[-1]
                 if not has_run_after_stage:
-                    last_stage.after_stage()
+                    last_stage(self.settings).after_stage(payload)
                     self.stages_used[-1] = (last_stage, True)
 
         # If this is the first time we've seen the stage, then run the `before_stage`
         # method
-        if stage != None and stage not in self.stages_used:
-            stage(self.settings).before_stage()
+        if (stage != None) and (stage not in self.stages_used):
+            stage(self.settings).before_stage(payload)
             self.stages_used.append((stage, False))
 
         # Run the stage if it exists
         if stage != None:
-            stage(self.settings).on_step()
+            stage(self.settings).on_step(payload)
+
+        # If this is the last step, then we need to run the after_stage
+        if stage != None and current_step >= total_steps - 1:
+            stage(self.settings).after_stage(payload)
 
     def _get_step_percentage(self, current_step, total_steps=None):
         if total_steps == None:

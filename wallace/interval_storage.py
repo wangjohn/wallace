@@ -50,3 +50,10 @@ class IntervalStorage(object):
                     (start <= value[0] and value[1] < end):
                 return True
         return False
+
+    def __repr__(self):
+        return str(self.interval_map)
+
+    def __str__(self):
+        return self.__repr__()
+

@@ -8,14 +8,11 @@ class OptimizationAlgorithmStage(object):
     def __init__(self, settings):
         self.settings = settings
 
-    def name(self):
-        raise NotImplementedError()
-
-    def before_stage(self):
+    def before_stage(self, payload=None):
         pass
 
-    def after_stage(self):
+    def after_stage(self, payload=None):
         pass
 
-    def on_step(self):
+    def on_step(self, payload=None):
         pass

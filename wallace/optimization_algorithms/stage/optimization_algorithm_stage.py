@@ -17,5 +17,5 @@ class OptimizationAlgorithmStage(object):
     def after_stage(self):
         pass
 
-    def step(self):
+    def on_step(self):
         pass

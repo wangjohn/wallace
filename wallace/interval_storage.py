@@ -31,8 +31,8 @@ class IntervalStorage(object):
 
     def has_intersection(self, start, end):
         for value in self.interval_map.itervalues():
-            if (value[0] <= start and start <= value[1]) or \
-                    (value[0] <= end and end <= value[1]) or \
-                    (start <= value[0] and value[1] <= end):
+            if (value[0] <= start and start < value[1]) or \
+                    (value[0] < end and end <= value[1]) or \
+                    (start <= value[0] and value[1] < end):
                 return True
         return False

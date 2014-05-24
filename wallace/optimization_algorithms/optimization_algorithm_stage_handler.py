@@ -1,4 +1,5 @@
 from wallace.interval_storage import IntervalStorage
+from wallace.optimization_algorithms.stage.optimization_algorithm_stage import OptimizationAlgorithmStage
 
 class OptimizationAlgorithmStageHandler(object):
     def __init__(self, settings, stages=None):
@@ -6,6 +7,11 @@ class OptimizationAlgorithmStageHandler(object):
 
         if stages == None:
             stages = self.settings.get("optimization_algoritm.default_stages")
+
+        for key in stages.iterkeys():
+            if not issubclass(key, OptimizationAlgorithmStage):
+                raise ValueError("OptimizationAlgorithmStageHandler must contain OptimizationAlgorithmStage subclasses.")
+
         self.stage_storage = IntervalStorage(stages)
         self.stages_used = []
 
@@ -22,26 +28,27 @@ class OptimizationAlgorithmStageHandler(object):
 
     def run_stage(self, current_step, total_steps=None):
         stage = None
-        if self.has_stage(curent_step, total_steps):
+        if self.has_stage(current_step, total_steps):
             stage = self.get_stage(current_step, total_steps)
 
         # If we've started using a new stage, check to see if we have to run the
         # `after_stage` method.
         if stage == None or stage not in self.stages_used:
-            last_stage, has_run_after_stage = self.stages_used[-1]
-            if not has_run_after_stage:
-                last_stage.after_stage()
-                self.stages_used[-1] = (last_stage, True)
+            if len(self.stages_used) > 0:
+                last_stage, has_run_after_stage = self.stages_used[-1]
+                if not has_run_after_stage:
+                    last_stage.after_stage()
+                    self.stages_used[-1] = (last_stage, True)
 
         # If this is the first time we've seen the stage, then run the `before_stage`
         # method
-        if stage not in self.stages_used:
-            stage.before_stage()
+        if stage != None and stage not in self.stages_used:
+            stage(self.settings).before_stage()
             self.stages_used.append((stage, False))
 
         # Run the stage if it exists
         if stage != None:
-            stage.on_step()
+            stage(self.settings).on_step()
 
     def _get_step_percentage(self, current_step, total_steps=None):
         if total_steps == None:

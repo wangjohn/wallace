@@ -57,13 +57,53 @@ class OptimizationAlgorithmStageHandlerTest(TestCase):
         for i in xrange(10):
             stage_handler.run_stage(i, total_steps=10, payload=payload)
 
-        self.assertEqual(9, len(payload))
+        self.assertEqual(7, len(payload))
         self.assertEqual("before_stage.fake_stage1", payload[0])
         self.assertEqual("on_step.fake_stage1", payload[1])
-        self.assertEqual("after_stage.fake_stage1", payload[2])
-        self.assertEqual("before_stage.fake_stage1", payload[3])
-        self.assertEqual("on_step.fake_stage1", payload[4])
-        self.assertEqual("after_stage.fake_stage1", payload[5])
-        self.assertEqual("before_stage.fake_stage2", payload[6])
-        self.assertEqual("after_stage.fake_stage2", payload[7])
-        self.assertEqual("on_step.fake_stage3", payload[8])
+        self.assertEqual("on_step.fake_stage1", payload[2])
+        self.assertEqual("after_stage.fake_stage1", payload[3])
+        self.assertEqual("before_stage.fake_stage2", payload[4])
+        self.assertEqual("after_stage.fake_stage2", payload[5])
+        self.assertEqual("on_step.fake_stage3", payload[6])
+
+    def test_timing_of_stage_handler_for_multi_step_stage_progression(self):
+        stage_handler = OptimizationAlgorithmStageHandler(self.settings, {
+                FakeStage1: (0.1, 0.4),
+                FakeStage2: (0.4, 0.45),
+                FakeStage3: (0.45, 0.6)
+            })
+
+        payload = []
+        stage_handler.run_stage(0, total_steps=10, payload=payload)
+        self.assertEqual(0, len(payload))
+
+        stage_handler.run_stage(1, total_steps=10, payload=payload)
+        self.assertEqual(2, len(payload))
+        self.assertEqual("before_stage.fake_stage1", payload[0])
+        self.assertEqual("on_step.fake_stage1", payload[1])
+
+        stage_handler.run_stage(2, total_steps=10, payload=payload)
+        print payload
+        self.assertEqual(3, len(payload))
+        self.assertEqual("on_step.fake_stage1", payload[2])
+
+        stage_handler.run_stage(3, total_steps=10, payload=payload)
+        self.assertEqual(4, len(payload))
+        self.assertEqual("on_step.fake_stage1", payload[3])
+
+        stage_handler.run_stage(4, total_steps=10, payload=payload)
+        self.assertEqual(6, len(payload))
+        self.assertEqual("after_stage.fake_stage1", payload[4])
+        self.assertEqual("before_stage.fake_stage2", payload[5])
+
+        stage_handler.run_stage(5, total_steps=10, payload=payload)
+        self.assertEqual(8, len(payload))
+        self.assertEqual("after_stage.fake_stage2", payload[6])
+        self.assertEqual("on_step.fake_stage3", payload[7])
+
+        stage_handler.run_stage(6, total_steps=10, payload=payload)
+        self.assertEqual(8, len(payload))
+
+        for i in xrange(7,10):
+            stage_handler.run_stage(i, total_steps=10, payload=payload)
+            self.assertEqual(8, len(payload))

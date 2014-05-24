@@ -25,6 +25,16 @@ class IntervalStorageTest(TestCase):
         with self.assertRaises(ValueError):
             interval_storage.add_interval("1", -3.2, 1.4)
 
+    def test_interval_storage_for_completely_containing_intervals(self):
+        interval_storage = IntervalStorage()
+        interval_storage.add_interval("1", 0.5, 0.7)
+
+        with self.assertRaises(ValueError):
+            interval_storage.add_interval("2", 0.55, 0.65)
+
+        with self.assertRaises(ValueError):
+            interval_storage.add_interval("3", 0.45, 0.75)
+
     def test_interval_storage_with_two_intervals_and_midpoint_get(self):
         interval_storage = IntervalStorage()
         interval_storage.add_interval("1", 0.0, 0.5)

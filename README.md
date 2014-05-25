@@ -32,6 +32,12 @@ filename = "boston_housing_data.csv"
 WallaceInitialization.initialize(settings, dependent_variable, filename)
 ```
 
+The above will initialize a new instance of Wallace which will search for a machine learning model with the best parameters and independent variables for predicting the dependent variable `Price`.
+
+# How it Works
+
+Wallace works by using a flavor of an evolutionary algorithm for constantly improving upon prediction models that have already been created. The best models continue to live and get mutations in a process that continually improves the predictive power of the best model.
+
 # Tests
 
 To run tests, you must download nose:

@@ -69,7 +69,6 @@ class OptimizationAlgorithm(object):
         self.initialize_population()
 
         while not self.has_finished():
-            self.stage_handler.run_stage(self.current_step)
             self.step()
 
         self.results_logger.write_results()
@@ -79,7 +78,7 @@ class OptimizationAlgorithm(object):
         self.current_step += 1
         self.logger.info("Optimization algorithm step: %s", self.current_step)
         self.logger.info("Generating population with probabilities: %s", str(self.predictive_model_generator.model_probabilities()))
-        self.update_population()
+        self.stage_handler.run_stage(self.current_step)
         self.optimization_algorithm_tracking.track_step(self.current_step, self.model_population)
         self.results_logger.write_results()
 

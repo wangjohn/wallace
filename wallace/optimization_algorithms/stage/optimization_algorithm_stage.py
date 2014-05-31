@@ -14,5 +14,6 @@ class OptimizationAlgorithmStage(object):
     def after_stage(self, payload=None):
         pass
 
-    def on_step(self, payload=None):
-        pass
+    def on_step(self, optimization_algorithm=None, payload=None):
+        if optimization_algorithm != None:
+            optimization_algorithm.update_population()

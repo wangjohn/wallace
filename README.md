@@ -54,6 +54,14 @@ Wallace uses a set of machine learning algorithms and optimizes the parameters a
 * Ridge Regression
 * SVM Regression
 
+The parameters in each machine learning algorithm are optimized using an evolutionary algorithm. The independent variables used in each model also have probabilities of being included in a particular model that are optimized.
+
+To create a new machine learning algorithm, one simply needs to subclass the `PredictiveModel` class.
+
+## Checking Fitness
+
+The fitness of each potential model is checked using [k-fold cross validation](http://en.wikipedia.org/wiki/Cross-validation_(statistics)#K-fold_cross-validation) on a subset of the data. One can change the `k` used by Wallace by changing the settings object.
+
 # Tests
 
 To run tests, you must download nose:

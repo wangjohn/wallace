@@ -38,6 +38,14 @@ The above will initialize a new instance of Wallace which will search for a mach
 
 Wallace works by using a flavor of an evolutionary algorithm for constantly improving upon prediction models that have already been created. The best models continue to live and get mutations in a process that continually improves the predictive power of the best model.
 
+## Dataset Cleaner
+
+When Wallace obtains a dataset, it automatically performs a number of cleaning operations on the dataset. It will detect whether or not the dataset contains headers, what those headers are, and the data types of each column of data.
+
+Wallace will also handle missing values. By default, Wallace will remove rows that have missing values. However, this behavior can be turned off. In addition, Wallace will not remove rows wih missing values if those missing values occur in columns with a high percentage of missing values (over 10%).
+
+## Evolutionary Algorithms
+
 ## Optimizing Machine Learning Algorithms
 
 Wallace uses a set of machine learning algorithms and optimizes the parameters and indepenendent variables used in these algorithms. The ML algorithms currently supported by wallace are the following:
@@ -60,7 +68,13 @@ To create a new machine learning algorithm, one simply needs to subclass the `Pr
 
 ## Checking Fitness
 
-The fitness of each potential model is checked using [k-fold cross validation](http://en.wikipedia.org/wiki/Cross-validation_(statistics)#K-fold_cross-validation) on a subset of the data. One can change the `k` used by Wallace by changing the settings object.
+The fitness of each potential model is checked using [k-fold cross validation](http://en.wikipedia.org/wiki/Cross-validation_(statistics)#K-fold_cross-validation) on a subset of the data (note that the `k` used by Wallace can be changed via the settings).The data is split into `k` randomly selected sections, and `k-1` of them are used to train the model on and 1 section is used for testing. The predicted data is compared to the actual data from the section, and an error measured is used for fitness. The default error measure is the Mean Squared Error measure and the currently supported error measures are the following:
+
+* Mean Squared Error
+* R Squared Score
+* Mean Absolute Error
+* F1 Score
+
 
 # Tests
 

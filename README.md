@@ -5,7 +5,7 @@ Wallace is a framework for distributed evolutionary algorithms. It trains machin
 
 Wallace provides a simple way to predict or categorize variables. It employs many modern machine learning techniques and attempts to build the best possible model for predicting a particular variable.
 
-# Simple Example
+## Simple Example
 
 Let's suppose you're looking to buy a home and want to predict the price of a house you're interested in (let's say it isn't for sale yet). You have the following dataset and you want to create a machine learning model that will be a good predictor of Boston housing prices:
 
@@ -37,6 +37,22 @@ The above will initialize a new instance of Wallace which will search for a mach
 # How it Works
 
 Wallace works by using a flavor of an evolutionary algorithm for constantly improving upon prediction models that have already been created. The best models continue to live and get mutations in a process that continually improves the predictive power of the best model.
+
+## Optimizing Machine Learning Algorithms
+
+Wallace uses a set of machine learning algorithms and optimizes the parameters and indepenendent variables used in these algorithms. The ML algorithms currently supported by wallace are the following:
+
+* Bayesian Ridge Regression
+* Decision Tree Regression
+* Extra Trees Regression
+* Gradient Boosting Regression
+* Lars Lasso Regression
+* Lars Regression
+* Lasso Regression
+* OLS Linear Regression
+* Random Forest Regression
+* Ridge Regression
+* SVM Regression
 
 # Tests
 

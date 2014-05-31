@@ -3,6 +3,7 @@ from wallace.independent_variables import IndependentVariableSelection
 from wallace.optimization_algorithms.optimization_algorithm_model_wrapper import OptimizationAlgorithmModelWrapper
 from wallace.optimization_algorithms.optimization_algorithm_tracking import OptimizationAlgorithmTracking
 from wallace.results_logger import ResultsLogger
+from wallace.optimization_algorithms.optimization_algorithm_stage_handler import OptimizationAlgorithmStageHandler
 from datetime import datetime
 import logging
 import heapq
@@ -21,6 +22,7 @@ class OptimizationAlgorithm(object):
         self.model_tracking = ModelTracking(self.settings)
         self.optimization_algorithm_tracking = OptimizationAlgorithmTracking(self.settings)
         self.results_logger = ResultsLogger(self.settings, self.model_tracking)
+        self.stage_handler = OptimizationAlgorithmStageHandler(self.settings)
 
     def initialize_population(self):
         model_population = []
@@ -67,6 +69,7 @@ class OptimizationAlgorithm(object):
         self.initialize_population()
 
         while not self.has_finished():
+            self.stage_handler.run_stage(self.current_step)
             self.step()
 
         self.results_logger.write_results()

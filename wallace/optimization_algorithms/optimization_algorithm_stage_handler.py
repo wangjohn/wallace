@@ -60,8 +60,6 @@ class OptimizationAlgorithmStageHandler(object):
                 return True
         return False
 
-
-
     def _get_step_percentage(self, current_step, total_steps=None):
         if total_steps == None:
             total_steps = self.settings.get("optimization_algorithm.finishing_criteria.max_steps")

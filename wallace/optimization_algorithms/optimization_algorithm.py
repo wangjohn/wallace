@@ -28,7 +28,7 @@ class OptimizationAlgorithm(object):
         model_population = []
         population_size = self.settings.get("optimization_algorithm.population_size")
         for i in xrange(population_size):
-            model_information = self.predictive_model_generator.choose_model_type()
+            model_information = self.choose_model_type()
             model_class = model_information["model_class"]
             parameter_set = self.predictive_model_generator.get_full_parameter_set()
 
@@ -48,6 +48,9 @@ class OptimizationAlgorithm(object):
 
         self.model_population = model_population
         self.logger.info("Initialized optimization algorithm with population size %s", population_size)
+
+    def choose_model_type(self):
+        return self.predictive_model_generator.choose_model_type()
 
     def update_population(self):
         raise NotImplementedError()

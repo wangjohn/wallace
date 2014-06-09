@@ -46,6 +46,10 @@ Wallace will also handle missing values. By default, Wallace will remove rows th
 
 ## Evolutionary Algorithms
 
+The default evolutionary algorithm used is [differential evolution](http://en.wikipedia.org/wiki/Differential_evolution) where three random members of the model population are selected for combining and mutating attributes. The basic mechanism through which differential evolution works is by changing the parameters of a model.
+
+For example, suppose that we have chosen to use 3 types of models for prediction - ols linear regression, svm regression, and lasso regression. The ols linear regression does not have any parameters, so running the algorithm with a fixed set of independent variables will return the same fitness every time (if you run it on the same data). However, you can tune the kernel type, the penalty parameter, and other values in an svm regression. The default evolutionary algorithm that wallace uses would select one of the 3 models to use based on past performance (with previously high performing models being favored) and with that model's parameters being mutated based on differential evolution.
+
 ## Optimizing Machine Learning Algorithms
 
 Wallace uses a set of machine learning algorithms and optimizes the parameters and indepenendent variables used in these algorithms. The ML algorithms currently supported by wallace are the following:
@@ -74,7 +78,6 @@ The fitness of each potential model is checked using [k-fold cross validation](h
 * R Squared Score
 * Mean Absolute Error
 * F1 Score
-
 
 # Tests
 

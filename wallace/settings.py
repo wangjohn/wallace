@@ -5,6 +5,8 @@ from wallace.dataset_transformations.scale_transformation import ScaleTransforma
 from wallace.dataset_transformations.sqrt_transformation import SqrtTransformation
 from wallace.dataset_transformations.box_cox_transformation import BoxCoxTransformation
 
+from wallace.optimization_algorithms.stage import ComputationStage, InitializationStage
+
 class AbstractSettings(object):
     DESCRIPTIONS = {
             "fitness_evaluation.crossfold_partitions": "Default number of partitions (k) to use when doing k-fold cross validation.",
@@ -44,7 +46,10 @@ class AbstractSettings(object):
             "differential_evolution.differential_weight": 0.8,
             "optimization_algorithm.population_size": 40,
             "optimization_algorithm.finishing_criteria.max_steps": 200,
-            "optimization_algorithm.default_stages": {},
+            "optimization_algorithm.default_stages": {
+                InitializationStage: (0, 0.3),
+                ComputationStage: (0.3, 1)
+                },
             "independent_variable_selection.initial_independent_variables_percentage": 0.25
         }
 

@@ -78,7 +78,8 @@ class OptimizationAlgorithm(object):
         self.current_step += 1
         self.logger.info("Optimization algorithm step: %s", self.current_step)
         self.logger.info("Generating population with probabilities: %s", str(self.predictive_model_generator.model_probabilities()))
-        self.stage_handler.run_stage(self.current_step)
+        stage_handler_payload = {"optimization_algorithm": self}
+        self.stage_handler.run_stage(self.current_step, payload=stage_handler_payload)
         self.optimization_algorithm_tracking.track_step(self.current_step, self.model_population)
         self.results_logger.write_results()
 

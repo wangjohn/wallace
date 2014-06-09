@@ -6,7 +6,7 @@ class OptimizationAlgorithmStageHandler(object):
         self.settings = settings
 
         if stages == None:
-            stages = self.settings.get("optimization_algoritm.default_stages")
+            stages = self.settings.get("optimization_algorithm.default_stages")
 
         for key in stages.iterkeys():
             if not issubclass(key, OptimizationAlgorithmStage):
@@ -26,6 +26,8 @@ class OptimizationAlgorithmStageHandler(object):
         step_percentage = self._get_step_percentage(current_step, total_steps)
         return self.stage_storage.get_entry(step_percentage)
 
+    # TODO: its possible that an optimization step won't get run if stage == None and
+    # on_step doesn't run. Need some way to fix that.
     def run_stage(self, current_step, total_steps=None, payload=None):
         stage = None
         if self.has_stage(current_step, total_steps):
@@ -48,7 +50,7 @@ class OptimizationAlgorithmStageHandler(object):
 
         # Run the stage if it exists
         if stage != None:
-            stage(self.settings).on_step(payload)
+            stage(self.settings).on_step(payload=payload)
 
         # If this is the last step, then we need to run the after_stage
         if stage != None and current_step >= total_steps - 1:

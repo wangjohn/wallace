@@ -1,4 +1,6 @@
-class InitializationStage(object):
+from optimization_algorithm_stage import OptimizationAlgorithmStage
+
+class InitializationStage(OptimizationAlgorithmStage):
     def __init__(self, settings):
         self.settings = settings
 

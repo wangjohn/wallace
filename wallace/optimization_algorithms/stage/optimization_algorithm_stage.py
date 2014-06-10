@@ -17,3 +17,10 @@ class OptimizationAlgorithmStage(object):
     def on_step(self, payload=None):
         if "optimization_algorithm" in payload:
             payload["optimization_algorithm"].update_population()
+
+    def _get_optimization_algorithm(self, payload):
+        if "optimization_algorithm" in payload:
+            return payload["optimization_algorithm"]
+        else:
+            raise ValueError("You must specify `optimization_algorithm` in the payload for InitializationStage methods.")
+

@@ -28,6 +28,6 @@ class OptimizationAlgorithmInitializationStageTest(TestCase):
             differential_evolution.step()
             current_population = differential_evolution.model_population
 
-            for model in current_population:
-                self.assertIsInstance(model, OLSLinearRegression)
+            for wrapper in current_population:
+                self.assertIsInstance(wrapper.model, OLSLinearRegression)
 

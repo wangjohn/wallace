@@ -53,7 +53,9 @@ class OptimizationAlgorithmStageHandler(object):
             stage(self.settings).on_step(payload=payload)
 
         # If this is the last step, then we need to run the after_stage
-        if stage != None and current_step >= total_steps - 1:
+        total_steps = self._get_total_steps(total_steps)
+        if stage != None and (current_step >= total_steps - 1):
+            print "Running after stage"
             stage(self.settings).after_stage(payload)
 
     def _is_used_stage(self, stage):
@@ -63,6 +65,12 @@ class OptimizationAlgorithmStageHandler(object):
         return False
 
     def _get_step_percentage(self, current_step, total_steps=None):
-        if total_steps == None:
-            total_steps = self.settings.get("optimization_algorithm.finishing_criteria.max_steps")
+        total_steps = self._get_total_steps(total_steps)
         return float(current_step) / total_steps
+
+    def _get_total_steps(self, total_steps=None):
+        if total_steps == None:
+            return self.settings.get("optimization_algorithm.finishing_criteria.max_steps")
+        else:
+            return total_steps
+

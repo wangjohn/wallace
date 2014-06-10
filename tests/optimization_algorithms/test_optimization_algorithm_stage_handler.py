@@ -83,7 +83,6 @@ class OptimizationAlgorithmStageHandlerTest(TestCase):
         self.assertEqual("on_step.fake_stage1", payload[1])
 
         stage_handler.run_stage(2, total_steps=10, payload=payload)
-        print payload
         self.assertEqual(3, len(payload))
         self.assertEqual("on_step.fake_stage1", payload[2])
 

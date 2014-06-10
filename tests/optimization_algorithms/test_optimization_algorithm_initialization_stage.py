@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from wallace.initialization import WallaceInitialization
 from wallace.optimization_algorithms.differential_evolution import DifferentialEvolution
+from wallace.predictive_models.ols_linear_regression import OLSLinearRegression
 from wallace.settings import AbstractSettings
 from wallace.dataset import DatasetVariable
 
@@ -17,7 +18,16 @@ class OptimizationAlgorithmInitializationStageTest(TestCase):
         self.dataset = self.initialization.read_filename(path)
         self.dependent_variable = DatasetVariable("X1")
 
-    # TODO: finish this test
     def test_initialization_stage_uses_ols_regression_only(self):
         predictive_model_generator = self.initialization.create_predictive_model_generator()
         differential_evolution = DifferentialEvolution(self.dataset, self.dependent_variable, self.settings, predictive_model_generator)
+
+        differential_evolution.initialize_population()
+
+        for i in xrange(10):
+            differential_evolution.step()
+            current_population = differential_evolution.model_population
+
+            for model in current_population:
+                self.assertIsInstance(model, OLSLinearRegression)
+

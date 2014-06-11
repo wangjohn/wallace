@@ -24,6 +24,7 @@ class DifferentialEvolution(OptimizationAlgorithm):
                     self.model_population,
                     self.potential_independent_variables)
             independent_variables = de_variable_selection.generate_independent_variables()
+            self.logger.debug("Choosing new independent variables: %s", independent_variables)
 
             model_information = self.choose_model_type()
             model_class = model_information["model_class"]

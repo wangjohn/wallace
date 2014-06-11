@@ -23,12 +23,12 @@ class CrossValidationFitnessEvaluation(FitnessEvaluation):
             start_training = datetime.now()
             trained_model = self.model.train(training_dataset)
             finished_training = datetime.now()
-            self.logger.info("Training model time %s", (finished_training - start_training).total_seconds())
+            self.logger.debug("Training model time %s", (finished_training - start_training).total_seconds())
 
             fitness = trained_model.predict_and_evaluate_fitness(test_dataset, evaluation_method)
             finished_evaluating_fitness = datetime.now()
-            self.logger.info("Fitness evaluation time %s", (finished_evaluating_fitness - finished_training).total_seconds())
+            self.logger.debug("Fitness evaluation time %s", (finished_evaluating_fitness - finished_training).total_seconds())
 
-            self.logger.info("Crossfold partition fitness for model %s: %s", self.model, fitness)
+            self.logger.debug("Crossfold partition fitness for model %s: %s", self.model, fitness)
             averaged_fitness += (float(test_dataset.num_rows) / (test_dataset.num_rows + training_dataset.num_rows)) * fitness
         return averaged_fitness

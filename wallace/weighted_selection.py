@@ -71,6 +71,12 @@ class WeightedSelection(object):
             normalized_weights[selection] = float(1) / total_selections
         return normalized_weights
 
+    def __repr__(self):
+        return str(self.weighted_selections)
+
+    def __str__(self):
+        return str(self.weighted_selections)
+
     def choose(self, rand_generator=None, rand_number=None):
         normalized_weights = self.normalize_weights(self.weighted_selections)
         if rand_generator != None:

@@ -16,7 +16,12 @@ class OptimizationAlgorithmStage(object):
 
     def on_step(self, payload=None):
         if "optimization_algorithm" in payload:
-            payload["optimization_algorithm"].update_population()
+            optimization_algorithm = payload["optimization_algorithm"]
+
+            if optimization_algorithm.initialized_population:
+                optimization_algorithm.update_population()
+            else:
+                optimization_algorithm.initialize_population()
 
     def _get_optimization_algorithm(self, payload):
         if "optimization_algorithm" in payload:

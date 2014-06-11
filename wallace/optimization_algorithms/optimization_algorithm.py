@@ -17,6 +17,7 @@ class OptimizationAlgorithm(object):
         self.full_validity_check = self.predictive_model_generator.get_full_validity_check()
         self.logger = logging.getLogger(__name__)
 
+        self.initialized_population = False
         self.model_population = []
         self.current_step = 0
         self.model_tracking = ModelTracking(self.settings)
@@ -47,6 +48,7 @@ class OptimizationAlgorithm(object):
             model_population.append(model_wrapper)
 
         self.model_population = model_population
+        self.initialized_population = True
         self.logger.info("Initialized optimization algorithm with population size %s", population_size)
 
     def choose_model_type(self):
@@ -69,8 +71,6 @@ class OptimizationAlgorithm(object):
         return False
 
     def run(self):
-        self.initialize_population()
-
         while not self.has_finished():
             self.step()
 

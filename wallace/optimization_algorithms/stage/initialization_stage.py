@@ -20,9 +20,10 @@ class InitializationStage(OptimizationAlgorithmStage):
         temporary_model_generator = self.create_temporary_model_generator(real_predictive_model_generator)
         optimization_algorithm.predictive_model_generator = temporary_model_generator
 
-        if optimization_algorithm.current_step == 1:
+        if optimization_algorithm.initialized_population:
+            optimization_algorithm.update_population()
+        else:
             optimization_algorithm.initialize_population()
-        optimization_algorithm.update_population()
 
         optimization_algorithm.predictive_model_generator = real_predictive_model_generator
 
